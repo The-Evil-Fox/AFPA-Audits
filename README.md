@@ -4,14 +4,14 @@ Audits project - AFPA
 
 External links:
 
-https://www.afpa.fr/
 # Officiel website of the training organisation "AFPA".
+https://www.afpa.fr/
 
-https://en.wikipedia.org/wiki/Audit
 # Documentation about what is an audit.
+https://en.wikipedia.org/wiki/Audit
 
-https://en.wikipedia.org/wiki/ISO_9000#Contents_of_ISO_9001
 # Documentation about the iso 9001 standards
+https://en.wikipedia.org/wiki/ISO_9000#Contents_of_ISO_9001
 
 
 The objectif of the project:

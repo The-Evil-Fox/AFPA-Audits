@@ -14,7 +14,7 @@ https://en.wikipedia.org/wiki/ISO_9000#Contents_of_ISO_9001
 # Documentation about the iso 9001 standards
 
 
-The objectif of the project:
+Objectifs:
 Developing a new portal where audits can be created by the admins and the users can answers them.
 The portal is only accessible by AFPA staff members.
 The results of the audits can be retrieved (individually or collectively) and analyzed by the admins.

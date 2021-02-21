@@ -72,6 +72,7 @@ button:hover, button:active, button:focus {
 
 #error-message {
     color: #FF781B;
-    margin: 10% auto;
+    margin: 3% auto;
     white-space: break-spaces;
+    font-weight: bold;
 }

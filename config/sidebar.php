@@ -6,7 +6,7 @@
     </div>
     <div class="mobile_nav_items">
         <a onclick="showContent('dashboard', true);" href="#tableaudebord"><i class="fas fa-desktop"></i><span>Tableau de bord</span></a>
-        <a onclick="showContent('monespace', true);" href="#monespace"><i class="fas fa-user-circle"></i><span>Espace personnel</span></a>
+        <a onclick="showContent('monespace', true);" href="#monespace"><i class="fas fa-chart-line"></i><span>Mes autoévaluations</span></a>
         <a onclick="showContent('autoevaluation', true);" href="#autoevaluation"><i class="fas fa-briefcase"></i></i><span>M'auto-évaluer</span></a>
         <?php if(isAdmin($userInfos['Role'])) { ?>
             <a onclick="showContent('administration', true);" href="#administration"><i class="fas fa-user-lock"></i><span>Espace administration</span></a>
@@ -22,7 +22,7 @@
         <form id="formAvatar" class="avatar-form" method="POST" enctype="multipart/form-data"><input class="avatar-form" type="file" name="inputAvatar" id="inputAvatar"></form>
     </div>
     <a onclick="showContent('dashboard', false);" href="#tableaudebord"><i class="fas fa-desktop"></i><span>Tableau de bord</span></a>
-    <a onclick="showContent('monespace', false);" href="#monespace"><i class="fas fa-user-circle"></i><span>Espace personnel</span></a>
+    <a onclick="showContent('monespace', false);" href="#monespace"><i class="fas fa-chart-line"></i><span>Mes autoévaluations</span></a>
     <a onclick="showContent('autoevaluation', false);" href="#autoevaluation"><i class="fas fa-briefcase"></i><span>M'auto-évaluer</span></a>
     <?php if(isAdmin($userInfos['Role'])) { ?>
         <a onclick="showContent('administration', false);" href="#administration"><i class="fas fa-user-lock"></i><span>Espace administration</span></a>

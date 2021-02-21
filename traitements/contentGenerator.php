@@ -6,7 +6,7 @@ require_once('../config/dateConvert.php');
 if( isset($_POST['dashboard'])) { ?>
 
     <div class="card">
-        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+        <div class="card-content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</div>
     </div>
 
 <?php } ?>
@@ -15,7 +15,7 @@ if( isset($_POST['dashboard'])) { ?>
 
     <?php
 
-    $checkEval = $db->prepare('SELECT DateAndHour FROM Autoevaluations WHERE User_ID = :user GROUP BY DateAndHour ORDER BY DateAndHour DESC');
+    $checkEval = $db->prepare('SELECT Evaluation_Number, DateAndHour FROM Autoevaluations WHERE User_ID = :user GROUP BY DateAndHour, Evaluation_Number ORDER BY DateAndHour DESC');
     $checkEval->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
     $checkEval->execute();
 
@@ -24,14 +24,17 @@ if( isset($_POST['dashboard'])) { ?>
     if($countEvals == 0) { ?>
 
     <div class="card text-center">
-        <p>Vous ne vous êtes pas auto-évalué pour le moment !</p>
+    <div class="card-content">Vous ne vous êtes pas auto-évalué pour le moment !</div>
     </div>
 
     <?php } else { ?>
 
         <?php while($eval = $checkEval->fetch()) { ?>
             <div class="card text-center">
-                <p>Vous vous êtes autoévalué le <?php echo dateConvert($eval['DateAndHour']); ?></p>
+                <div class="card-content">
+                    Vous vous êtes autoévalué le <?php echo dateConvert($eval['DateAndHour']); ?>
+                    <button class="button-show-autoeval-result" type="button" onclick="showChart('<?php echo dateConvert($eval['DateAndHour']); ?>','<?= $eval['Evaluation_Number']; ?>')">Voir mes résultats</button>
+                </div>
             </div>
         <?php } ?>
 
@@ -57,7 +60,10 @@ if( isset($_POST['dashboard'])) { ?>
         <h3>Auto-évaluation</h3>
         <?php while($questions = $selectQuestions->fetch()) { ?>
             <div class="form-part" id="question<?= $compteur; ?>">
-                <label for="question<?= $compteur; ?>">Question n°<?= $compteur; ?>: <?= $questions['Question']; ?> ?</label>
+                <div class="question-number">
+                    <?php if($compteur == $questionsNumber) { echo "Question finale:"; } else { echo "Question n°$compteur:"; } ?> 
+                </div>
+                <label for="question<?= $compteur; ?>"><?= $questions['Question']; ?> ?</label>
                 <div class="inputGroup">
                     <div class="checkbox">
                         <input type="checkbox" name="questions" value="Oui"><span class="answer">Oui</span>
@@ -74,7 +80,8 @@ if( isset($_POST['dashboard'])) { ?>
                             <button type="button" class="button-next" onclick="autoEvalNext(<?= $compteur; ?>)">Question suivante <i class="fas fa-long-arrow-alt-right"></i></button>
                         <?php } ?>
                         <?php if($compteur == $questionsNumber) { ?>
-                        <button type="button" class="button-send" onclick="sendAutoEval()">Envoyer mon auto-évaluation</button>
+                        <div id="message"></div>
+                        <button type="button" class="button-send" id="autoeval-button-send" onclick="sendAutoEval()">Envoyer mon auto-évaluation</button>
                         <input type="hidden" id="questionsNumber" value="<?= $compteur; ?>">
                         <?php } ?>
                     </div>
@@ -82,7 +89,6 @@ if( isset($_POST['dashboard'])) { ?>
             </div>
             <?php $compteur++; ?>
         <?php } ?>
-        <div id="message"></div>
     </form>
 
 <?php } ?>
@@ -90,25 +96,25 @@ if( isset($_POST['dashboard'])) { ?>
 <?php if(isset($_POST['administration'])) { ?>
 
     <div class="card">
-        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+        <div class="card-content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</div>
     </div>
     <div class="card">
-        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+    <div class="card-content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</div>
     </div>
     <div class="card">
-        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+        <div class="card-content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</div>
     </div>
     <div class="card">
-        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+    <div class="card-content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</div>
     </div>
     <div class="card">
-        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+    <div class="card-content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</div>
     </div>
     <div class="card">
-        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+    <div class="card-content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</div>
     </div>
     <div class="card">
-        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+    <div class="card-content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</div>
     </div>
 
 <?php } ?>

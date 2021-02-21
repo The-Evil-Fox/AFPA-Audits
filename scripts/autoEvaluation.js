@@ -41,6 +41,7 @@ function sendAutoEval() {
     $(document).ready(function() {
 
         let messageWindow = document.getElementById('message');
+        let buttonSend = document.getElementById('autoeval-button-send');
         let answers = new Array();
 
         $("input:checkbox[name*=questions]:checked").each(function(){
@@ -59,6 +60,40 @@ function sendAutoEval() {
 
         }
 
+        if(answers.length > questions.length) {
+
+            messageWindow.style.display = "block";
+            messageWindow.style.color = "#FF781B";
+            messageWindow.innerHTML = "Une ou plusieurs questions ont reçu plusieurs réponses !";
+            console.log("(vérification) nombre réponses: " + answers.length + "nombre questions :" + questions.length);
+            buttonSend.style.display = "none";
+            setTimeout(() => {
+                messageWindow.style.display = "none";
+                messageWindow.innerHTML = "";
+                buttonSend.innerHTML = "Renvoyer mon auto-évaluation";
+                buttonSend.style.display = "block";
+            }, 2500);
+            return;
+
+        }
+
+        if(answers.length < questions.length) {
+
+            messageWindow.style.display = "block";
+            messageWindow.style.color = "#FF781B";
+            messageWindow.innerHTML = "Une ou plusieurs questions ont pas reçu de réponses !";
+            console.log("(vérification) nombre réponses: " + answers.length + "nombre questions :" + questions.length);
+            buttonSend.style.display = "none";
+            setTimeout(() => {
+                messageWindow.style.display = "none";
+                messageWindow.innerHTML = "";
+                buttonSend.innerHTML = "Renvoyer mon auto-évaluation";
+                buttonSend.style.display = "block";
+            }, 2500);
+            return;
+
+        }
+
         $.ajax({
 
             type: 'POST',
@@ -66,15 +101,16 @@ function sendAutoEval() {
             data: {Reponses:answers, Questions:questions},
             dataType: 'text',
             success: function(data) {
-            
+                
+                buttonSend.style.display = "none";
                 messageWindow.style.display = "block";
+                messageWindow.style.color = "green";
                 messageWindow.innerHTML = data;
                 // setTimeout(() => {
                 //     messageWindow.style.display = "none";
                 //     messageWindow.innerHTML = "";
                 // }, 2500);
             
-
             }
 
         });

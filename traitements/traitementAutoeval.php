@@ -6,7 +6,7 @@ $questionsAndAnswers = array();
 
 $questionsAndAnswers = array_combine($_POST['Questions'], $_POST['Reponses']);
 
-$selectLastEval = $db->prepare('SELECT Evaluation_Number FROM Autoevaluations WHERE User_ID = :user');
+$selectLastEval = $db->prepare('SELECT Evaluation_Number FROM Autoevaluations WHERE User_ID = :user ORDER BY Evaluation_Number DESC LIMIT 1');
 $selectLastEval->bindParam(':user',$_SESSION['ID'], PDO::PARAM_INT);
 $selectLastEval->execute();
 
@@ -22,8 +22,6 @@ if($countResult == 0) {
     $evaluationNumber = $lastEval['Evaluation_Number'] + 1;
 
 }
-
-echo "numéro d'évaluation: $evaluationNumber <br>";
 
 try {
 

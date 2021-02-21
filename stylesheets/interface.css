@@ -146,6 +146,7 @@ label #sidebar_btn:hover{
     background-size: cover;
     transition: 0.5s;
     color: white;
+    font-size: 3vh;
 }
 
 #check:checked ~ .content {
@@ -164,13 +165,19 @@ label #sidebar_btn:hover{
     display: none;
 }
 
-.content .card p {
-    background: #4B4B4B;
+.content .card .card-content {
+    background: rgb(68,163,61);
+    background: -moz-linear-gradient(309deg, rgba(68,163,61,1) 25%, rgba(135,187,52,1) 61%);
+    background: -webkit-linear-gradient(309deg, rgba(68,163,61,1) 25%, rgba(135,187,52,1) 61%);
+    background: linear-gradient(309deg, rgba(68,163,61,1) 25%, rgba(135,187,52,1) 61%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#44a33d",endColorstr="#87bb34",GradientType=1);
+    border: 1px solid black;
     padding: 15px;
     margin-bottom: 10px;
-    font-size: 14px;
     opacity: 0.8;
     border-radius: 25px;
+    display: flex;
+    flex-direction: column;
 }
 
 #avatar:hover, #avatarResponsive:hover {
@@ -187,16 +194,19 @@ label #sidebar_btn:hover{
     text-align: center;
 }
 
-#autoEvaluation {
+#autoEvaluation, #resultat-autoevaluation{
     background: rgb(18,171,0);
     background: -moz-radial-gradient(circle, rgba(18,171,0,0.7) 20%, rgba(95,255,0,0.7) 100%);
     background: -webkit-radial-gradient(circle, rgba(18,171,0,0.7) 20%, rgba(95,255,0,0.7) 100%);
     background: radial-gradient(circle, rgba(18,171,0,0.7) 20%, rgba(95,255,0,0.7) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#12ab00",endColorstr="#5fff00",GradientType=1);
+    border: 1px solid black;
+}
+
+#autoEvaluation {
     padding: 5%;
     text-align: center;
-    border: 1px solid black;
-    color: black;
+    color: white;
 }
 
 #autoEvaluation label {
@@ -226,10 +236,10 @@ label #sidebar_btn:hover{
 }
 
 .form-buttons {
-    margin-top: 3%;
+    margin-top: 3vh;
 }
 
-.button-next, .button-previous {
+.button-next, .button-previous, #autoeval-button-send {
     background: white;
     -webkit-border-radius: 20px;
     -moz-border-radius: 20px;
@@ -241,7 +251,6 @@ label #sidebar_btn:hover{
     text-shadow: 1px 1px 20px #000000;
     border: solid #000000 1px;
     text-decoration: none;
-    display: inline-block;
     cursor: pointer;
     text-align: center;
     padding: 10px;
@@ -249,12 +258,16 @@ label #sidebar_btn:hover{
     outline: none;
 }
 
+.button-next, .button-previous {
+    display: inline-block;
+}
+
 .button-send {
     display: block;
-    margin: 5% auto;
+    margin: 5vh auto;
 }
  
-.button-next:hover, .button-previous:hover {
+.button-next:hover, .button-previous:hover, #autoeval-button-send:hover {
     border: solid #337FED 1px;
     background: #00FFFF;
     background-image: -webkit-linear-gradient(top, #00FFFF, #FFFFFF);
@@ -269,9 +282,22 @@ label #sidebar_btn:hover{
 }
 
 #message {
-    color: #FF781B;
-    margin: 10% auto;
+    display: none;
+    margin: 5vh auto;
     white-space: break-spaces;
+    background: rgba(255,255,255,0.7);
+    padding: 3vh 0;
+    font-weight: bold;
+}
+
+.button-show-autoeval-result {
+    margin: 3% auto;
+}
+
+#resultat-autoevaluation {
+    height: 50vh;
+    width: 90%;
+    margin: 0.5vh auto;
 }
 
 /* Responsive CSS */

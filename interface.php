@@ -21,8 +21,8 @@ require_once('config/roles.php');
 <body>
   <?php require_once('config/header.php'); ?>
   <?php require_once('config/sidebar.php'); ?>
-  <!-- Content window ( with example home content ) -->
-  <div class="content" id="content">
+  <!-- Content window ( with home background image ) -->
+  <div class="content backgroundImage" id="content">
     
   </div>
   <!-- Content window end -->
@@ -32,6 +32,9 @@ require_once('config/roles.php');
   <script src="scripts/setAvatar.js"></script>
   <script src="scripts/autoEvaluation.js"></script>
   <script src="scripts/charts.js"></script>
+  <?php if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) { ?>
+    <script src="scripts/administration.js"></script>
+  <?php } ?>
   <noscript>Votre navigateur ne supporte pas Javascript !</noscript>
 </body>
 </html>

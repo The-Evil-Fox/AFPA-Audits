@@ -142,11 +142,16 @@ label #sidebar_btn:hover{
     margin-top: 60px;
     padding: 20px;
     margin-left: 250px;
-    background-position: center;
-    background-size: cover;
     transition: 0.5s;
     color: white;
     font-size: 3vh;
+}
+
+.backgroundImage {
+    background-image: url('../assets/homeBackground.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
 }
 
 #check:checked ~ .content {
@@ -166,11 +171,11 @@ label #sidebar_btn:hover{
 }
 
 .content .card .card-content {
-    background: rgb(68,163,61);
-    background: -moz-linear-gradient(309deg, rgba(68,163,61,1) 25%, rgba(135,187,52,1) 61%);
-    background: -webkit-linear-gradient(309deg, rgba(68,163,61,1) 25%, rgba(135,187,52,1) 61%);
-    background: linear-gradient(309deg, rgba(68,163,61,1) 25%, rgba(135,187,52,1) 61%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#44a33d",endColorstr="#87bb34",GradientType=1);
+    background: rgb(29,37,28);
+    background: -moz-radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
+    background: -webkit-radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
+    background: radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#1d251c",endColorstr="#0d1425",GradientType=1);
     border: 1px solid black;
     padding: 15px;
     margin-bottom: 10px;
@@ -194,19 +199,62 @@ label #sidebar_btn:hover{
     text-align: center;
 }
 
-#autoEvaluation, #resultat-autoevaluation{
-    background: rgb(18,171,0);
-    background: -moz-radial-gradient(circle, rgba(18,171,0,0.7) 20%, rgba(95,255,0,0.7) 100%);
-    background: -webkit-radial-gradient(circle, rgba(18,171,0,0.7) 20%, rgba(95,255,0,0.7) 100%);
-    background: radial-gradient(circle, rgba(18,171,0,0.7) 20%, rgba(95,255,0,0.7) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#12ab00",endColorstr="#5fff00",GradientType=1);
+#autoEvaluation, #resultat-autoevaluation, #startContainer, #autoevalParams {
+    background: rgb(29,37,28);
+    background: -moz-radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
+    background: -webkit-radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
+    background: radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#1d251c",endColorstr="#0d1425",GradientType=1);
     border: 1px solid black;
+    text-align: center;
 }
 
 #autoEvaluation {
+    opacity: 0;
+}
+
+#autoEvaluation, #startContainer{
     padding: 5%;
-    text-align: center;
     color: white;
+    transition: 0.5s;
+}
+
+#startContainer .form-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.question-number img {
+    width: 25px;
+    cursor: pointer;
+    margin-left: 1vw;
+    vertical-align: bottom;
+}
+
+.autoevaluation-logos-container {
+    display: inline-block;
+    width: 100%;
+}
+
+.autoevaluation-logos-container .logo-qualite {
+    float: left;
+}
+
+.autoevaluation-logos-container .logo-afpa {
+    float: right;
+}
+
+.question-number {
+    margin-top: 5%;
+}
+
+.category-question {
+    margin-top: 3%;
+    font-weight: bold;
+    border: 2px solid white;
+    padding: 1% 0;
 }
 
 #autoEvaluation label {
@@ -221,6 +269,12 @@ label #sidebar_btn:hover{
 
 #autoEvaluation .checkbox {
     margin: 1.5% auto;
+}
+
+#autoEvaluation textarea {
+    resize: none;
+    margin-top: 5%;
+    display: none;
 }
 
 #autoEvaluation h3, #autoEvaluation .answer{
@@ -239,7 +293,7 @@ label #sidebar_btn:hover{
     margin-top: 3vh;
 }
 
-.button-next, .button-previous, #autoeval-button-send {
+button{
     background: white;
     -webkit-border-radius: 20px;
     -moz-border-radius: 20px;
@@ -258,16 +312,28 @@ label #sidebar_btn:hover{
     outline: none;
 }
 
-.button-next, .button-previous {
+.button-next, .button-previous, .button-send {
     display: inline-block;
+    font-size: 4vh;
+}
+
+.button-next {
+    float: right;
+}
+
+.button-previous {
+    float: left;
+}
+
+.button-previous, .button-next, .button-send{
+    margin-top: 5vh;
 }
 
 .button-send {
-    display: block;
-    margin: 5vh auto;
+    float: right;
 }
  
-.button-next:hover, .button-previous:hover, #autoeval-button-send:hover {
+button:hover {
     border: solid #337FED 1px;
     background: #00FFFF;
     background-image: -webkit-linear-gradient(top, #00FFFF, #FFFFFF);
@@ -283,14 +349,22 @@ label #sidebar_btn:hover{
 
 #message {
     display: none;
+    flex-direction: column;
     margin: 5vh auto;
     white-space: break-spaces;
     background: rgba(255,255,255,0.7);
-    padding: 3vh 0;
+    padding: 3vh 2vw;
     font-weight: bold;
+    box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.75);
 }
 
-.button-show-autoeval-result {
+#message .phrase {
+    margin: 2vh auto;
+}
+
+.button-show-autoeval-result, .button-show-administration {
     margin: 3% auto;
 }
 
@@ -298,6 +372,90 @@ label #sidebar_btn:hover{
     height: 50vh;
     width: 90%;
     margin: 0.5vh auto;
+}
+
+.helper-container-start-screen, .helper-container-questions {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #00FFFF;
+    margin: 3vh auto 5vh auto;
+    box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.75);
+    padding: 3vh 3vw;
+    background: radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
+}
+
+.helper-container-questions {
+    display: none;
+}
+
+.helper-content {
+    margin: 2% auto;
+}
+
+#autoevalParams {
+    padding-top: 5vh;
+}
+
+#autoevalParams .autoeval-param-ajoutquestion input, .autoeval-input-edit, #autoevalParams .autoeval-param-ajoutquestion select {
+    width: 35%;
+    height: 5vh;
+}
+
+.autoeval-input-edit {
+    width: 50%;
+}
+
+#autoevalParams .autoeval-param-questions {
+    margin: 5vh auto;
+}
+
+#autoevalParams .tableau {
+    margin: 3vh 10vw;
+    border-top: 2px solid white;
+    padding-top: 3vh;
+}
+
+#autoevalParams .question {
+    font-weight: bold;
+}
+
+#autoevalParams .buttons {
+    margin: 5vh 0;
+}
+
+#autoevalParams button {
+    margin: 0 1.5vw;
+}
+
+#autoevalParams .autoeval-param-ajoutquestion {
+    margin: 10vh auto;
+    display: flex;
+    flex-direction: column;
+}
+
+#autoevalParams .autoeval-param-ajoutquestion input, #autoevalParams .autoeval-param-ajoutquestion select {
+    margin: 5vh auto;
+    width: 75%;
+}
+
+#autoevalParams .autoeval-param-ajoutquestion button {
+    margin: 5vh auto;
+}
+
+#autoevalParams h3 {
+    background-color: black;
+    padding: 2vh 0;
+    margin: 0 10vw;
+    border-radius: 20px;
+}
+
+#autoevalParams .edit-notification {
+    font-weight: bolder;
+    display: block;
+    margin-top: 3vh;
+    color: aqua;
 }
 
 /* Responsive CSS */

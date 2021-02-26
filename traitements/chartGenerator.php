@@ -25,7 +25,7 @@ $nonCompliances = (int) $resultCount2['nb_noncompliance'];
 if($compliances !== 0) {
 
 	$compliancesTab = array(
-		"label"=> "Conformitées", "y"=> $compliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+		"label"=> "Conformités", "y"=> $compliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
 	);
 
 }
@@ -33,7 +33,7 @@ if($compliances !== 0) {
 if($nonCompliances !== 0) {
 
 	$nonCompliancesTab = array(
-		"label"=> "Non-conformitées", "y"=> $nonCompliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+		"label"=> "Non-conformités", "y"=> $nonCompliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
 	);
 
 }

@@ -1,8 +1,25 @@
-function showContent(category, isResponsive) {
+function showContent(category) {
     
     $(document).ready(function() {
 
         let contentWindow = document.getElementById('content');
+
+        if(typeof(autoEvalKeyboardControlsActive) !== "undefined") {
+
+            removeControls();
+
+        }
+
+        if(category == "home") {
+
+            contentWindow.style.opacity = 0;
+            contentWindow.className = "content backgroundImage";
+            contentWindow.innerHTML = "";
+            contentWindow.style.opacity = 1;
+            return;
+
+        }
+
         $.ajax({
 
             type: 'POST',
@@ -11,29 +28,29 @@ function showContent(category, isResponsive) {
             dataType: 'text',
             success: function(data) {
 
-                if(isResponsive == false) {
+                contentWindow.className = "content";
 
-                    contentWindow.style.opacity = 0;
+                contentWindow.style.opacity = 0;
 
-                    setTimeout(function() {
-
-                        contentWindow.innerHTML = data;
-                        contentWindow.style.opacity = 1;
-
-                    }, 500)
-
-                }
-
-                if(isResponsive == true) {
+                setTimeout(function() {
 
                     contentWindow.innerHTML = data;
-                    $('.mobile_nav_items').toggleClass('active');
+                    contentWindow.style.opacity = 1;
+
+                }, 500)
+
+                if ($('#mobileNavDropdown').attr('class').indexOf('active') > -1) {
+
+                    $('#mobileNavDropdown').removeClass('active');
 
                 }
 
             },
+
             error: function(xhr, textStatus, error){
+
                 alert(error);
+
             }
 
         });

@@ -20,7 +20,7 @@ require_once('config/roles.php');
     <div class="form">
       <form class="login-form" id="form-login">
           <h3><a class="navbar-brand" href="<?= $_SERVER['PHP_SELF']; ?>" title="logo AFPA">
-              <img src="assets/logoAFPA.png" alt="Logo AFPA">
+              <img src="assets/logoAFPABlack.png" alt="Logo AFPA">
           </a></h3>
           <div id="error-message"><?php if(isset($errorMsg) && !empty($errorMsg)) { echo $errorMsg; } ?></div>
           <input type="text" placeholder="Adresse email" id="emailInput"/>

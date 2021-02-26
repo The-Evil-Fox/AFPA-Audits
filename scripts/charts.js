@@ -1,7 +1,15 @@
 function createChart(container, title, myData) {
 
+    CanvasJS.addColorSet("redGreen",
+        [//colorSet Array
+        "#33A00D",
+        "#A91C1C"          
+        ]
+    );
+
     let chart = new CanvasJS.Chart(container, {
 
+        colorSet: "redGreen",
         animationEnabled: true,
         exportEnabled: true,
         backgroundColor: null,
@@ -20,10 +28,11 @@ function createChart(container, title, myData) {
         },
         data: [{
             type: "pie",
+            startAngle: 268,
             showInLegend: true,
             legendText: "{label}",
             // indexLabelFontSize: 16,
-            // indexLabel: "{label} - #percent%",
+            indexLabel: "{label} - #percent%",
             highlightEnabled: true,
             explodeOnClick: true,
             dataPoints: myData

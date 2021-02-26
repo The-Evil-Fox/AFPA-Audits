@@ -143,7 +143,7 @@ $('#form-login').submit(function(e) {
           
           if(data == "") {
             
-            window.location.replace('interface.php');
+            window.location.replace('interface.php#home');
           
           } else {
               

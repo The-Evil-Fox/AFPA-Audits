@@ -6,6 +6,10 @@ $questionsAndAnswers = array();
 
 $questionsAndAnswers = array_combine($_POST['Questions'], $_POST['Reponses']);
 
+$tabReasons = $_POST['Raisons'];
+      
+$reasons = array_combine(array_column($tabReasons, 'id'), array_column($tabReasons, 'reason'));
+
 $selectLastEval = $db->prepare('SELECT Evaluation_Number FROM Autoevaluations WHERE User_ID = :user ORDER BY Evaluation_Number DESC LIMIT 1');
 $selectLastEval->bindParam(':user',$_SESSION['ID'], PDO::PARAM_INT);
 $selectLastEval->execute();
@@ -42,8 +46,30 @@ try {
         $user = $_SESSION['ID'];
         $insertEval->execute();
     }
-    
-    $message = "Votre auto-évaluation a bien été validée !"; 
+
+    try {
+
+        if(isset($_POST['Raisons']) && !empty($_POST['Raisons'])) {
+
+            $insertReasons = $db->prepare('INSERT INTO RaisonsNonConformites(User, Question_ID, Reason) VALUES (:user, :question, :reason)');
+            $insertReasons->bindParam(':user', $user);
+            $insertReasons->bindParam(':question', $questionID);
+            $insertReasons->bindParam(':reason', $reason);
+            foreach($reasons as $key=>$value) {
+                $questionID = intval($key);
+                $reason = $value;
+                $user = $_SESSION['ID'];
+                $insertReasons->execute();
+            }
+
+        }
+
+    } catch(Exception $e) {
+
+        echo $e;
+    }
+
+    $message = "<span class='phrase'>Votre auto-évaluation a bien été validée !</span><span class='phrase'>Merci pour votre temps !</span>"; 
 
 } catch(PDOException $e) {
 

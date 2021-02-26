@@ -2,7 +2,7 @@
 
 function dateConvert($date) {
     
-    return (strftime('%d/%m/%Y à %H:%M:%S', strtotime($date)));
+    return (strftime('%d/%m/%Y à %H:%M', strtotime($date)));
     
 }
 

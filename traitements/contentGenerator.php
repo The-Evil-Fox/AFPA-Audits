@@ -37,91 +37,133 @@ if(isset($_POST['monespace'])) {
 
     <?php
 
-    $countQuestions = $db->query('SELECT COUNT(*) AS nb_questions FROM Questions WHERE Active = true');
-    $result = $countQuestions->fetch();
-    $questionsNumber = (int) $result['nb_questions'];
+    $selectEvalInProgress = $db->prepare('SELECT Evaluation_Number FROM Autoevaluations WHERE User_ID = :user AND Completed = false');
+    $selectEvalInProgress->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+    $selectEvalInProgress->execute();
 
-    $selectQuestions = $db->query('SELECT * FROM Questions INNER JOIN CategoriesQuestions ON Questions.Category = CategoriesQuestions.Category WHERE Questions.Active = true ORDER BY Questions.ID ASC');
+    $countResult = $selectEvalInProgress->rowCount();
 
-    $compteur = 1;
+    if($countResult == 0) {
 
-    ?>
+        $evaluationNumber = 1;
 
-    <div id="startContainer">
-        <div class="autoevaluation-logos-container">
-            <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
-            <img class="logo-afpa" src="assets/logoAFPAWhite.png" alt="logo afpa blanc">
-        </div>
-        <div class="form-title">
-            <h3>Auto-évaluation</h3>
-        </div>
-        <div class="helper-container-start-screen">
-            <div class="helper-content">
-                Toutes les questions doivent être réponduent.
+    } else {
+
+        $evalInProgress = $selectEvalInProgress->fetch();
+        $evaluationNumber = $evalInProgress['Evaluation_Number'];
+
+    }
+
+    if($countResult == 1) {
+
+        $countQuestions = $db->query('SELECT COUNT(*) AS nb_questions FROM Questions WHERE Active = true');
+        $result = $countQuestions->fetch();
+        $questionsNumber = (int) $result['nb_questions'];
+
+        // $selectQuestions = $db->query('SELECT * FROM Questions INNER JOIN CategoriesQuestions ON Questions.Category = CategoriesQuestions.Category WHERE Questions.Active = true ORDER BY Questions.ID ASC');
+
+        $selectQuestions = $db->prepare('SELECT q.ID, q.Question, ra.Answer, cq.Name, rnc.Reason FROM Questions q 
+        LEFT JOIN CategoriesQuestions cq ON 
+        q.Category = cq.Category LEFT JOIN ResultatsAutoevaluations ra ON 
+        q.ID = ra.Question LEFT JOIN RaisonsNonConformites rnc ON q.ID = rnc.Question_ID
+        WHERE q.Active = true AND 
+        ra.User_ID = :user AND ra.Evaluation_Number = :evalNumber
+        ORDER BY q.ID ASC');
+        $selectQuestions->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+        $selectQuestions->bindParam(':evalNumber', $evaluationNumber, PDO::PARAM_INT);
+        $selectQuestions->execute();
+
+        $evalNumber = $selectEvalInProgress->fetch();
+
+        $compteur = 1; ?>
+
+        <form method="POST" id="autoEvaluation">
+            <div class="autoevaluation-logos-container">
+                <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
+                <img class="logo-afpa" src="assets/logoAFPAWhite.png" alt="logo afpa blanc">
             </div>
-            <div class="helper-content">
-                Si vous répondez négativement à une question, veuillez insérer la raison dans le champ qui apparaitra.
-            </div>
-            <div class="helper-content">
-                Durée moyenne: 10 à 20 minutes.
-            </div>
-        </div>
-        <button class="button-start" onclick="startEval()">Démarrer</button>
-    </div>
-    <form method="POST" id="autoEvaluation">
-        <div class="autoevaluation-logos-container">
-            <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
-            <img class="logo-afpa" src="assets/logoAFPAWhite.png" alt="logo afpa blanc">
-        </div>
-        <?php while($questions = $selectQuestions->fetch()) { ?>
-            <div class="form-part" id="question<?= $compteur; ?>">
-                <div class="question-number">
-                    <?php if($compteur == $questionsNumber) { echo "Question finale"; } else { echo "Question n°$compteur"; } ?><img src="assets/tooltip.png" alt="infobulle" onmouseover="showTip('helper<?= $compteur; ?>')" onclick="showTip('helper<?= $compteur; ?>')" onmouseout="showTip('helper<?= $compteur; ?>')">
-                </div>
-                <div class="helper-container-questions" id="helper<?= $compteur; ?>">
-                    <div class="helper-content">
-                        Toutes les questions doivent être réponduent.
+            <?php while($questions = $selectQuestions->fetch()) { ?>
+                <div class="form-part" id="question<?= $compteur; ?>">
+                    <div class="question-number">
+                        <?php if($compteur == $questionsNumber) { echo "Question finale"; } else { echo "Question n°$compteur"; } ?><img src="assets/tooltip.png" alt="infobulle" onmouseover="showTip('helper<?= $compteur; ?>')" onclick="showTip('helper<?= $compteur; ?>')" onmouseout="showTip('helper<?= $compteur; ?>')">
                     </div>
-                    <div class="helper-content">
-                        Si vous répondez négativement à une question, veuillez insérer la raison dans le champ qui apparaitra.
+                    <div class="helper-container-questions" id="helper<?= $compteur; ?>">
+                        <div class="helper-content">
+                            Toutes les questions doivent être réponduent.
+                        </div>
+                        <div class="helper-content">
+                            Si vous répondez négativement à une question, veuillez insérer la raison dans le champ qui apparaitra.
+                        </div>
+                        <div class="helper-content">
+                            Durée moyenne: 10 à 20 minutes.
+                        </div>
                     </div>
-                    <div class="helper-content">
-                        Durée moyenne: 10 à 20 minutes.
+                    <div class="category-question">
+                        <?= $questions['Name']; ?>
                     </div>
-                </div>
-                <div class="category-question">
-                    <?= $questions['Name']; ?>
-                </div>
-                <label for="question<?= $compteur; ?>"><?= $questions['Question']; ?> ?</label>
-                <div class="inputGroup">
-                    <div class="checkbox">
-                        <input type="checkbox" name="questions" value="Oui"><span class="answer">Oui</span>
-                    </div>
-                    <div class="checkbox">
-                        <input type="checkbox" onclick="showTextArea('<?= $compteur; ?>')" name="questions" value="Non"><span class="answer">Non</span>
-                    </div>
-                    <textarea name="textAreas" id="<?= $compteur; ?>" placeholder="Pourquoi avez vous répondu non ?" cols="60" rows="5"></textarea>
-                    <input type="hidden" value="<?= $questions['ID']; ?>" name="questionNumber[]" readonly required>
-                    <?php if($compteur == $questionsNumber) { ?>
-                        <div id="message"></div>
-                    <?php } ?>
-                    <div class="form-buttons">
-                        <?php if($compteur > 1) { ?>
-                            <button type="button" class="button-previous" onclick="autoEvalPrevious(<?= $compteur; ?>)"><i class="fas fa-long-arrow-alt-left"></i> Précédent</button>
-                        <?php } ?>
-                        <?php if($compteur < $questionsNumber) { ?>
-                            <button type="button" class="button-next" onclick="autoEvalNext(<?= $compteur; ?>)">Suivant <i class="fas fa-long-arrow-alt-right"></i></button>
-                        <?php } ?>
+                    <label for="question<?= $compteur; ?>"><?= $questions['Question']; ?> ?</label>
+                    <div class="inputGroup">
+                        <div class="radiobox">
+                            <input type="radio" id="<?= $questions['ID']; ?>Oui" name="<?= $questions['ID']; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateAnswer(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Oui" <?php if($questions['Answer'] == "Oui") {?> checked <?php } ?>>
+                            <label for="<?= $questions['ID']; ?>Oui">Oui</label>
+                        </div>
+                        <div class="radiobox">
+                            <input type="radio" id="<?= $questions['ID']; ?>Non" name="<?= $questions['ID']; ?>" value="Non" onchange="showTextArea(<?= $compteur; ?>, true); updateAnswer(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" <?php if($questions['Answer'] == "Non") {?> checked <?php } ?>>
+                            <label for="<?= $questions['ID']; ?>Non">Non</label>
+                        </div>
+                        <textarea <?php if($questions['Answer'] == "Non") {?> class="visible" <?php } ?> name="textAreas" id="<?= $compteur; ?>" placeholder="Pourquoi avez vous répondu non ?" cols="60" rows="5" onchange="addReason(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value)"><?= $questions['Reason']; ?></textarea>
+                        <input type="hidden" value="<?= $questions['ID']; ?>" name="questionNumber[]" readonly required>
                         <?php if($compteur == $questionsNumber) { ?>
-                            <button type="button" class="button-send" id="autoeval-button-send" onclick="sendAutoEval()">Envoyer mon auto-évaluation <i class="fas fa-long-arrow-alt-right"></i></button>
-                            <input type="hidden" id="questionsNumber" value="<?= $compteur; ?>">
+                            <div id="message"></div>
                         <?php } ?>
+                        <div class="form-buttons">
+                            <?php if($compteur > 1) { ?>
+                                <button type="button" class="button-previous" onclick="autoEvalPrevious(<?= $compteur; ?>)"><i class="fas fa-long-arrow-alt-left"></i> Précédent</button>
+                            <?php } ?>
+                            <?php if($compteur < $questionsNumber) { ?>
+                                <button type="button" class="button-next" onclick="autoEvalNext(<?= $compteur; ?>)">Suivant <i class="fas fa-long-arrow-alt-right"></i></button>
+                            <?php } ?>
+                            <?php if($compteur == $questionsNumber) { ?>
+                                <button type="button" class="button-send" id="autoeval-button-send" onclick="sendAutoEval()">Envoyer mon auto-évaluation <i class="fas fa-long-arrow-alt-right"></i></button>
+                                <input type="hidden" id="questionsNumber" value="<?= $compteur; ?>">
+                            <?php } ?>
+                        </div>
                     </div>
                 </div>
+                <?php $compteur++; ?>
+            <?php } ?>
+        </form>
+
+
+    <?php } else { ?>
+    
+        <div id="startContainer">
+            <div class="autoevaluation-logos-container">
+                <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
+                <img class="logo-afpa" src="assets/logoAFPAWhite.png" alt="logo afpa blanc">
             </div>
-            <?php $compteur++; ?>
-        <?php } ?>
-    </form>
+            <div class="form-title">
+                <h3>Auto-évaluation</h3>
+            </div>
+            <div class="helper-container-start-screen">
+                <div class="helper-content">
+                    Toutes les questions doivent être réponduent.
+                </div>
+                <div class="helper-content">
+                    Si vous répondez négativement à une question, veuillez insérer la raison dans le champ qui apparaitra.
+                </div>
+                <div class="helper-content">
+                    Une nouvelle auto-évaluation étant générée à chaque fois, veuillez ne pas quitter le formulaire d'autoévaluation tant que celui-ci n'a pas été envoyé sinon vous perdrez votre progression sur l'autoévaluation en cours.
+                </div>
+                <div class="helper-content">
+                    Durée moyenne: 10 à 20 minutes.
+                </div>
+            </div>
+            <button class="button-start" onclick="startEval()">Démarrer</button>
+        </div>
+
+    <?php } ?>
+
 <?php } ?>
 
 <?php if(isset($_POST['administration'])) {

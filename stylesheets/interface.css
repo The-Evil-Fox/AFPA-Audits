@@ -4,6 +4,10 @@ body{
     font-family: "Arial", sans-serif;
 }
 
+.visible {
+    display: block !important;
+}
+
 header{
     z-index: 3;
     position: fixed;
@@ -209,10 +213,6 @@ label #sidebar_btn:hover{
     text-align: center;
 }
 
-#autoEvaluation {
-    opacity: 0;
-}
-
 #autoEvaluation, #startContainer{
     padding: 5%;
     color: white;
@@ -267,8 +267,10 @@ label #sidebar_btn:hover{
     flex-direction: column;
 }
 
-#autoEvaluation .checkbox {
-    margin: 1.5% auto;
+#autoEvaluation .radiobox {
+    display: flex;
+    flex-direction: row;
+    margin: 1.5vh auto;
 }
 
 #autoEvaluation textarea {
@@ -546,3 +548,4 @@ button:hover {
         display: block;
     }
 }
+

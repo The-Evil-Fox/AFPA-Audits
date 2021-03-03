@@ -27,7 +27,7 @@ require_once('config/roles.php');
   </div>
   <!-- Content window end -->
   <script src="scripts/interface.js"></script>
-  <script src="scripts/chartGenerator.js"></script>
+  <script src="scripts/showResults.js"></script>
   <script src="scripts/contentGenerator.js"></script>
   <script src="scripts/setAvatar.js"></script>
   <script src="scripts/autoEvaluation.js"></script>

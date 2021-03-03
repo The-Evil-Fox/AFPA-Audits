@@ -2,6 +2,13 @@
 
 require_once('../config/dbConnection.php');
 
+if(!isset($_SESSION['ID'])) {
+
+    header('Location: index.php');
+    exit();
+
+}
+
 if(isset($_FILES['inputAvatar']) && !empty($_FILES['inputAvatar']['name'])) {
         
     // Taille max d'une image = 2Mo

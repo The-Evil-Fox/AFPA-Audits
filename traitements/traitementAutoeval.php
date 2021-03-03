@@ -2,34 +2,49 @@
 
 require_once('../config/dbConnection.php');
 
+if(!isset($_SESSION['ID'])) {
+
+    header('Location: index.php');
+    exit();
+
+}
+
 if(isset($_POST['answer']) && !empty($_POST['answer'])) {
 
-    $updateAnswer = $db->prepare('UPDATE ResultatsAutoevaluations SET Answer = :answer WHERE Evaluation_Number = :evalNumber AND Question = :question AND User_ID = :user');
-    $updateAnswer->bindParam(':evalNumber', $_POST['evalNumber'], PDO::PARAM_INT);
-    $updateAnswer->bindParam(':question', $_POST['question'], PDO::PARAM_INT);
-    $updateAnswer->bindParam(':answer', $_POST['answer'], PDO::PARAM_STR);
-    $updateAnswer->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-    $updateAnswer->execute();
+    try {
 
-    if($_POST['answer'] == "Oui") {
+        $updateAnswer = $db->prepare('UPDATE ResultatsAutoevaluations SET Answer = :answer WHERE Evaluation_Number = :evalNumber AND Question = :question AND User_ID = :user');
+        $updateAnswer->bindParam(':evalNumber', $_POST['evalNumber'], PDO::PARAM_INT);
+        $updateAnswer->bindParam(':question', $_POST['question'], PDO::PARAM_INT);
+        $updateAnswer->bindParam(':answer', $_POST['answer'], PDO::PARAM_STR);
+        $updateAnswer->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+        $updateAnswer->execute();
 
-        $checkIfReasonExist1 = $db->prepare('SELECT * FROM RaisonsNonConformites WHERE User = :user AND Question_ID = :question AND Eval_Number = :eval');
-        $checkIfReasonExist1->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-        $checkIfReasonExist1->bindParam(':question', $_POST['question'], PDO::PARAM_INT);
-        $checkIfReasonExist1->bindParam(':eval', $_POST['evalNumber'], PDO::PARAM_INT);
-        $checkIfReasonExist1->execute();
+        if($_POST['answer'] == "Oui") {
 
-        $countReason1 = $checkIfReasonExist1->rowCount();
+            $checkIfReasonExist1 = $db->prepare('SELECT * FROM RaisonsNonConformites WHERE User = :user AND Question_ID = :question AND Eval_Number = :eval');
+            $checkIfReasonExist1->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+            $checkIfReasonExist1->bindParam(':question', $_POST['question'], PDO::PARAM_INT);
+            $checkIfReasonExist1->bindParam(':eval', $_POST['evalNumber'], PDO::PARAM_INT);
+            $checkIfReasonExist1->execute();
 
-        if($countReason1 == 1) {
+            $countReason1 = $checkIfReasonExist1->rowCount();
 
-            $deleteReason = $db->prepare('DELETE FROM RaisonsNonConformites WHERE User = :user AND Question_ID = :question AND Eval_Number = :eval');
-            $deleteReason->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-            $deleteReason->bindParam(':question', $_POST['question'], PDO::PARAM_INT);
-            $deleteReason->bindParam(':eval', $_POST['evalNumber'], PDO::PARAM_INT);
-            $deleteReason->execute();
+            if($countReason1 == 1) {
+
+                $deleteReason = $db->prepare('DELETE FROM RaisonsNonConformites WHERE User = :user AND Question_ID = :question AND Eval_Number = :eval');
+                $deleteReason->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+                $deleteReason->bindParam(':question', $_POST['question'], PDO::PARAM_INT);
+                $deleteReason->bindParam(':eval', $_POST['evalNumber'], PDO::PARAM_INT);
+                $deleteReason->execute();
+
+            }
 
         }
+
+    } catch(PDOException $e) {
+
+        $message = $e;
 
     }
 
@@ -37,110 +52,146 @@ if(isset($_POST['answer']) && !empty($_POST['answer'])) {
 
 if(isset($_POST['reason']) && !empty($_POST['reason'])) {
 
-    $checkIfReasonExist2 = $db->prepare('SELECT * FROM RaisonsNonConformites WHERE User = :user AND Question_ID = :question AND Eval_Number = :eval');
-    $checkIfReasonExist2->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-    $checkIfReasonExist2->bindParam(':question', $_POST['question'], PDO::PARAM_INT);
-    $checkIfReasonExist2->bindParam(':eval', $_POST['evalNumber'], PDO::PARAM_INT);
-    $checkIfReasonExist2->execute();
+    try {
 
-    $countReason2 = $checkIfReasonExist2->rowCount();
+        $checkIfReasonExist2 = $db->prepare('SELECT * FROM RaisonsNonConformites WHERE User = :user AND Question_ID = :question AND Eval_Number = :eval');
+        $checkIfReasonExist2->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+        $checkIfReasonExist2->bindParam(':question', $_POST['question'], PDO::PARAM_INT);
+        $checkIfReasonExist2->bindParam(':eval', $_POST['evalNumber'], PDO::PARAM_INT);
+        $checkIfReasonExist2->execute();
 
-    if($countReason2 == 0) {
+        $countReason2 = $checkIfReasonExist2->rowCount();
 
-        $addReason = $db->prepare('INSERT INTO RaisonsNonConformites (User, Question_ID, Reason, Eval_Number) VALUES (:user, :question, :reason, :eval)');
-        $addReason->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-        $addReason->bindParam(':question', $_POST['question'], PDO::PARAM_INT);
-        $addReason->bindParam(':reason', $_POST['reason'], PDO::PARAM_STR);
-        $addReason->bindParam(':eval', $_POST['evalNumber'], PDO::PARAM_INT);
-        $addReason->execute();
+        if($countReason2 == 0) {
 
-    } else {
+            $addReason = $db->prepare('INSERT INTO RaisonsNonConformites (User, Question_ID, Reason, Eval_Number) VALUES (:user, :question, :reason, :eval)');
+            $addReason->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+            $addReason->bindParam(':question', $_POST['question'], PDO::PARAM_INT);
+            $addReason->bindParam(':reason', $_POST['reason'], PDO::PARAM_STR);
+            $addReason->bindParam(':eval', $_POST['evalNumber'], PDO::PARAM_INT);
+            $addReason->execute();
 
-        $updateReason = $db->prepare('UPDATE RaisonsNonConformites SET Reason = :reason WHERE User = :user AND Question_ID = :question AND Eval_Number = :eval');
-        $updateReason->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-        $updateReason->bindParam(':question', $_POST['question'], PDO::PARAM_INT);
-        $updateReason->bindParam(':reason', $_POST['reason'], PDO::PARAM_STR);
-        $updateReason->bindParam(':eval', $_POST['evalNumber'], PDO::PARAM_INT);
-        $updateReason->execute();
+        } else {
+
+            $updateReason = $db->prepare('UPDATE RaisonsNonConformites SET Reason = :reason WHERE User = :user AND Question_ID = :question AND Eval_Number = :eval');
+            $updateReason->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+            $updateReason->bindParam(':question', $_POST['question'], PDO::PARAM_INT);
+            $updateReason->bindParam(':reason', $_POST['reason'], PDO::PARAM_STR);
+            $updateReason->bindParam(':eval', $_POST['evalNumber'], PDO::PARAM_INT);
+            $updateReason->execute();
+
+        }
+    
+    } catch(PDOException $e) {
+
+        $message = $e;
 
     }
 
 }
 
-// $questionsAndAnswers = array();
+if(isset($_POST['eval']) && !empty($_POST['eval'])) {
 
-// $questionsAndAnswers = array_combine($_POST['Questions'], $_POST['Reponses']);
+    $evalNumber = intval($_POST['eval']);
 
-// $tabReasons = $_POST['Raisons'];
-    
-// $reasons = array_combine(array_column($tabReasons, 'id'), array_column($tabReasons, 'reason'));
+    try {
 
-// $selectLastEval = $db->prepare('SELECT Evaluation_Number FROM Autoevaluations WHERE User_ID = :user ORDER BY Evaluation_Number DESC LIMIT 1');
-// $selectLastEval->bindParam(':user',$_SESSION['ID'], PDO::PARAM_INT);
-// $selectLastEval->execute();
+        $completed = true;
+        $completeAutoEval = $db->prepare('UPDATE Autoevaluations SET Completed = :completed WHERE User_ID = :user AND Evaluation_Number = :eval');
+        $completeAutoEval->bindParam(':completed', $completed, PDO::PARAM_BOOL);
+        $completeAutoEval->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+        $completeAutoEval->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
+        $completeAutoEval->execute();
 
-// $countResult = $selectLastEval->rowCount();
+        $actualite = "c'est autoévalué !";
+        $insertActualite = $db->prepare('INSERT INTO Actualites(User, Actualite, Eval_Number) VALUES(:user, :actualite, :eval)');
+        $insertActualite->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+        $insertActualite->bindParam(':actualite', $actualite, PDO::PARAM_STR);
+        $insertActualite->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
+        $insertActualite->execute();
 
-// if($countResult == 0) {
+        $countCompliances = $db->prepare('SELECT count(*) as nb_compliance FROM ResultatsAutoevaluations WHERE Evaluation_Number = :eval AND Answer = "Oui" AND User_ID = :user');
+        $countCompliances->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
+        $countCompliances->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+        $countCompliances->execute();
 
-//     $evaluationNumber = 1;
+        $resultCount1 = $countCompliances->fetch();
 
-// } else {
+        $compliances = (int) $resultCount1['nb_compliance'];
 
-//     $lastEval = $selectLastEval->fetch();
-//     $evaluationNumber = $lastEval['Evaluation_Number'] + 1;
+        $countNonCompliances = $db->prepare('SELECT count(*) as nb_noncompliance FROM ResultatsAutoevaluations WHERE Evaluation_Number = :eval AND Answer = "Non" AND User_ID = :user');
+        $countNonCompliances->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
+        $countNonCompliances->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+        $countNonCompliances->execute();
 
-// }
+        $resultCount2 = $countNonCompliances->fetch();
 
-// try {
+        $nonCompliances = (int) $resultCount2['nb_noncompliance'];
 
-//     $timeStamp = $db->prepare('INSERT INTO Autoevaluations(Evaluation_Number, User_iD) VALUES(:evalNumber, :user)');
-//     $timeStamp->bindParam(':evalNumber', $evaluationNumber, PDO::PARAM_INT);
-//     $timeStamp->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-//     $timeStamp->execute();
+        if($compliances !== 0) {
 
-//     $insertEval = $db->prepare('INSERT INTO ResultatsAutoevaluations(Evaluation_Number, Question, Answer, User_ID) VALUES(:evalnumber, :question, :answer, :userId)');
-//     $insertEval->bindParam(':evalnumber', $evaluationNumber);
-//     $insertEval->bindParam(':question', $question);
-//     $insertEval->bindParam(':answer', $answer);
-//     $insertEval->bindParam(':userId', $user);
-//     foreach($questionsAndAnswers as $key=>$value) {
-//         // echo "question n°" . $key . "a la réponse :" . $value . " ";
-//         $question = intval($key);
-//         $answer = $value;
-//         $user = $_SESSION['ID'];
-//         $insertEval->execute();
-//     }
+            $compliancesTab = array(
+                "label"=> "Conformités", "y"=> $compliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+            );
 
-//     try {
+        }
 
-//         if(isset($_POST['Raisons']) && !empty($_POST['Raisons'])) {
+        if($nonCompliances !== 0) {
 
-//             $insertReasons = $db->prepare('INSERT INTO RaisonsNonConformites(User, Question_ID, Reason) VALUES (:user, :question, :reason)');
-//             $insertReasons->bindParam(':user', $user);
-//             $insertReasons->bindParam(':question', $questionID);
-//             $insertReasons->bindParam(':reason', $reason);
-//             foreach($reasons as $key=>$value) {
-//                 $questionID = intval($key);
-//                 $reason = $value;
-//                 $user = $_SESSION['ID'];
-//                 $insertReasons->execute();
-//             }
+            $nonCompliancesTab = array(
+                "label"=> "Non-conformités", "y"=> $nonCompliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+            );
 
-//         }
+        }
 
-//     } catch(Exception $e) {
+        $dataPoints = array(
 
-//         echo $e;
-//     }
+        );
 
-//     $message = "<span class='phrase'>Votre auto-évaluation a bien été validée !</span><span class='phrase'>Merci pour votre temps !</span>"; 
+        if(is_array($compliancesTab)) {
 
-// } catch(PDOException $e) {
+            array_push($dataPoints, $compliancesTab);
 
-//     echo $e;
+        }
 
-// }
+        if(is_array($nonCompliancesTab)) {
+
+            array_push($dataPoints, $nonCompliancesTab);
+
+        }
+
+        echo json_encode($dataPoints, JSON_NUMERIC_CHECK);
+
+    } catch(PDOException $e) {
+
+        $message = $e;
+    }
+
+}
+
+if(isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
+
+	$evalNumber = intval($_POST['evalNumber']);
+
+	$getNonCompliances = $db->prepare('SELECT q.Question FROM RaisonsNonConformites rnc JOIN Questions q ON rnc.Question_ID = q.ID WHERE rnc.User = :user AND Eval_Number = :eval');
+	$getNonCompliances->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+	$getNonCompliances->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
+	$getNonCompliances->execute();
+	
+	$compteur = 1;
+	?>
+
+	<h3>Liste des non conformités</h3>
+	<?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
+		
+		<div class="resultat-question">
+			<?= $compteur . ") " . $nonCompliances['Question']; ?>
+		</div>
+	
+		<?php $compteur++; ?>
+	<?php } ?>
+
+<?php }
 
 if(isset($message) && !empty($message)) {
 

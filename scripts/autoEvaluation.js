@@ -13,6 +13,7 @@ function showTip(helperid) {
         helper.style.display = "block";
 
     }
+
 }
 
 function startEval() {
@@ -39,52 +40,6 @@ function startEval() {
 
 }
 
-shortcutsControls = (e) => {
-
-    keyPressed = e.which || e.keyCode;
-
-    questionsNbr = document.getElementById('questionsNumber').value;
-
-    if(keyPressed === 37) {
-        
-        if(page == 1) {
-
-            return false;
-    
-        }
-
-        autoEvalPrevious(page);
-
-    }
-    
-    if(keyPressed === 39) {
-        
-        if(page == questionsNbr) {
-
-            return false;
-    
-        }
-        
-        autoEvalNext(page);
-
-    }
-
-}
-
-addControls();
-
-function addControls() {
-
-    document.body.addEventListener('keydown', shortcutsControls);
-
-}
-
-function removeControls() {
-
-    document.body.removeEventListener('keydown', shortcutsControls);
-
-}
-
 function showTextArea(textAreaId, mustBeDisplayed) {
 
     let questionTextArea = document.getElementById(textAreaId);
@@ -95,7 +50,14 @@ function showTextArea(textAreaId, mustBeDisplayed) {
 
     } else {
 
+        if(questionTextArea.classList.contains('visible')) {
+
+            questionTextArea.className = "";
+
+        }
+
         questionTextArea.style.display = "none";
+        
 
     }
     
@@ -198,98 +160,113 @@ function addReason(evalNumber, question, reason) {
 
 }
 
-// function sendAutoEval() {
+function sendEval(eval) {
 
-//     $(document).ready(function() {
+    $(document).ready(function() {
 
-//         let messageWindow = document.getElementById('message');
-//         let buttonSend = document.getElementById('autoeval-button-send');
-//         let answers = new Array();
+        let content = document.getElementById('content');
+        let messageWindow = document.getElementById('message');
+        let buttonSend = document.getElementById('autoeval-button-send');
+        let allTextAreas = document.getElementsByTagName('textarea');
+    
+        for (var i = 0; i < allTextAreas.length; i++) {
 
-//         $("input:checkbox[name*=questions]:checked").each(function(){
+            let number = i;
+            number++;
 
-//             answers.push($(this).val());
-            
-//         });
+            if (!$("input[name='"+number+"']:checked").val()) {
+                messageWindow.innerHTML = "Veuillez cochez une réponse pour la question numéro " + number + " !";
+                messageWindow.style.display = "flex";
+                messageWindow.style.color = "#FF781B";
+                buttonSend.style.display = "none";
+                setTimeout(() => {
 
-//         let questions = new Array();
+                    messageWindow.style.display = "none";
+                    messageWindow.innerHTML = "";
+                    buttonSend.style.display = "block";
 
-//         var els = document.getElementsByName("questionNumber[]");
+                }, 2500);
+                return false;
+             }
 
-//         for (var i = 0; i < els.length; i++) {
+            if(allTextAreas[i].style.display == "block" && allTextAreas[i].value == "") {
 
-//             questions.push(els[i].value);
+                messageWindow.innerHTML = "Veuillez insérer la raison de votre réponse négative à la question numéro " + number + " !";
+                messageWindow.style.display = "flex";
+                messageWindow.style.color = "#FF781B";
+                buttonSend.style.display = "none";
+                setTimeout(() => {
 
-//         }
+                    messageWindow.style.display = "none";
+                    messageWindow.innerHTML = "";
+                    buttonSend.style.display = "block";
 
-//         let reasons = new Array();
+                }, 2500);
+                return false;
 
-//         $('textarea').each(function() {
+            }
 
-//             if($(this).val() != "") {
+        }
 
-//                 reasons.push({id: $(this).attr('id'), reason: $(this).val()});
+        finalisation = {eval};
 
-//             }
+        $.ajax({
 
-//         })
-
-//         if(answers.length > questions.length) {
-
-//             messageWindow.style.display = "flex";
-//             messageWindow.style.color = "#FF781B";
-//             messageWindow.innerHTML = "<span class='phrase'>Une ou plusieurs questions ont reçu plusieurs réponses !</span>";
-//             // console.log("(vérification) nombre réponses: " + answers.length + "nombre questions :" + questions.length);
-//             buttonSend.style.display = "none";
-//             setTimeout(() => {
-//                 messageWindow.style.display = "none";
-//                 messageWindow.innerHTML = "";
-//                 buttonSend.innerHTML = "Renvoyer mon auto-évaluation";
-//                 buttonSend.style.display = "block";
-//             }, 2500);
-//             return;
-
-//         }
-
-//         if(answers.length < questions.length) {
-
-//             messageWindow.style.display = "flex";
-//             messageWindow.style.color = "#FF781B";
-//             messageWindow.innerHTML = "<span class='phrase'>Une ou plusieurs questions n'ont pas reçu de réponses !</span>";
-//             // console.log("(vérification) nombre réponses: " + answers.length + "nombre questions :" + questions.length);
-//             buttonSend.style.display = "none";
-//             setTimeout(() => {
-//                 messageWindow.style.display = "none";
-//                 messageWindow.innerHTML = "";
-//                 buttonSend.innerHTML = "Renvoyer mon auto-évaluation";
-//                 buttonSend.style.display = "block";
-//             }, 2500);
-//             return;
-
-//         }
-
-//         $.ajax({
-
-//             type: 'POST',
-//             url: 'traitements/traitementAutoeval.php',
-//             data: {Reponses:answers, Questions:questions, Raisons:reasons},
-//             dataType: 'text',
-//             success: function(data) {
+            type: 'POST',
+            url: 'traitements/traitementAutoeval.php',
+            data: finalisation,
+            dataType: 'JSON',
+            success: function(data) {
                 
-//                 buttonSend.style.display = "none";
-//                 messageWindow.style.display = "flex";
-//                 messageWindow.style.color = "green";
-//                 messageWindow.innerHTML = data;
+                content.innerHTML = "<div id='resultat-autoevaluation'></div><div id='tableau-nonconformites'></div>";
 
-//                 // setTimeout(() => {
-//                 //     messageWindow.style.display = "none";
-//                 //     messageWindow.innerHTML = "";
-//                 // }, 2500);
+                createChart("resultat-autoevaluation", "Vos résultats", data);
+
+
+                function hideMessages() {
+
+                    var x = document.getElementsByClassName("canvasjs-chart-credit");
+                    var i;
+                    for (i = 0; i < x.length; i++) {
+                    x[i].style.display = "none";
+                    }
+
+                }
             
-//             }
+                setInterval(() => {
 
-//         });
+                    hideMessages();
+                    
+                }, 15);
+            
+            }
 
-//     });
+        });
 
-// }
+        $.ajax({
+
+            type: 'POST',
+            url: 'traitements/traitementAutoeval.php',
+            data: {
+                'getNonCompliances': true,
+                'evalNumber' : eval 
+            }, 
+            dataType: 'text',
+            success: function(data) {
+
+                setTimeout(() => {
+
+                    document.getElementById('tableau-nonconformites').innerHTML = data;
+
+                }, 250);
+
+            },
+            error: function(xhr, textStatus, error){
+                alert(error);
+            }
+
+        });
+
+    });
+
+}

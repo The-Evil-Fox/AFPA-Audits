@@ -2,58 +2,93 @@
 
 require_once('../config/dbConnection.php');
 
-$evalNumber = intval($_POST['evalNumber']);
+if(!isset($_SESSION['ID'])) {
 
-$countCompliances = $db->prepare('SELECT count(*) as nb_compliance FROM ResultatsAutoevaluations WHERE Evaluation_Number = :eval AND Answer = "Oui" AND User_ID = :user');
-$countCompliances->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
-$countCompliances->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-$countCompliances->execute();
+    header('Location: index.php');
+    exit();
 
-$resultCount1 = $countCompliances->fetch();
+}
 
-$compliances = (int) $resultCount1['nb_compliance'];
+if(!isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
 
-$countNonCompliances = $db->prepare('SELECT count(*) as nb_noncompliance FROM ResultatsAutoevaluations WHERE Evaluation_Number = :eval AND Answer = "Non" AND User_ID = :user');
-$countNonCompliances->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
-$countNonCompliances->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-$countNonCompliances->execute();
+	$evalNumber = intval($_POST['evalNumber']);
 
-$resultCount2 = $countNonCompliances->fetch();
+	$countCompliances = $db->prepare('SELECT count(*) as nb_compliance FROM ResultatsAutoevaluations WHERE Evaluation_Number = :eval AND Answer = "Oui" AND User_ID = :user');
+	$countCompliances->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
+	$countCompliances->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+	$countCompliances->execute();
 
-$nonCompliances = (int) $resultCount2['nb_noncompliance'];
+	$resultCount1 = $countCompliances->fetch();
 
-if($compliances !== 0) {
+	$compliances = (int) $resultCount1['nb_compliance'];
 
-	$compliancesTab = array(
-		"label"=> "Conformités", "y"=> $compliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+	$countNonCompliances = $db->prepare('SELECT count(*) as nb_noncompliance FROM ResultatsAutoevaluations WHERE Evaluation_Number = :eval AND Answer = "Non" AND User_ID = :user');
+	$countNonCompliances->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
+	$countNonCompliances->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+	$countNonCompliances->execute();
+
+	$resultCount2 = $countNonCompliances->fetch();
+
+	$nonCompliances = (int) $resultCount2['nb_noncompliance'];
+
+	if($compliances !== 0) {
+
+		$compliancesTab = array(
+			"label"=> "Conformités", "y"=> $compliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+		);
+
+	}
+
+	if($nonCompliances !== 0) {
+
+		$nonCompliancesTab = array(
+			"label"=> "Non-conformités", "y"=> $nonCompliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+		);
+
+	}
+
+	$dataPoints = array(
+
 	);
 
-}
+	if(is_array($compliancesTab)) {
 
-if($nonCompliances !== 0) {
+		array_push($dataPoints, $compliancesTab);
 
-	$nonCompliancesTab = array(
-		"label"=> "Non-conformités", "y"=> $nonCompliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
-	);
+	}
 
-}
+	if(is_array($nonCompliancesTab)) {
 
-$dataPoints = array(
+		array_push($dataPoints, $nonCompliancesTab);
 
-);
+	}
 
-if(is_array($compliancesTab)) {
-
-	array_push($dataPoints, $compliancesTab);
+	echo json_encode($dataPoints, JSON_NUMERIC_CHECK);
 
 }
 
-if(is_array($nonCompliancesTab)) {
+if(isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
 
-	array_push($dataPoints, $nonCompliancesTab);
+	$evalNumber = intval($_POST['evalNumber']);
 
-}
+	$getNonCompliances = $db->prepare('SELECT q.Question FROM RaisonsNonConformites rnc JOIN Questions q ON rnc.Question_ID = q.ID WHERE rnc.User = :user AND Eval_Number = :eval;');
+	$getNonCompliances->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+	$getNonCompliances->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
+	$getNonCompliances->execute();
+	
+	$compteur = 1;
+	?>
+	
+	<h3>Liste des non conformités</h3>
+	<?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
 
-echo json_encode($dataPoints, JSON_NUMERIC_CHECK);
+		<div class="resultat-question">
+			<?= $compteur . ") " . $nonCompliances['Question']; ?>
+		</div>
+	
+		<?php $compteur++; ?>
+	<?php } ?>
+
+<?php }
 
 ?>

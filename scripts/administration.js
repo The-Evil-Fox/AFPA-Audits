@@ -4,22 +4,6 @@ function showAdministration(category) {
 
         let contentWindow = document.getElementById('content');
 
-        if(typeof(autoEvalKeyboardControlsActive) !== "undefined") {
-
-            removeControls();
-
-        }
-
-        if(category == "home") {
-
-            contentWindow.style.opacity = 0;
-            contentWindow.className = "content backgroundImage";
-            contentWindow.innerHTML = "";
-            contentWindow.style.opacity = 1;
-            return;
-
-        }
-
         $.ajax({
 
             type: 'POST',
@@ -56,6 +40,70 @@ function showAdministration(category) {
 
 }
 
+function showUserResultEval(userID, eval, userName, userFirstName) {
+
+    userData = { 
+        userID,
+        eval 
+    };
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/getUserResultEval.php',
+        data: userData,
+        dataType: 'JSON',
+        success: function(data) {
+
+            content.innerHTML = "<div id='resultat-autoevaluation'></div><div id='tableau-nonconformites'></div>";
+
+            createChart("resultat-autoevaluation", "Résultats de l'autoévaluation de " + userName + " " + userFirstName, data);
+
+
+            function hideMessages() {
+
+                var x = document.getElementsByClassName("canvasjs-chart-credit");
+                var i;
+                for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+                }
+
+            }
+        
+            setInterval(() => {
+
+                hideMessages();
+                
+            }, 15);
+        
+        }
+
+    });
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/getUserResultEval.php',
+        data: {
+            'getNonCompliances': true,
+            'evalNumber' : eval,
+            'user': userID
+        },
+        dataType: 'text',
+        success: function(data) {
+
+            setTimeout(() => {
+
+                document.getElementById('tableau-nonconformites').innerHTML = data;
+
+            }, 250);
+        
+        }
+
+    });
+
+}
+
 function updateStatusRemoveQuestionAutoEval(button, questionID) {
 
     let operation = button.value;
@@ -71,7 +119,7 @@ function updateStatusRemoveQuestionAutoEval(button, questionID) {
     $.ajax({
 
         type: 'POST',
-        url: 'traitements/administrationAutoeval.php',
+        url: 'traitements/traitementAdministrationAutoeval.php',
         data: dataSend,
         dataType: 'text',
         success: function(data) {
@@ -171,7 +219,7 @@ function updateQuestionAutoEval(button, questionID) {
         $.ajax({
 
             type: 'POST',
-            url: 'traitements/administrationAutoeval.php',
+            url: 'traitements/traitementAdministrationAutoeval.php',
             data: dataSend,
             dataType: 'text',
             success: function(data) {
@@ -222,7 +270,7 @@ function addQuestion() {
     $.ajax({
 
         type: 'POST',
-        url: 'traitements/administrationAutoeval.php',
+        url: 'traitements/traitementAdministrationAutoeval.php',
         data: dataSend,
         dataType: 'text',
         success: function(data) {

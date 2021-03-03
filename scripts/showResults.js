@@ -3,9 +3,13 @@ function showChart(evaldate, autoeval_number) {
     $(document).ready(function() {
 
         let contentWindow = document.getElementById('content');
+        
+        if(typeof(evaldate !== "undefined")) {
+            
+            date = evaldate;
 
-        let date = evaldate;
-
+        }
+        
         let evalNumber = autoeval_number;
 
         $.ajax({
@@ -18,21 +22,49 @@ function showChart(evaldate, autoeval_number) {
             dataType: 'JSON',
             success: function(data) {
 
-                contentWindow.innerHTML = "<div id='resultat-autoevaluation'></div>";
+                contentWindow.innerHTML = "<div id='resultat-autoevaluation'></div><div id='tableau-nonconformites'></div>";
 
-                createChart("resultat-autoevaluation", "Autoévaluation du " +date, data);
+                createChart("resultat-autoevaluation", "Autoévaluation du " + date, data);
 
                 function hideMessages() {
+
                     var x = document.getElementsByClassName("canvasjs-chart-credit");
                     var i;
                     for (i = 0; i < x.length; i++) {
                     x[i].style.display = "none";
                     }
+                    
                 }
             
                 setInterval(() => {
+
                     hideMessages();
+
                 }, 15);
+
+            },
+            error: function(xhr, textStatus, error){
+                alert(error);
+            }
+
+        });
+
+        $.ajax({
+
+            type: 'POST',
+            url: 'traitements/chartGenerator.php',
+            data: {
+                'getNonCompliances': true,
+                'evalNumber' : evalNumber 
+            }, 
+            dataType: 'text',
+            success: function(data) {
+
+                setTimeout(() => {
+
+                    document.getElementById('tableau-nonconformites').innerHTML = data;
+
+                }, 250);
 
             },
             error: function(xhr, textStatus, error){

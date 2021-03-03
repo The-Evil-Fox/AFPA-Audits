@@ -2,6 +2,13 @@
 
 require_once('../config/dbConnection.php');
 
+if(!isset($_SESSION['ID'])) {
+
+    header('Location: index.php');
+    exit();
+
+}
+
 if(isset($_POST['operation']) && !empty($_POST['operation'])) {
 
     if(isset($_POST['questionID']) && !empty($_POST['questionID'])) {

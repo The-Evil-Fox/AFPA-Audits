@@ -376,6 +376,17 @@ button:hover {
     margin: 0.5vh auto;
 }
 
+#tableau-nonconformites {
+    background-color: #F16137;
+    text-align: center;
+    padding: 3vh 3vw;
+    margin-top: 5vh;
+}
+
+.resultat-question {
+    margin: 0 auto 2vh auto;
+}
+
 .helper-container-start-screen, .helper-container-questions {
     display: flex;
     flex-direction: column;
@@ -394,6 +405,12 @@ button:hover {
 
 .helper-content {
     margin: 2% auto;
+}
+
+.actu-date {
+    display: block;
+    text-align: right;
+    margin-bottom: 5vh;
 }
 
 #autoevalParams {

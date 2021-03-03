@@ -2,6 +2,13 @@
 
 require_once('../config/dbConnection.php');
 
+if(!isset($_SESSION['ID'])) {
+
+    header('Location: index.php');
+    exit();
+
+}
+
 if(isset($_POST['createNewEval'])) {
 
     $selectLastEval = $db->prepare('SELECT Evaluation_Number FROM Autoevaluations WHERE User_ID = :user AND Completed = true');
@@ -16,8 +23,7 @@ if(isset($_POST['createNewEval'])) {
 
     } else {
 
-        $lastEval = $selectLastEval->fetch();
-        $evaluationNumber = $lastEval['Evaluation_Number'] + 1;
+        $evaluationNumber = ($countResult + 1);
 
     }
 
@@ -69,10 +75,13 @@ if(isset($_POST['createNewEval'])) {
                     </div>
                     <div class="helper-container-questions" id="helper<?= $compteur; ?>">
                         <div class="helper-content">
-                            Toutes les questions doivent être réponduent.
+                            Toutes les questions doivent être répondues.
                         </div>
                         <div class="helper-content">
                             Si vous répondez négativement à une question, veuillez insérer la raison dans le champ qui apparaitra.
+                        </div>
+                        <div class="helper-content">
+                            Les réponses sont sauvegardées automatiquent lors de leurs ajouts et/ou modifications.
                         </div>
                         <div class="helper-content">
                             Durée moyenne: 10 à 20 minutes.
@@ -84,15 +93,14 @@ if(isset($_POST['createNewEval'])) {
                     <label for="question<?= $compteur; ?>"><?= $questions['Question']; ?> ?</label>
                     <div class="inputGroup">
                         <div class="radiobox">
-                            <input type="radio" id="<?= $questions['ID']; ?>Oui" name="<?= $questions['ID']; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateAnswer(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Oui">
+                            <input type="radio" id="<?= $questions['ID']; ?>Oui" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateAnswer(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Oui">
                             <label for="<?= $questions['ID']; ?>Oui">Oui</label>
                         </div>
                         <div class="radiobox">
-                            <input type="radio" id="<?= $questions['ID']; ?>Non" name="<?= $questions['ID']; ?>" value="Non" onchange="showTextArea(<?= $compteur; ?>, true); updateAnswer(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);">
+                            <input type="radio" id="<?= $questions['ID']; ?>Non" name="<?= $compteur; ?>" value="Non" onchange="showTextArea(<?= $compteur; ?>, true); updateAnswer(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);">
                             <label for="<?= $questions['ID']; ?>Non">Non</label>
                         </div>
                         <textarea name="textAreas" id="<?= $compteur; ?>" placeholder="Pourquoi avez-vous répondu non ?" cols="60" rows="5" onchange="addReason(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value)"></textarea>
-                        <input type="hidden" value="<?= $questions['ID']; ?>" name="questionNumber[]" readonly required>
                         <?php if($compteur == $questionsNumber) { ?>
                             <div id="message"></div>
                         <?php } ?>
@@ -104,7 +112,7 @@ if(isset($_POST['createNewEval'])) {
                                 <button type="button" class="button-next" onclick="autoEvalNext(<?= $compteur; ?>)">Suivant <i class="fas fa-long-arrow-alt-right"></i></button>
                             <?php } ?>
                             <?php if($compteur == $questionsNumber) { ?>
-                                <button type="button" class="button-send" id="autoeval-button-send" onclick="sendAutoEval()">Envoyer mon auto-évaluation <i class="fas fa-long-arrow-alt-right"></i></button>
+                                <button type="button" class="button-send" id="autoeval-button-send" onclick="sendEval(<?= $evaluationNumber; ?>)">Finaliser mon auto-évaluation <i class="fas fa-long-arrow-alt-right"></i></button>
                                 <input type="hidden" id="questionsNumber" value="<?= $compteur; ?>">
                             <?php } ?>
                         </div>

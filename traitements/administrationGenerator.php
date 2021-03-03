@@ -1,6 +1,14 @@
 <?php
 
 require_once('../config/dbConnection.php');
+require_once('../config/dateConvert.php');
+
+if(!isset($_SESSION['ID'])) {
+
+    header('Location: index.php');
+    exit();
+
+}
 
 if(isset($_POST['autoEvalution'])) {
 
@@ -38,4 +46,27 @@ if(isset($_POST['autoEvalution'])) {
         </div>
     </div>
 
-<?php } ?>
+<?php }
+
+if(isset($_POST['actualites'])) {
+
+    $reqActus = $db->query('SELECT u.ID, u.Name, u.Firstname,a.Actualite, a.Eval_Number, a.DateAndHour FROM Actualites a 
+    LEFT JOIN Users u ON a.User = u.ID ORDER BY DateAndHour DESC');
+
+    while($actu = $reqActus->fetch()) { ?>
+
+        <?php if($_SESSION['ID'] !== $actu['ID']) { ?>
+            
+            <div class="card text-center">
+                <div class="card-content">
+                    <span class="actu-date"><?= dateConvert($actu['DateAndHour']); ?></span>
+                    <?= $actu['Name'] . " " . $actu['Firstname'] . " " . $actu['Actualite']; ?>
+                    <button class="button-show-autoeval-result" onclick="showUserResultEval(<?= $actu['ID']; ?>, <?= $actu['Eval_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['Firstname']; ?>')">Voir ses résultats</button>
+                </div>
+            </div>
+
+        <?php } ?>
+
+    <?php }
+
+} ?>

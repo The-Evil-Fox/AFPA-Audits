@@ -4,9 +4,16 @@ require_once('../config/dbConnection.php');
 require_once('../config/dateConvert.php');
 require_once('../config/roles.php');
 
+if(!isset($_SESSION['ID'])) {
+
+    header('Location: index.php');
+    exit();
+
+}
+
 if(isset($_POST['monespace'])) { 
 
-    $checkEval = $db->prepare('SELECT Evaluation_Number, DateAndHour FROM Autoevaluations WHERE User_ID = :user GROUP BY DateAndHour, Evaluation_Number ORDER BY DateAndHour DESC');
+    $checkEval = $db->prepare('SELECT Evaluation_Number, DateAndHour FROM Autoevaluations WHERE User_ID = :user AND Completed = true ORDER BY DateAndHour DESC');
     $checkEval->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
     $checkEval->execute();
 
@@ -15,7 +22,7 @@ if(isset($_POST['monespace'])) {
     if($countEvals == 0) { ?>
 
     <div class="card text-center">
-    <div class="card-content">Vous ne vous êtes pas auto-évalué pour le moment !</div>
+        <div class="card-content">Aucun résultats à afficher pour le moment !</div>
     </div>
 
     <?php } else { ?>
@@ -60,15 +67,17 @@ if(isset($_POST['monespace'])) {
         $result = $countQuestions->fetch();
         $questionsNumber = (int) $result['nb_questions'];
 
-        // $selectQuestions = $db->query('SELECT * FROM Questions INNER JOIN CategoriesQuestions ON Questions.Category = CategoriesQuestions.Category WHERE Questions.Active = true ORDER BY Questions.ID ASC');
-
-        $selectQuestions = $db->prepare('SELECT q.ID, q.Question, ra.Answer, cq.Name, rnc.Reason FROM Questions q 
-        LEFT JOIN CategoriesQuestions cq ON 
-        q.Category = cq.Category LEFT JOIN ResultatsAutoevaluations ra ON 
-        q.ID = ra.Question LEFT JOIN RaisonsNonConformites rnc ON q.ID = rnc.Question_ID
-        WHERE q.Active = true AND 
-        ra.User_ID = :user AND ra.Evaluation_Number = :evalNumber
-        ORDER BY q.ID ASC');
+        $selectQuestions = $db->prepare('SELECT q.ID, q.Question, ra.Answer, cq.Name, rnc.Reason 
+        FROM Questions q 
+        LEFT JOIN CategoriesQuestions cq ON q.Category = cq.Category 
+        LEFT JOIN ResultatsAutoevaluations ra ON ra.Question = q.ID  
+                                             AND ra.User_ID = :user
+                                             AND ra.Evaluation_Number = :evalNumber
+        LEFT JOIN RaisonsNonConformites rnc ON rnc.Question_ID = q.ID
+                                           AND rnc.User = :user 
+                                           AND rnc.Eval_Number = :evalNumber
+        WHERE q.Active = true 
+        ORDER BY q.ID;');
         $selectQuestions->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
         $selectQuestions->bindParam(':evalNumber', $evaluationNumber, PDO::PARAM_INT);
         $selectQuestions->execute();
@@ -89,10 +98,13 @@ if(isset($_POST['monespace'])) {
                     </div>
                     <div class="helper-container-questions" id="helper<?= $compteur; ?>">
                         <div class="helper-content">
-                            Toutes les questions doivent être réponduent.
+                            Toutes les questions doivent être répondues.
                         </div>
                         <div class="helper-content">
                             Si vous répondez négativement à une question, veuillez insérer la raison dans le champ qui apparaitra.
+                        </div>
+                        <div class="helper-content">
+                            Les réponses sont sauvegardées automatiquent lors de leurs ajouts et/ou modifications.
                         </div>
                         <div class="helper-content">
                             Durée moyenne: 10 à 20 minutes.
@@ -104,15 +116,14 @@ if(isset($_POST['monespace'])) {
                     <label for="question<?= $compteur; ?>"><?= $questions['Question']; ?> ?</label>
                     <div class="inputGroup">
                         <div class="radiobox">
-                            <input type="radio" id="<?= $questions['ID']; ?>Oui" name="<?= $questions['ID']; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateAnswer(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Oui" <?php if($questions['Answer'] == "Oui") {?> checked <?php } ?>>
+                            <input type="radio" id="<?= $questions['ID']; ?>Oui" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateAnswer(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Oui" <?php if($questions['Answer'] == "Oui") {?> checked <?php } ?>>
                             <label for="<?= $questions['ID']; ?>Oui">Oui</label>
                         </div>
                         <div class="radiobox">
-                            <input type="radio" id="<?= $questions['ID']; ?>Non" name="<?= $questions['ID']; ?>" value="Non" onchange="showTextArea(<?= $compteur; ?>, true); updateAnswer(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" <?php if($questions['Answer'] == "Non") {?> checked <?php } ?>>
+                            <input type="radio" id="<?= $questions['ID']; ?>Non" name="<?= $compteur; ?>" value="Non" onchange="showTextArea(<?= $compteur; ?>, true); updateAnswer(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" <?php if($questions['Answer'] == "Non") {?> checked <?php } ?>>
                             <label for="<?= $questions['ID']; ?>Non">Non</label>
                         </div>
                         <textarea <?php if($questions['Answer'] == "Non") {?> class="visible" <?php } ?> name="textAreas" id="<?= $compteur; ?>" placeholder="Pourquoi avez vous répondu non ?" cols="60" rows="5" onchange="addReason(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value)"><?= $questions['Reason']; ?></textarea>
-                        <input type="hidden" value="<?= $questions['ID']; ?>" name="questionNumber[]" readonly required>
                         <?php if($compteur == $questionsNumber) { ?>
                             <div id="message"></div>
                         <?php } ?>
@@ -124,7 +135,7 @@ if(isset($_POST['monespace'])) {
                                 <button type="button" class="button-next" onclick="autoEvalNext(<?= $compteur; ?>)">Suivant <i class="fas fa-long-arrow-alt-right"></i></button>
                             <?php } ?>
                             <?php if($compteur == $questionsNumber) { ?>
-                                <button type="button" class="button-send" id="autoeval-button-send" onclick="sendAutoEval()">Envoyer mon auto-évaluation <i class="fas fa-long-arrow-alt-right"></i></button>
+                                <button type="button" class="button-send" id="autoeval-button-send" onclick="sendEval(<?= $evaluationNumber; ?>)">Finaliser mon auto-évaluation <i class="fas fa-long-arrow-alt-right"></i></button>
                                 <input type="hidden" id="questionsNumber" value="<?= $compteur; ?>">
                             <?php } ?>
                         </div>
@@ -147,13 +158,13 @@ if(isset($_POST['monespace'])) {
             </div>
             <div class="helper-container-start-screen">
                 <div class="helper-content">
-                    Toutes les questions doivent être réponduent.
+                    Toutes les questions doivent être répondues.
                 </div>
                 <div class="helper-content">
                     Si vous répondez négativement à une question, veuillez insérer la raison dans le champ qui apparaitra.
                 </div>
                 <div class="helper-content">
-                    Une nouvelle auto-évaluation étant générée à chaque fois, veuillez ne pas quitter le formulaire d'autoévaluation tant que celui-ci n'a pas été envoyé sinon vous perdrez votre progression sur l'autoévaluation en cours.
+                    Les réponses sont sauvegardées automatiquent lors de leurs ajouts et/ou modifications.
                 </div>
                 <div class="helper-content">
                     Durée moyenne: 10 à 20 minutes.
@@ -193,6 +204,11 @@ if(isset($_POST['monespace'])) {
 
     <?php } else { ?>
 
+        <div class="card text-center">
+            <div class="card-content">
+                <button class="button-show-administration" onclick="showAdministration('actualites')">Fil d'actualité</button>
+            </div>
+        </div>
         <div class="card text-center">
             <div class="card-content">
                 <button class="button-show-administration" onclick="showAdministration('autoEvalution')">Modifier le questionnaire d'auto-évaluation</button>

@@ -15,6 +15,10 @@ function showContent(category) {
 
             keyPressed = e.which || e.keyCode;
         
+            if(document.getElementById('questionsNumber') == null) {
+                return;
+            }
+
             questionsNbr = document.getElementById('questionsNumber').value;
         
             if(keyPressed === 37) {
@@ -25,7 +29,7 @@ function showContent(category) {
             
                 }
         
-                autoEvalPrevious(page);
+                previousQuestion(page);
         
             }
             
@@ -37,7 +41,7 @@ function showContent(category) {
             
                 }
                 
-                autoEvalNext(page);
+                nextQuestion(page);
         
             }
         
@@ -61,6 +65,13 @@ function showContent(category) {
             dataType: 'text',
             success: function(data) {
 
+                if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                    window.location.replace('index.php');
+                    return;
+                    
+                }
+
                 contentWindow.className = "content";
 
                 contentWindow.style.opacity = 0;
@@ -78,7 +89,7 @@ function showContent(category) {
 
                 }
 
-                if(category == "autoevaluation") {
+                if(category == "autoevaluation" || category == "auditer") {
                     
                     document.body.addEventListener('keydown', autoEvalShortcutsControls);
                     autoEvalKeyboardControlsActive = true;
@@ -87,10 +98,13 @@ function showContent(category) {
 
             },
 
+            
             error: function(xhr, textStatus, error){
 
                 alert(error);
-
+                alert(xhr);
+                alert(textStatus);
+                
             }
 
         });

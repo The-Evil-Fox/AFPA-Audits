@@ -30,7 +30,7 @@ require_once('config/roles.php');
   <script src="scripts/showResults.js"></script>
   <script src="scripts/contentGenerator.js"></script>
   <script src="scripts/setAvatar.js"></script>
-  <script src="scripts/autoEvaluation.js"></script>
+  <script src="scripts/questionnaires.js"></script>
   <script src="scripts/charts.js"></script>
   <?php if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) { ?>
     <script src="scripts/administration.js"></script>

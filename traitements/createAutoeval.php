@@ -4,8 +4,8 @@ require_once('../config/dbConnection.php');
 
 if(!isset($_SESSION['ID'])) {
 
-    header('Location: index.php');
-    exit();
+    echo "Acces refusé ! Veuillez vous connectez !";
+    return;
 
 }
 
@@ -35,13 +35,13 @@ if(isset($_POST['createNewEval'])) {
     $insertNewEval->bindParam(':completed', $completed, PDO::PARAM_BOOL);
     $insertNewEval->execute();
 
-    $countQuestions = $db->query('SELECT COUNT(*) AS nb_questions FROM Questions WHERE Active = true');
+    $countQuestions = $db->query('SELECT COUNT(*) AS nb_questions FROM QuestionsAutoevaluation WHERE Active = true');
     $result = $countQuestions->fetch();
     $questionsNumber = (int) $result['nb_questions'];
 
-    $selectQuestions = $db->query('SELECT * FROM Questions INNER JOIN CategoriesQuestions ON Questions.Category = CategoriesQuestions.Category WHERE Questions.Active = true ORDER BY Questions.ID ASC');
+    $selectQuestions = $db->query('SELECT * FROM QuestionsAutoevaluation INNER JOIN CategoriesQuestionsAutoevaluation ON QuestionsAutoevaluation.Category = CategoriesQuestionsAutoevaluation.Category WHERE QuestionsAutoevaluation.Active = true ORDER BY QuestionsAutoevaluation.ID ASC');
 
-    $selectQuestionsID = $db->query('SELECT Questions.ID FROM Questions INNER JOIN CategoriesQuestions ON Questions.Category = CategoriesQuestions.Category WHERE Questions.Active = true ORDER BY Questions.ID ASC');
+    $selectQuestionsID = $db->query('SELECT QuestionsAutoevaluation.ID FROM QuestionsAutoevaluation WHERE QuestionsAutoevaluation.Active = true ORDER BY QuestionsAutoevaluation.ID ASC');
     $questionID = array();
     
     while($question = $selectQuestionsID->fetch()) {
@@ -84,13 +84,20 @@ if(isset($_POST['createNewEval'])) {
                             Les réponses sont sauvegardées automatiquent lors de leurs ajouts et/ou modifications.
                         </div>
                         <div class="helper-content">
+                            <div class="help-shortcuts">Raccourcis clavier:</div>
+                            <div class="shortcuts">
+                                <span><i class="far fa-caret-square-left"></i>Question précédente</span>
+                                <span><i class="far fa-caret-square-right"></i>Question suivante</span>
+                            </div>
+                        </div>
+                        <div class="helper-content">
                             Durée moyenne: 10 à 20 minutes.
                         </div>
                     </div>
                     <div class="category-question">
                         <?= $questions['Name']; ?>
                     </div>
-                    <label for="question<?= $compteur; ?>"><?= $questions['Question']; ?> ?</label>
+                    <label class="question-label" for="question<?= $compteur; ?>"><?= $questions['Question']; ?></label>
                     <div class="inputGroup">
                         <div class="radiobox">
                             <input type="radio" id="<?= $questions['ID']; ?>Oui" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateAnswer(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Oui">
@@ -100,19 +107,19 @@ if(isset($_POST['createNewEval'])) {
                             <input type="radio" id="<?= $questions['ID']; ?>Non" name="<?= $compteur; ?>" value="Non" onchange="showTextArea(<?= $compteur; ?>, true); updateAnswer(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);">
                             <label for="<?= $questions['ID']; ?>Non">Non</label>
                         </div>
-                        <textarea name="textAreas" id="<?= $compteur; ?>" placeholder="Pourquoi avez-vous répondu non ?" cols="60" rows="5" onchange="addReason(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value)"></textarea>
+                        <textarea name="textAreas" id="<?= $compteur; ?>" placeholder="Pourquoi avez-vous répondu non ?" cols="60" rows="5" onchange="addReason(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value, this.id)"></textarea>
                         <?php if($compteur == $questionsNumber) { ?>
                             <div id="message"></div>
                         <?php } ?>
                         <div class="form-buttons">
                             <?php if($compteur > 1) { ?>
-                                <button type="button" class="button-previous" onclick="autoEvalPrevious(<?= $compteur; ?>)"><i class="fas fa-long-arrow-alt-left"></i> Précédent</button>
+                                <button type="button" class="button-previous" onclick="previousQuestion(<?= $compteur; ?>)"><i class="fas fa-long-arrow-alt-left"></i> Précédent</button>
                             <?php } ?>
                             <?php if($compteur < $questionsNumber) { ?>
-                                <button type="button" class="button-next" onclick="autoEvalNext(<?= $compteur; ?>)">Suivant <i class="fas fa-long-arrow-alt-right"></i></button>
+                                <button type="button" class="button-next" onclick="nextQuestion(<?= $compteur; ?>)">Suivant <i class="fas fa-long-arrow-alt-right"></i></button>
                             <?php } ?>
                             <?php if($compteur == $questionsNumber) { ?>
-                                <button type="button" class="button-send" id="autoeval-button-send" onclick="sendEval(<?= $evaluationNumber; ?>)">Finaliser mon auto-évaluation <i class="fas fa-long-arrow-alt-right"></i></button>
+                                <button type="button" class="button-send" id="autoeval-button-send" onclick="sendEval(<?= $evaluationNumber; ?>)">Finaliser mon auto-évaluation</button>
                                 <input type="hidden" id="questionsNumber" value="<?= $compteur; ?>">
                             <?php } ?>
                         </div>

@@ -22,6 +22,13 @@ function showChart(evaldate, autoeval_number) {
             dataType: 'JSON',
             success: function(data) {
 
+                if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                    window.location.replace('index.php');
+                    return;
+                    
+                }
+
                 contentWindow.innerHTML = "<div id='resultat-autoevaluation'></div><div id='tableau-nonconformites'></div>";
 
                 createChart("resultat-autoevaluation", "Autoévaluation du " + date, data);
@@ -60,15 +67,32 @@ function showChart(evaldate, autoeval_number) {
             dataType: 'text',
             success: function(data) {
 
-                setTimeout(() => {
+                if(data == "Acces refusé ! Veuillez vous connectez !") {
 
-                    document.getElementById('tableau-nonconformites').innerHTML = data;
+                    window.location.replace('index.php');
+                    return;
+                    
+                }
 
-                }, 250);
+                if(data !== "") {
+
+                    setTimeout(() => {
+
+                        document.getElementById('tableau-nonconformites').style.display = "block";
+                        document.getElementById('tableau-nonconformites').innerHTML = data;
+
+                    }, 250);
+
+                }
 
             },
+            
             error: function(xhr, textStatus, error){
+
                 alert(error);
+                alert(xhr);
+                alert(textStatus);
+                
             }
 
         });

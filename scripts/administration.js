@@ -1,3 +1,5 @@
+// Administration content generator
+
 function showAdministration(category) {
     
     $(document).ready(function() {
@@ -30,8 +32,13 @@ function showAdministration(category) {
                 }
 
             },
+            
             error: function(xhr, textStatus, error){
+
                 alert(error);
+                alert(xhr);
+                alert(textStatus);
+                
             }
 
         });
@@ -39,6 +46,8 @@ function showAdministration(category) {
     });
 
 }
+
+// Edit autoeval functions
 
 function showUserResultEval(userID, eval, userName, userFirstName) {
 
@@ -92,12 +101,25 @@ function showUserResultEval(userID, eval, userName, userFirstName) {
         dataType: 'text',
         success: function(data) {
 
-            setTimeout(() => {
+            if(data !== "") {
 
-                document.getElementById('tableau-nonconformites').innerHTML = data;
+                setTimeout(() => {
 
-            }, 250);
+                    document.getElementById('tableau-nonconformites').style.display = "block";
+                    document.getElementById('tableau-nonconformites').innerHTML = data;
+    
+                }, 250);
+
+            }
         
+        },
+
+        error: function(xhr, textStatus, error){
+
+            alert(error);
+            alert(xhr);
+            alert(textStatus);
+            
         }
 
     });
@@ -152,7 +174,11 @@ function updateStatusRemoveQuestionAutoEval(button, questionID) {
 
         },
         error: function(xhr, textStatus, error){
+
             alert(error);
+            alert(xhr);
+            alert(textStatus);
+
         }
 
     });
@@ -233,8 +259,13 @@ function updateQuestionAutoEval(button, questionID) {
                 // }, 250);
 
             },
+
             error: function(xhr, textStatus, error){
+
                 alert(error);
+                alert(xhr);
+                alert(textStatus);
+
             }
 
         });
@@ -245,10 +276,10 @@ function updateQuestionAutoEval(button, questionID) {
 
 function addQuestion() {
 
-    let newQuestion = document.getElementById('newQuestion').value;
-    let categorieQuestion = document.getElementById('categorie').value;
+    newQuestionLabel = document.getElementById('newQuestion').value;
+    categorieQuestion = document.getElementById('categorie').value;
 
-    if(newQuestion == "") {
+    if(newQuestionLabel == "") {
 
         alert('Veuillez insérer votre question !');
         return;
@@ -263,7 +294,7 @@ function addQuestion() {
     }
 
     dataSend = {
-        newQuestion,
+        newQuestionLabel,
         categorieQuestion
     };
 
@@ -275,17 +306,161 @@ function addQuestion() {
         dataType: 'text',
         success: function(data) {
 
-            alert(data);
-
-            // setTimeout(() => {
-        
-            //     alert(data);
-            
-            // }, 250);
+            alert("La question a bien été ajoutée !");
 
         },
+
         error: function(xhr, textStatus, error){
+
             alert(error);
+            alert(xhr);
+            alert(textStatus);
+
+        }
+
+    });
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/administrationGenerator.php',
+        data: "autoEvalution",
+        dataType: 'text',
+        success: function(data) {
+
+            let contentWindow = document.getElementById('content');
+            contentWindow.innerHTML = data;
+
+        },
+
+        error: function(xhr, textStatus, error){
+
+            alert(error);
+            alert(xhr);
+            alert(textStatus);
+            
+        }
+
+    });
+
+}
+
+// Documents functions
+
+function addDocument() {
+
+    $('#addDocument').click();
+    $('#addDocument').on('change', function() {
+    
+        let userfile = $(this).val();
+        if(userfile) {
+            
+            $('#formDocument').submit();
+            
+        }
+    
+    });
+    
+    $('#formDocument').on('submit', function(e) {
+        
+        e.preventDefault();
+
+        $.ajax({
+            type: 'POST',
+            url: 'traitements/traitementDocuments.php',
+            data:  new FormData(this),
+            contentType: false,
+            cache: false,
+            processData:false,
+            
+            success: function(data) {
+
+                if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                    window.location.replace('index.php');
+                    return;
+                    
+                }
+
+                if(data.includes("Erreur:")) {
+                    
+                    alert(data);
+                    
+                } else {
+
+                refreshDocuments();
+
+                }
+    
+            },
+
+            error: function(xhr, textStatus, error){
+
+                alert(error);
+                alert(xhr);
+                alert(textStatus);
+                
+            }
+    
+        });
+
+    });
+
+}
+
+function deleteDocument(action, id, link) {
+
+    operation = {
+        action,
+        id,
+        link
+    };
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/traitementDocuments.php',
+        data: operation,
+        dataType: 'text',
+        success: function(data) {
+
+            refreshDocuments();
+
+        },
+
+        error: function(xhr, textStatus, error){
+
+            alert(error);
+            alert(xhr);
+            alert(textStatus);
+            
+        }
+
+    });
+
+}
+
+function refreshDocuments() {
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/administrationGenerator.php',
+        data: "documents",
+        dataType: 'text',
+        success: function(data) {
+
+            let contentWindow = document.getElementById('content');
+            contentWindow.innerHTML = data;
+
+        },
+
+        error: function(xhr, textStatus, error){
+
+            alert(error);
+            alert(xhr);
+            alert(textStatus);
+            
         }
 
     });

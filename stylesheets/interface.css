@@ -203,7 +203,7 @@ label #sidebar_btn:hover{
     text-align: center;
 }
 
-#autoEvaluation, #resultat-autoevaluation, #startContainer, #autoevalParams {
+#autoEvaluation, #resultat-autoevaluation, #startContainer, #autoevalParams, #tableauDocuments {
     background: rgb(29,37,28);
     background: -moz-radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
     background: -webkit-radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
@@ -233,38 +233,53 @@ label #sidebar_btn:hover{
     vertical-align: bottom;
 }
 
-.autoevaluation-logos-container {
+.autoevaluation-logos-container, .audit-logos-container{
     display: inline-block;
     width: 100%;
 }
 
-.autoevaluation-logos-container .logo-qualite {
+.autoevaluation-logos-container .logo-qualite, .audit-logos-container .logo-qualite {
     float: left;
 }
 
-.autoevaluation-logos-container .logo-afpa {
+.autoevaluation-logos-container .logo-afpa, .audit-logos-container .logo-afpa {
     float: right;
 }
 
+.audit-selectuser-buttonstart-container {
+    display: flex;
+    flex-direction: column;
+    margin: 8vh auto;
+}
+
+.audit-selectuser-buttonstart-container select {
+    margin: 2vh 20%;
+}
+
+.audit-selectuser-buttonstart-container button {
+    margin: 2vh 40%;
+}
+
 .question-number {
-    margin-top: 5%;
+    margin-top: 5vh;
 }
 
 .category-question {
-    margin-top: 3%;
+    margin-top: 3vh;
     font-weight: bold;
     border: 2px solid white;
     padding: 1% 0;
 }
 
-#autoEvaluation label {
-    margin:3.5% auto;
+#autoEvaluation .question-label {
+    margin:3.5vh auto;
     display: block;
 }
 
 #autoEvaluation .inputGroup {
     display: flex;
     flex-direction: column;
+    margin-top: 5vh;
 }
 
 #autoEvaluation .radiobox {
@@ -275,7 +290,7 @@ label #sidebar_btn:hover{
 
 #autoEvaluation textarea {
     resize: none;
-    margin-top: 5%;
+    margin-top: 5vh;
     display: none;
 }
 
@@ -295,12 +310,12 @@ label #sidebar_btn:hover{
     margin-top: 3vh;
 }
 
-button{
+button {
     background: white;
     -webkit-border-radius: 20px;
     -moz-border-radius: 20px;
     border-radius: 20px;
-    font-family: Brush Script MT;
+    font-family: "Arial", sans-serif;
     -webkit-box-shadow: 1px 1px 20px 0 #000000;
     -moz-box-shadow: 1px 1px 20px 0 #000000;
     box-shadow: 1px 1px 20px 0 #000000;
@@ -314,11 +329,6 @@ button{
     outline: none;
 }
 
-.button-next, .button-previous, .button-send {
-    display: inline-block;
-    font-size: 4vh;
-}
-
 .button-next {
     float: right;
 }
@@ -328,7 +338,10 @@ button{
 }
 
 .button-previous, .button-next, .button-send{
+    display: inline-block;
     margin-top: 5vh;
+    font-size: 3vh;
+    width: auto;
 }
 
 .button-send {
@@ -367,7 +380,7 @@ button:hover {
 }
 
 .button-show-autoeval-result, .button-show-administration {
-    margin: 3% auto;
+    margin: 3vh auto;
 }
 
 #resultat-autoevaluation {
@@ -381,6 +394,7 @@ button:hover {
     text-align: center;
     padding: 3vh 3vw;
     margin-top: 5vh;
+    display: none;
 }
 
 .resultat-question {
@@ -407,13 +421,31 @@ button:hover {
     margin: 2% auto;
 }
 
+.helper-content .help-shortcuts {
+    margin-bottom: 2vh;
+}
+
+.helper-content .shortcuts {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.helper-content .shortcuts span {
+    margin: 0.5vh 0;
+}
+
+.helper-content .shortcuts i {
+    margin-right: 1vw;
+}
+
 .actu-date {
     display: block;
     text-align: right;
     margin-bottom: 5vh;
 }
 
-#autoevalParams {
+#autoevalParams, #tableauDocuments {
     padding-top: 5vh;
 }
 
@@ -463,7 +495,7 @@ button:hover {
     margin: 5vh auto;
 }
 
-#autoevalParams h3 {
+#autoevalParams h3, #tableauDocuments h3 {
     background-color: black;
     padding: 2vh 0;
     margin: 0 10vw;
@@ -475,6 +507,38 @@ button:hover {
     display: block;
     margin-top: 3vh;
     color: aqua;
+}
+
+#tableauDocuments .ajout-document {
+    margin: 8vh auto;
+}
+
+#tableauDocuments #formDocument {
+    display: none;
+}
+
+#tableauDocuments .document {
+    display: flex;
+    flex-direction: column;
+    margin: 5vh 8vw;
+    text-align: center;
+    border-top: 2px solid white;
+    padding: 6vh 0;
+}
+
+#tableauDocuments a {
+    color: white;
+    text-decoration: none;
+    margin-left: 1vw;
+}
+
+#tableauDocuments a:hover {
+    color: #00FFFF;
+    text-decoration: underline;
+}
+
+#tableauDocuments .document-buttons {
+    margin: 3vh;
 }
 
 /* Responsive CSS */

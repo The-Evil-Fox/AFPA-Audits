@@ -4,14 +4,56 @@ function showTip(helperid) {
 
     let helper = document.getElementById(helperid);
 
-    if(helper.style.display == "block") {
+    if(helper.style.display == "flex") {
 
         helper.style.display = "none";
 
     } else {
 
-        helper.style.display = "block";
+        helper.style.display = "flex";
 
+    }
+
+}
+
+function startAudit() {
+
+    let contentWindow = document.getElementById('content');
+    let startContainer = document.getElementById('startContainer');
+
+    selectauditedUser = document.getElementById('auditedUser');
+    auditedUserID = selectauditedUser.value;
+
+    if(auditedUserID.length !== 0) {
+
+        startContainer.style.opacity = 0;
+        startContainer.style.display = "none";
+
+        createNewAudit = "createNeAudit";
+
+        dataSend = {
+            createNewAudit,
+            auditedUserID
+        }
+
+        $.ajax({
+
+            type: 'POST',
+            url: 'traitements/createAudit.php',
+            data: dataSend,
+            dataType: 'text',
+            success: function(data) {
+                
+                contentWindow.innerHTML = data;
+
+            }
+
+        });
+    
+    } else {
+
+        alert("Veuillez selectionner un utilisateur à auditer !");
+        return;
     }
 
 }
@@ -63,7 +105,7 @@ function showTextArea(textAreaId, mustBeDisplayed) {
     
 }
 
-function autoEvalPrevious(partNumber) {
+function previousQuestion(partNumber) {
 
     let content = document.getElementById('content');
 
@@ -83,7 +125,7 @@ function autoEvalPrevious(partNumber) {
 
 }
 
-function autoEvalNext(partNumber) {
+function nextQuestion(partNumber) {
 
     let content = document.getElementById('content');
     
@@ -107,11 +149,19 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
 
     textArea = document.getElementById(textAreaID);
 
+    checkReason = "checkReason";
+
     myAnswer = {
         evalNumber,
         question,
         answer
     };
+
+    checkReason = {
+        evalNumber,
+        question,
+        checkReason
+    }
 
     $.ajax({
 
@@ -120,6 +170,13 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
         data: myAnswer,
         dataType: 'text',
         success: function(data) {
+
+            if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                window.location.replace('index.php');
+                return;
+                
+            }
 
             if(textArea.value !== "") {
 
@@ -132,31 +189,91 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
 
             }
 
+        },
+
+        error: function(xhr, textStatus, error){
+
+            alert(error);
+            alert(xhr);
+            alert(textStatus);
+            
         }
 
     });
+
+    if(answer == "Oui") {
+
+        $.ajax({
+
+            type: 'POST',
+            url: 'traitements/traitementAutoeval.php',
+            data: checkReason,
+            dataType: 'text',
+            success: function(data) {
+                
+                if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                    window.location.replace('index.php');
+                    return;
+                    
+                }
+
+            },
+    
+            error: function(xhr, textStatus, error){
+    
+                alert(error);
+                alert(xhr);
+                alert(textStatus);
+                
+            }
+    
+        });
+
+    }
 
 }
 
-function addReason(evalNumber, question, reason) {
+function addReason(evalNumber, question, reason, textareaID) {
 
-    myReason = {
-        evalNumber,
-        question,
-        reason
-    };
+    if(reason.length !== 0) {
 
-    $.ajax({
+        if(reason.length <= 3) {
 
-        type: 'POST',
-        url: 'traitements/traitementAutoeval.php',
-        data: myReason,
-        dataType: 'text',
-        success: function(data) {
-        
+            alert("Le motif n'est pas valable");
+            document.getElementById(textareaID).value = "";
+            return;
+
         }
 
-    });
+
+        myReason = {
+            evalNumber,
+            question,
+            reason
+        };
+
+        $.ajax({
+
+            type: 'POST',
+            url: 'traitements/traitementAutoeval.php',
+            data: myReason,
+            dataType: 'text',
+            success: function(data) {
+            
+            },
+
+            error: function(xhr, textStatus, error){
+
+                alert(error);
+                alert(xhr);
+                alert(textStatus);
+                
+            }
+
+        });
+
+    }
 
 }
 
@@ -218,6 +335,13 @@ function sendEval(eval) {
             dataType: 'JSON',
             success: function(data) {
                 
+                if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                    window.location.replace('index.php');
+                    return;
+                    
+                }
+
                 content.innerHTML = "<div id='resultat-autoevaluation'></div><div id='tableau-nonconformites'></div>";
 
                 createChart("resultat-autoevaluation", "Vos résultats", data);
@@ -239,6 +363,14 @@ function sendEval(eval) {
                     
                 }, 15);
             
+            },
+            
+            error: function(xhr, textStatus, error){
+
+                alert(error);
+                alert(xhr);
+                alert(textStatus);
+                
             }
 
         });
@@ -254,15 +386,32 @@ function sendEval(eval) {
             dataType: 'text',
             success: function(data) {
 
-                setTimeout(() => {
+                if(data == "Acces refusé ! Veuillez vous connectez !") {
 
-                    document.getElementById('tableau-nonconformites').innerHTML = data;
+                    window.location.replace('index.php');
+                    return;
+                    
+                }
 
-                }, 250);
+                if(data !== "") {
+
+                    setTimeout(() => {
+
+                        document.getElementById('tableau-nonconformites').style.display = "block";
+                        document.getElementById('tableau-nonconformites').innerHTML = data;
+
+                    }, 250);
+
+                }
 
             },
+            
             error: function(xhr, textStatus, error){
+
                 alert(error);
+                alert(xhr);
+                alert(textStatus);
+                
             }
 
         });

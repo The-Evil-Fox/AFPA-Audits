@@ -4,8 +4,8 @@ require_once('../config/dbConnection.php');
 
 if(!isset($_SESSION['ID'])) {
 
-    header('Location: index.php');
-    exit();
+    echo "Acces refusé ! Veuillez vous connectez !";
+    return;
 
 }
 

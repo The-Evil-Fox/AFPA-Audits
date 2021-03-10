@@ -4,8 +4,8 @@ require_once('../config/dbConnection.php');
 
 if(!isset($_SESSION['ID'])) {
 
-    header('Location: index.php');
-    exit();
+    echo "Acces refusé ! Veuillez vous connectez !";
+    return;
 
 }
 
@@ -17,7 +17,7 @@ if(isset($_POST['operation']) && !empty($_POST['operation'])) {
 
         if($_POST['operation'] == "delete") {
 
-            $deleteQuestion = $db->prepare('DELETE FROM Questions WHERE ID = :questionID');
+            $deleteQuestion = $db->prepare('DELETE FROM QuestionsAutoevaluation WHERE ID = :questionID');
             $deleteQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
             $deleteQuestion->execute();
 
@@ -29,7 +29,7 @@ if(isset($_POST['operation']) && !empty($_POST['operation'])) {
 
             $active = 0;
 
-            $updateQuestion = $db->prepare('UPDATE Questions SET Active = :active  WHERE ID = :questionID');
+            $updateQuestion = $db->prepare('UPDATE QuestionsAutoevaluation SET Active = :active  WHERE ID = :questionID');
             $updateQuestion->bindParam(':active', $active, PDO::PARAM_BOOL);
             $updateQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
             $updateQuestion->execute();
@@ -42,7 +42,7 @@ if(isset($_POST['operation']) && !empty($_POST['operation'])) {
 
             $active = 1;
 
-            $updateQuestion = $db->prepare('UPDATE Questions SET Active = :active WHERE ID = :questionID');
+            $updateQuestion = $db->prepare('UPDATE QuestionsAutoevaluation SET Active = :active WHERE ID = :questionID');
             $updateQuestion->bindParam(':active', $active, PDO::PARAM_BOOL);
             $updateQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
             $updateQuestion->execute();
@@ -53,7 +53,7 @@ if(isset($_POST['operation']) && !empty($_POST['operation'])) {
 
         if($_POST['operation'] == "edit" && isset($_POST['updatedQuestion']) && !empty($_POST['updatedQuestion'])) {
 
-            $editQuestion = $db->prepare('UPDATE Questions SET Question = :question WHERE ID = :questionID');
+            $editQuestion = $db->prepare('UPDATE QuestionsAutoevaluation SET Question = :question WHERE ID = :questionID');
             $editQuestion->bindParam(':question', $_POST['updatedQuestion'], PDO::PARAM_STR);
             $editQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
             $editQuestion->execute();
@@ -65,18 +65,29 @@ if(isset($_POST['operation']) && !empty($_POST['operation'])) {
 
 }
 
-if(isset($_POST['newQuestion']) && !empty($_POST['newQuestion'])) {
+if(isset($_POST['newQuestionLabel']) && !empty($_POST['newQuestionLabel'])) {
 
     if(isset($_POST['categorieQuestion']) && !empty($_POST['categorieQuestion'])) {
 
-        $addQuestion = $db->prepare('INSERT INTO Questions(User_ID, Question, Category) VALUES (:user, :question, :category)');
-        $addQuestion->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-        $addQuestion->bindParam(':question', $_POST['newQuestion'], PDO::PARAM_STR);
-        $addQuestion->bindParam(':category', $_POST['categorieQuestion'], PDO::PARAM_INT);
-        $addQuestion->execute();
+        try {
 
-        $message = "La question a bien été ajoutée !";
-        
+            $addQuestion = $db->prepare('INSERT INTO QuestionsAutoevaluation(User_ID, Question, Category) VALUES (:user, :question, :category)');
+            $addQuestion->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+            $addQuestion->bindParam(':question', $_POST['newQuestionLabel'], PDO::PARAM_STR);
+            $addQuestion->bindParam(':category', $_POST['categorieQuestion'], PDO::PARAM_INT);
+            $addQuestion->execute();
+
+            $getLastID = $db->query('SELECT ID FROM QuestionsAutoevaluation ORDER BY ID DESC LIMIT 1');
+            $result = $getLastID->fetch();
+            $lastID = (int) $result['ID'];
+            echo $lastID;
+
+        } catch(PDOException $e) {
+
+            echo $e;
+
+        }
+
     }
 
 }

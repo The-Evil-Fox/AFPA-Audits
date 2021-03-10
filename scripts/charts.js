@@ -31,7 +31,7 @@ function createChart(container, title, myData) {
             startAngle: 268,
             showInLegend: true,
             legendText: "{label}",
-            // indexLabelFontSize: 16,
+            indexLabelFontSize: 9,
             indexLabel: "{label} - #percent%",
             highlightEnabled: true,
             explodeOnClick: true,

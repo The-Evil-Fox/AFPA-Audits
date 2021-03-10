@@ -3,7 +3,6 @@ function setAvatar() {
     let avatar = document.getElementById('avatar');
     let useravatar = document.getElementById('avatar').src;
     let avatarResponsive = document.getElementById('avatarResponsive');
-    let useravatarResponsive = document.getElementById('avatarResponsive').src;
 
     $('#inputAvatar').click();
     $('#inputAvatar').on('change', function() {
@@ -31,6 +30,13 @@ function setAvatar() {
             processData:false,
             
             success: function(data) {
+
+                if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                    window.location.replace('index.php');
+                    return;
+                    
+                }
                 
                 if(data.includes("Erreur:")) {
                     
@@ -45,6 +51,14 @@ function setAvatar() {
                     
                 }
     
+            },
+
+            error: function(xhr, textStatus, error){
+
+                alert(error);
+                alert(xhr);
+                alert(textStatus);
+                
             }
     
         });

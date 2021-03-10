@@ -4,8 +4,8 @@ require_once('../config/dbConnection.php');
 
 if(!isset($_SESSION['ID'])) {
 
-    header('Location: index.php');
-    exit();
+    echo "Acces refusé ! Veuillez vous connectez !";
+    return;
 
 }
 
@@ -57,9 +57,13 @@ if(!isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
 
 	}
 
-	if(is_array($nonCompliancesTab)) {
+	if(isset($nonCompliancesTab)) {
 
-		array_push($dataPoints, $nonCompliancesTab);
+		if(is_array($nonCompliancesTab)) {
+
+			array_push($dataPoints, $nonCompliancesTab);
+	
+		}
 
 	}
 
@@ -71,24 +75,37 @@ if(isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
 
 	$evalNumber = intval($_POST['evalNumber']);
 
-	$getNonCompliances = $db->prepare('SELECT q.Question FROM RaisonsNonConformites rnc JOIN Questions q ON rnc.Question_ID = q.ID WHERE rnc.User = :user AND Eval_Number = :eval;');
-	$getNonCompliances->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-	$getNonCompliances->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
-	$getNonCompliances->execute();
-	
-	$compteur = 1;
-	?>
-	
-	<h3>Liste des non conformités</h3>
-	<?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
+	$numberAllNonCompliances = $db->prepare('SELECT COUNT(qa.Question) as nbr_non_compliances FROM RaisonsNonConformitesAutoevaluation rnca JOIN QuestionsAutoevaluation qa ON rnca.Question_ID = qa.ID WHERE rnca.User = :user AND Eval_Number = :eval ');
+    $numberAllNonCompliances->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+	$numberAllNonCompliances->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
+    $numberAllNonCompliances->execute();
 
-		<div class="resultat-question">
-			<?= $compteur . ") " . $nonCompliances['Question']; ?>
-		</div>
-	
-		<?php $compteur++; ?>
-	<?php } ?>
+    $result = $numberAllNonCompliances->fetch();
 
-<?php }
+    $numberNonCompliances = (int) $result['nbr_non_compliances'];
+
+    if($numberNonCompliances !== 0) {
+
+		$getNonCompliances = $db->prepare('SELECT qa.Question FROM RaisonsNonConformitesAutoevaluation rnca JOIN QuestionsAutoevaluation qa ON rnca.Question_ID = qa.ID WHERE rnca.User = :user AND Eval_Number = :eval;');
+		$getNonCompliances->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+		$getNonCompliances->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
+		$getNonCompliances->execute();
+		
+		$compteur = 1;
+		?>
+		
+		<h3>Liste des non conformités</h3>
+		<?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
+
+			<div class="resultat-question">
+				<?= $compteur . ") " . $nonCompliances['Question']; ?>
+			</div>
+		
+			<?php $compteur++; ?>
+		<?php }
+	
+	}
+
+}
 
 ?>

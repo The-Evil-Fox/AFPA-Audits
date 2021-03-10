@@ -157,8 +157,13 @@ $('#form-login').submit(function(e) {
           }
     
         },
+        
         error: function(xhr, textStatus, error){
+
             alert(error);
+            alert(xhr);
+            alert(textStatus);
+            
         }
         
     });

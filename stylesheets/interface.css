@@ -203,7 +203,7 @@ label #sidebar_btn:hover{
     text-align: center;
 }
 
-#autoEvaluation, #resultat-autoevaluation, #startContainer, #autoevalParams, #tableauDocuments {
+#questionnaire, #resultat-autoevaluation, #startContainer, #autoevalParams, #tableauDocuments {
     background: rgb(29,37,28);
     background: -moz-radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
     background: -webkit-radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
@@ -213,7 +213,7 @@ label #sidebar_btn:hover{
     text-align: center;
 }
 
-#autoEvaluation, #startContainer{
+#questionnaire, #startContainer{
     padding: 5%;
     color: white;
     transition: 0.5s;
@@ -271,30 +271,33 @@ label #sidebar_btn:hover{
     padding: 1% 0;
 }
 
-#autoEvaluation .question-label {
+#questionnaire .question-label {
     margin:3.5vh auto;
     display: block;
 }
+#questionnaire .preuves-label {
+    margin-right: 0.5vw;
+}
 
-#autoEvaluation .inputGroup {
+#questionnaire .inputGroup {
     display: flex;
     flex-direction: column;
     margin-top: 5vh;
 }
 
-#autoEvaluation .radiobox {
+#questionnaire .radiobox {
     display: flex;
     flex-direction: row;
     margin: 1.5vh auto;
 }
 
-#autoEvaluation textarea {
+#questionnaire textarea {
     resize: none;
     margin-top: 5vh;
     display: none;
 }
 
-#autoEvaluation h3, #autoEvaluation .answer{
+#questionnaire h3, #questionnaire .answer{
     user-select: none;
 }
 
@@ -379,11 +382,11 @@ button:hover {
     margin: 2vh auto;
 }
 
-.button-show-autoeval-result, .button-show-administration {
+.button-show-autoeval-result, .button-show-audit-result, .button-show-administration {
     margin: 3vh auto;
 }
 
-#resultat-autoevaluation {
+#resultats-autoevaluation, #resultats-audit {
     height: 50vh;
     width: 90%;
     margin: 0.5vh auto;

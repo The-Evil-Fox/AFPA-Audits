@@ -12,7 +12,7 @@ if(!isset($_SESSION['ID'])) {
 
 if(isset($_POST['actualites'])) {
 
-    $reqActus = $db->query('SELECT u.ID, u.Name, u.Firstname,a.Actualite, a.Eval_Number, a.DateAndHour FROM Actualites a 
+    $reqActus = $db->query('SELECT u.ID, u.Name, u.Firstname,a.Actualite, a.Eval_Number, a.Audit_Number, a.DateAndHour FROM Actualites a 
     LEFT JOIN Users u ON a.User = u.ID ORDER BY DateAndHour DESC');
 
     while($actu = $reqActus->fetch()) { ?>
@@ -23,7 +23,12 @@ if(isset($_POST['actualites'])) {
                 <div class="card-content">
                     <span class="actu-date"><?= dateConvert($actu['DateAndHour']); ?></span>
                     <?= $actu['Name'] . " " . $actu['Firstname'] . " " . $actu['Actualite']; ?>
-                    <button class="button-show-autoeval-result" onclick="showUserResultEval(<?= $actu['ID']; ?>, <?= $actu['Eval_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['Firstname']; ?>')">Voir ses résultats</button>
+                    <?php if($actu['Eval_Number'] !== null) { ?>
+                        <button class="button-show-autoeval-result" onclick="showUserResultEval(<?= $actu['ID']; ?>, <?= $actu['Eval_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['Firstname']; ?>')">Voir ses résultats</button>
+                    <?php } ?>
+                    <?php if($actu['Audit_Number'] !== null) {?>
+                        <button class="button-show-audit-result" onclick="showUserResultAudit(<?= $actu['ID']; ?>, <?= $actu['Audit_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['Firstname']; ?>')">Voir ses résultats</button>
+                    <?php } ?> 
                 </div>
             </div>
 

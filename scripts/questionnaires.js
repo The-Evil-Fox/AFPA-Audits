@@ -43,9 +43,24 @@ function startAudit() {
             data: dataSend,
             dataType: 'text',
             success: function(data) {
+
+                if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                    window.location.replace('index.php');
+                    return;
+                    
+                }
                 
                 contentWindow.innerHTML = data;
 
+            },
+
+            error: function(xhr, textStatus, error) {
+    
+                alert(error);
+                alert(xhr);
+                alert(textStatus);
+                
             }
 
         });
@@ -55,6 +70,250 @@ function startAudit() {
         alert("Veuillez selectionner un utilisateur à auditer !");
         return;
     }
+
+}
+
+function updateConstat(user, audit, thematique, constat, textAreaID) {
+
+    textArea = document.getElementById(textAreaID);
+
+    method = "updateConstat";
+
+    newConstat = {
+        method,
+        user,
+        audit,
+        thematique,
+        constat
+    }
+    
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/traitementAudit.php',
+        data: newConstat,
+        dataType: 'text',
+        success: function(data) {
+            
+            if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                window.location.replace('index.php');
+                return;
+                
+            }
+
+            if(constat == "conforme") {
+
+                if(textArea.value !== "") {
+
+                    textArea.value = "";
+                    if(textArea.classList.contains("visible")) {
+
+                        textArea.className = "";
+
+                    }
+
+                }
+
+            }
+
+        },
+
+        error: function(xhr, textStatus, error) {
+
+            alert(error);
+            alert(xhr);
+            alert(textStatus);
+            
+        }
+
+    });
+
+}
+
+function updateObservation(user, audit, thematique, observation, textAreaID) {
+
+    textArea = document.getElementById(textAreaID);
+
+    method = "updateObservation";
+
+    newObservation = {
+        method,
+        user,
+        audit,
+        thematique,
+        observation
+    }
+    
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/traitementAudit.php',
+        data: newObservation,
+        dataType: 'text',
+        success: function(data) {
+            
+            if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                window.location.replace('index.php');
+                return;
+                
+            }
+
+        },
+
+        error: function(xhr, textStatus, error) {
+
+            alert(error);
+            alert(xhr);
+            alert(textStatus);
+            
+        }
+
+    });
+
+}
+
+function sendAudit(audit, user) {
+
+    let content = document.getElementById('content');
+    let messageWindow = document.getElementById('message');
+    let buttonSend = document.getElementById('questionnaire-button-send');
+    let allTextAreas = document.getElementsByTagName('textarea');
+
+    for (var i = 0; i < allTextAreas.length; i++) {
+
+        let number = i;
+        number++;
+
+        if (!$("input[name='"+number+"']:checked").val()) {
+            messageWindow.innerHTML = "Veuillez cochez une réponse pour la question numéro " + number + " !";
+            messageWindow.style.display = "flex";
+            messageWindow.style.color = "#FF781B";
+            buttonSend.style.display = "none";
+            setTimeout(() => {
+
+                messageWindow.style.display = "none";
+                messageWindow.innerHTML = "";
+                buttonSend.style.display = "block";
+
+            }, 2500);
+            return false;
+         }
+
+        if(allTextAreas[i].style.display == "block" && allTextAreas[i].value == "") {
+
+            messageWindow.innerHTML = "Veuillez insérer la raison de votre réponse négative à la question numéro " + number + " !";
+            messageWindow.style.display = "flex";
+            messageWindow.style.color = "#FF781B";
+            buttonSend.style.display = "none";
+            setTimeout(() => {
+
+                messageWindow.style.display = "none";
+                messageWindow.innerHTML = "";
+                buttonSend.style.display = "block";
+
+            }, 2500);
+            return false;
+
+        }
+
+    }
+
+    method = "finaliseAudit";
+
+    finaliseAudit = {
+        method,
+        audit,
+        user
+    }
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/traitementAudit.php',
+        data: finaliseAudit,
+        dataType: 'JSON',
+        success: function(data) {
+            
+            content.innerHTML = "<div id='resultats-audit'></div><div id='tableau-nonconformites'></div>";
+
+            createChart("resultats-audit", "Résultats de l'audit", data);
+
+
+            function hideMessages() {
+
+                var x = document.getElementsByClassName("canvasjs-chart-credit");
+                var i;
+                for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+                }
+
+            }
+        
+            setInterval(() => {
+
+                hideMessages();
+                
+            }, 15);
+
+        },
+
+        error: function(xhr, textStatus, error) {
+
+            alert(error);
+            alert(xhr);
+            alert(textStatus);
+            
+        }
+
+    });
+
+    method = "getNonCompliances";
+
+    finaliseAudit = {
+        method,
+        audit,
+        user
+    }
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/traitementAudit.php',
+        data: finaliseAudit,
+        dataType: 'text',
+        success: function(data) {
+
+            if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                window.location.replace('index.php');
+                return;
+                
+            }
+
+            if(data !== "") {
+
+                setTimeout(() => {
+
+                    document.getElementById('tableau-nonconformites').style.display = "block";
+                    document.getElementById('tableau-nonconformites').innerHTML = data;
+
+                }, 750);
+
+            }
+
+        },
+        
+        error: function(xhr, textStatus, error) {
+
+            alert(error);
+            alert(xhr);
+            alert(textStatus);
+            
+        }
+
+    });
 
 }
 
@@ -74,8 +333,23 @@ function startEval() {
         dataType: 'text',
         success: function(data) {
             
+            if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                window.location.replace('index.php');
+                return;
+                
+            }
+
             contentWindow.innerHTML = data;
 
+        },
+
+        error: function(xhr, textStatus, error) {
+
+            alert(error);
+            alert(xhr);
+            alert(textStatus);
+            
         }
 
     });
@@ -191,7 +465,7 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
 
         },
 
-        error: function(xhr, textStatus, error){
+        error: function(xhr, textStatus, error) {
 
             alert(error);
             alert(xhr);
@@ -220,7 +494,7 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
 
             },
     
-            error: function(xhr, textStatus, error){
+            error: function(xhr, textStatus, error) {
     
                 alert(error);
                 alert(xhr);
@@ -263,7 +537,7 @@ function addReason(evalNumber, question, reason, textareaID) {
             
             },
 
-            error: function(xhr, textStatus, error){
+            error: function(xhr, textStatus, error) {
 
                 alert(error);
                 alert(xhr);
@@ -283,7 +557,7 @@ function sendEval(eval) {
 
         let content = document.getElementById('content');
         let messageWindow = document.getElementById('message');
-        let buttonSend = document.getElementById('autoeval-button-send');
+        let buttonSend = document.getElementById('questionnaire-button-send');
         let allTextAreas = document.getElementsByTagName('textarea');
     
         for (var i = 0; i < allTextAreas.length; i++) {
@@ -342,9 +616,9 @@ function sendEval(eval) {
                     
                 }
 
-                content.innerHTML = "<div id='resultat-autoevaluation'></div><div id='tableau-nonconformites'></div>";
+                content.innerHTML = "<div id='resultats-autoevaluation'></div><div id='tableau-nonconformites'></div>";
 
-                createChart("resultat-autoevaluation", "Vos résultats", data);
+                createChart("resultats-autoevaluation", "Vos résultats", data);
 
 
                 function hideMessages() {
@@ -365,7 +639,7 @@ function sendEval(eval) {
             
             },
             
-            error: function(xhr, textStatus, error){
+            error: function(xhr, textStatus, error) {
 
                 alert(error);
                 alert(xhr);
@@ -400,13 +674,13 @@ function sendEval(eval) {
                         document.getElementById('tableau-nonconformites').style.display = "block";
                         document.getElementById('tableau-nonconformites').innerHTML = data;
 
-                    }, 250);
+                    }, 750);
 
                 }
 
             },
             
-            error: function(xhr, textStatus, error){
+            error: function(xhr, textStatus, error) {
 
                 alert(error);
                 alert(xhr);

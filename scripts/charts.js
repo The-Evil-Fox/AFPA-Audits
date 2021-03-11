@@ -3,7 +3,9 @@ function createChart(container, title, myData) {
     CanvasJS.addColorSet("redGreen",
         [//colorSet Array
         "#76CC63",
-        "#F16137"          
+        "#F16137",
+        "#2FD09F",
+        "#565AB3"         
         ]
     );
 

@@ -1,0 +1,230 @@
+<?php
+
+
+require_once('../config/dbConnection.php');
+
+if(!isset($_SESSION['ID'])) {
+
+    echo "Acces refusé ! Veuillez vous connectez !";
+    return;
+
+}
+
+if(isset($_POST['method']) && !empty($_POST['method'])) {
+
+    if($_POST['method'] == "updateConstat") {
+
+        if(isset($_POST['constat']) && !empty($_POST['constat'])) {
+
+            if(isset($_POST['user']) && !empty($_POST['user']) && isset($_POST['audit']) && !empty($_POST['audit']) && isset($_POST['thematique'])) {
+
+                $updateConstat = $db->prepare('UPDATE ConstatsAudits SET Constat = :constat WHERE User_ID = :user AND Audit_Number = :auditNumber AND Thematique = :thematique');
+                $updateConstat->bindParam(':constat', $_POST['constat'], PDO::PARAM_STR);
+                $updateConstat->bindParam(':user', $_POST['user'], PDO::PARAM_INT);
+                $updateConstat->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
+                $updateConstat->bindParam(':thematique', $_POST['thematique'], PDO::PARAM_INT);
+                $updateConstat->execute();
+
+            }
+
+        }
+
+    } else if($_POST['method'] == "updateObservation") {
+
+        if(isset($_POST['observation']) && !empty($_POST['observation'])) {
+
+            if(isset($_POST['user']) && !empty($_POST['user']) && isset($_POST['audit']) && !empty($_POST['audit']) && isset($_POST['thematique']) && !empty($_POST['thematique'])) {
+
+                $updateObservation = $db->prepare('UPDATE ConstatsAudits SET Observation = :observation WHERE User_ID = :user AND Audit_Number = :auditNumber AND Thematique = :thematique');
+                $updateObservation->bindParam(':observation', $_POST['observation'], PDO::PARAM_STR);
+                $updateObservation->bindParam(':user', $_POST['user'], PDO::PARAM_INT);
+                $updateObservation->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
+                $updateObservation->bindParam(':thematique', $_POST['thematique'], PDO::PARAM_INT);
+                $updateObservation->execute();
+
+            }
+
+        }
+
+    } else if($_POST['method'] == "finaliseAudit") {
+
+        if(isset($_POST['user']) && !empty($_POST['user']) && isset($_POST['audit']) && !empty($_POST['audit'])) {
+
+            $completed = true;
+
+            $finaliseAudit = $db->prepare('UPDATE Audits SET Completed = :completed WHERE Audit_Number = :auditNumber AND User_ID = :user');
+            $finaliseAudit->bindParam(':completed', $completed, PDO::PARAM_BOOL);
+            $finaliseAudit->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
+            $finaliseAudit->bindParam(':user', $_POST['user'], PDO::PARAM_INT);
+            $finaliseAudit->execute();
+
+            $getUserName = $db->prepare('SELECT Name, FirstName FROM Users WHERE ID = :user');
+            $getUserName->bindParam(':user', $_POST['user'], PDO::PARAM_INT);
+            $getUserName->execute();
+
+            $userName = $getUserName->fetch();
+
+            $actualite = "a été auditer !";
+            $insertActualite = $db->prepare('INSERT INTO Actualites(User, Actualite, Audit_Number) VALUES(:user, :actualite, :eval)');
+            $insertActualite->bindParam(':user', $_POST['user'], PDO::PARAM_INT);
+            $insertActualite->bindParam(':actualite', $actualite, PDO::PARAM_STR);
+            $insertActualite->bindParam(':eval', $_POST['audit'], PDO::PARAM_INT);
+            $insertActualite->execute();
+
+            $countCompliances = $db->prepare('SELECT count(*) as nb_compliance FROM ConstatsAudits WHERE Audit_Number = :auditNumber AND Constat = "Conforme" AND User_ID = :user');
+            $countCompliances->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
+            $countCompliances->bindParam(':user', $_POST['user'], PDO::PARAM_INT);
+            $countCompliances->execute();
+
+            $resultCount1 = $countCompliances->fetch();
+
+            $compliances = (int) $resultCount1['nb_compliance'];
+
+            $countNonCompliances = $db->prepare('SELECT count(*) as nb_noncompliance FROM ConstatsAudits WHERE Audit_Number = :auditNumber AND Constat = "NC" AND User_ID = :user');
+            $countNonCompliances->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
+            $countNonCompliances->bindParam(':user', $_POST['user'], PDO::PARAM_INT);
+            $countNonCompliances->execute();
+
+            $resultCount2 = $countNonCompliances->fetch();
+
+            $nonCompliances = (int) $resultCount2['nb_noncompliance'];
+
+            $countNotApplicable = $db->prepare('SELECT count(*) as nb_notapplicable FROM ConstatsAudits WHERE Audit_Number = :auditNumber AND Constat = "NA" AND User_ID = :user');
+            $countNotApplicable->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
+            $countNotApplicable->bindParam(':user', $_POST['user'], PDO::PARAM_INT);
+            $countNotApplicable->execute();
+
+            $resultCount3 = $countNotApplicable->fetch();
+
+            $notApplicables = (int) $resultCount3['nb_notapplicable'];
+
+            $countNDA = $db->prepare('SELECT count(*) as nb_na FROM ConstatsAudits WHERE Audit_Number = :auditNumber AND Constat = "NDA" AND User_ID = :user');
+            $countNDA->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
+            $countNDA->bindParam(':user', $_POST['user'], PDO::PARAM_INT);
+            $countNDA->execute();
+
+            $resultCount4 = $countNDA->fetch();
+
+            $NDA = (int) $resultCount4['nb_na'];
+
+            if($compliances !== 0) {
+
+                $compliancesTab = array(
+                    "label"=> "Conformités", "y"=> $compliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+                );
+    
+            }
+
+            if($nonCompliances !== 0) {
+
+                $nonCompliancesTab = array(
+                    "label"=> "Non-conformités", "y"=> $nonCompliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+                );
+    
+            }
+
+            if($notApplicables !== 0) {
+
+                $notApplicablesTab = array(
+                    "label"=> "Non-applicables", "y"=> $notApplicables, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+                );
+    
+            }
+
+            if($NDA !== 0) {
+
+                $NDATab = array(
+                    "label"=> "NDA", "y"=> $NDA, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+                );
+    
+            }
+
+            $dataPoints = array(
+
+            );
+    
+            if(isset($compliancesTab)) {
+            
+                if(is_array($compliancesTab)) {
+    
+                    array_push($dataPoints, $compliancesTab);
+    
+                }
+    
+            }
+    
+            if(isset($nonCompliancesTab)) {
+    
+                if(is_array($nonCompliancesTab)) {
+    
+                    array_push($dataPoints, $nonCompliancesTab);
+        
+                }
+    
+            }
+
+            if(isset($notApplicablesTab)) {
+            
+                if(is_array($notApplicablesTab)) {
+    
+                    array_push($dataPoints, $notApplicablesTab);
+    
+                }
+    
+            }
+
+            if(isset($NDATab)) {
+            
+                if(is_array($NDATab)) {
+    
+                    array_push($dataPoints, $NDATab);
+    
+                }
+    
+            }
+    
+            echo json_encode($dataPoints, JSON_NUMERIC_CHECK);
+
+        }
+
+    } else if($_POST['method'] == "getNonCompliances") {
+
+        if(isset($_POST['user']) && !empty($_POST['user']) && isset($_POST['audit']) && !empty($_POST['audit'])) {
+
+            $numberAllNonCompliances = $db->prepare("SELECT COUNT(ca.Constat) as nbr_non_compliances FROM ConstatsAudits ca JOIN QuestionsAudit qa ON ca.Thematique = qa.ID WHERE ca.User_ID = :user AND Audit_Number = :auditNumber AND ca.Constat = 'NC'");
+            $numberAllNonCompliances->bindParam(':user', $_POST['user'], PDO::PARAM_INT);
+            $numberAllNonCompliances->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
+            $numberAllNonCompliances->execute();
+
+            $result = $numberAllNonCompliances->fetch();
+
+            $numberNonCompliances = (int) $result['nbr_non_compliances'];
+
+            if($numberNonCompliances !== 0) {
+
+                $getNonCompliances = $db->prepare("SELECT qa.Thematique FROM ConstatsAudits ca JOIN QuestionsAudit qa ON ca.Thematique = qa.ID WHERE ca.User_ID = :user AND Audit_Number = :auditNumber AND Constat = 'NC'");
+                $getNonCompliances->bindParam(':user', $_POST['user'], PDO::PARAM_INT);
+                $getNonCompliances->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
+                $getNonCompliances->execute();
+                
+                $compteur = 1;
+
+            } ?>
+
+            <h3>Liste des non conformités</h3>
+            <?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
+                
+                <div class="resultat-question">
+                    <?= $compteur . ") " . $nonCompliances['Thematique']; ?>
+                </div>
+            
+                <?php $compteur++; ?>
+            <?php }
+
+        }
+
+    }
+
+}
+
+?>

@@ -29,9 +29,9 @@ function showChart(evaldate, autoeval_number) {
                     
                 }
 
-                contentWindow.innerHTML = "<div id='resultat-autoevaluation'></div><div id='tableau-nonconformites'></div>";
+                contentWindow.innerHTML = "<div id='resultats-autoevaluation'></div><div id='tableau-nonconformites'></div>";
 
-                createChart("resultat-autoevaluation", "Autoévaluation du " + date, data);
+                createChart("resultats-autoevaluation", "Autoévaluation du " + date, data);
 
                 function hideMessages() {
 

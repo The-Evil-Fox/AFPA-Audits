@@ -63,7 +63,7 @@ if(isset($_POST['createNewEval'])) {
 
     $compteur = 1; ?>
 
-        <form method="POST" id="autoEvaluation">
+        <form method="POST" id="questionnaire">
             <div class="autoevaluation-logos-container">
                 <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
                 <img class="logo-afpa" src="assets/logoAFPAWhite.png" alt="logo afpa blanc">
@@ -71,7 +71,7 @@ if(isset($_POST['createNewEval'])) {
             <?php while($questions = $selectQuestions->fetch()) { ?>
                 <div class="form-part" id="question<?= $compteur; ?>">
                     <div class="question-number">
-                        <?php if($compteur == $questionsNumber) { echo "Question finale"; } else { echo "Question n°$compteur"; } ?><img src="assets/tooltip.png" alt="infobulle" onmouseover="showTip('helper<?= $compteur; ?>')" onclick="showTip('helper<?= $compteur; ?>')" onmouseout="showTip('helper<?= $compteur; ?>')">
+                        <?php if($compteur == $questionsNumber) { echo "Question finale"; } else { echo "Question n°$compteur"; } ?><img src="assets/tooltip.png" alt="infobulle" title="cliquez ici pour afficher l'aide" onclick="showTip('helper<?= $compteur; ?>')">
                     </div>
                     <div class="helper-container-questions" id="helper<?= $compteur; ?>">
                         <div class="helper-content">
@@ -97,7 +97,7 @@ if(isset($_POST['createNewEval'])) {
                     <div class="category-question">
                         <?= $questions['Name']; ?>
                     </div>
-                    <label class="question-label" for="question<?= $compteur; ?>"><?= $questions['Question']; ?></label>
+                    <span class="question-label"><?= $questions['Question']; ?></label>
                     <div class="inputGroup">
                         <div class="radiobox">
                             <input type="radio" id="<?= $questions['ID']; ?>Oui" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateAnswer(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Oui">
@@ -119,7 +119,7 @@ if(isset($_POST['createNewEval'])) {
                                 <button type="button" class="button-next" onclick="nextQuestion(<?= $compteur; ?>)">Suivant <i class="fas fa-long-arrow-alt-right"></i></button>
                             <?php } ?>
                             <?php if($compteur == $questionsNumber) { ?>
-                                <button type="button" class="button-send" id="autoeval-button-send" onclick="sendEval(<?= $evaluationNumber; ?>)">Finaliser mon auto-évaluation</button>
+                                <button type="button" class="button-send" id="questionnaire-button-send" onclick="sendEval(<?= $evaluationNumber; ?>)">Finaliser mon auto-évaluation</button>
                                 <input type="hidden" id="questionsNumber" value="<?= $compteur; ?>">
                             <?php } ?>
                         </div>

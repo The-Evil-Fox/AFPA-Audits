@@ -64,9 +64,9 @@ function showUserResultEval(userID, eval, userName, userFirstName) {
         dataType: 'JSON',
         success: function(data) {
 
-            content.innerHTML = "<div id='resultat-autoevaluation'></div><div id='tableau-nonconformites'></div>";
+            content.innerHTML = "<div id='graphique-resultats'></div><div id='tableau-graphique'></div>";
 
-            createChart("resultat-autoevaluation", "Résultats de l'autoévaluation de " + userName + " " + userFirstName, data);
+            createChart("graphique-resultats", "Résultats de l'autoévaluation de " + userName + " " + userFirstName, data);
 
 
             function hideMessages() {
@@ -96,7 +96,7 @@ function showUserResultEval(userID, eval, userName, userFirstName) {
         data: {
             'getNonCompliances': true,
             'evalNumber' : eval,
-            'user': userID
+            'userID': userID
         },
         dataType: 'text',
         success: function(data) {
@@ -105,10 +105,87 @@ function showUserResultEval(userID, eval, userName, userFirstName) {
 
                 setTimeout(() => {
 
-                    document.getElementById('tableau-nonconformites').style.display = "block";
-                    document.getElementById('tableau-nonconformites').innerHTML = data;
+                    document.getElementById('tableau-graphique').style.display = "block";
+                    document.getElementById('tableau-graphique').innerHTML = data;
     
-                }, 250);
+                }, 750);
+
+            }
+        
+        },
+
+        error: function(xhr, textStatus, error){
+
+            alert(error);
+            alert(xhr);
+            alert(textStatus);
+            
+        }
+
+    });
+
+}
+
+function showUserResultAudit(userID, audit, userName, userFirstName) {
+
+    userData = { 
+        userID,
+        audit 
+    };
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/getUserResultAudit.php',
+        data: userData,
+        dataType: 'JSON',
+        success: function(data) {
+
+            content.innerHTML = "<div id='graphique-resultats'></div><div id='tableau-graphique'></div>";
+
+            createChart("graphique-resultats", "Résultats de l'audit de " + userName + " " + userFirstName, data);
+
+
+            function hideMessages() {
+
+                var x = document.getElementsByClassName("canvasjs-chart-credit");
+                var i;
+                for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+                }
+
+            }
+        
+            setInterval(() => {
+
+                hideMessages();
+                
+            }, 15);
+        
+        }
+
+    });
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/getUserResultAudit.php',
+        data: {
+            'getNonCompliances': true,
+            'audit' : audit,
+            'userID': userID
+        },
+        dataType: 'text',
+        success: function(data) {
+
+            if(data !== "") {
+
+                setTimeout(() => {
+
+                    document.getElementById('tableau-graphique').style.display = "block";
+                    document.getElementById('tableau-graphique').innerHTML = data;
+    
+                }, 750);
 
             }
         

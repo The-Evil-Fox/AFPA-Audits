@@ -73,7 +73,7 @@ function startAudit() {
 
 }
 
-function updateConstat(user, audit, thematique, constat, textAreaID) {
+function updateConstat(userID, audit, thematique, constat, textAreaID) {
 
     textArea = document.getElementById(textAreaID);
 
@@ -81,7 +81,7 @@ function updateConstat(user, audit, thematique, constat, textAreaID) {
 
     newConstat = {
         method,
-        user,
+        userID,
         audit,
         thematique,
         constat
@@ -102,7 +102,7 @@ function updateConstat(user, audit, thematique, constat, textAreaID) {
                 
             }
 
-            if(constat == "conforme") {
+            if(constat == "Conforme") {
 
                 if(textArea.value !== "") {
 
@@ -114,6 +114,12 @@ function updateConstat(user, audit, thematique, constat, textAreaID) {
                     }
 
                 }
+
+            }
+
+            if(constat !== "Conforme") {
+
+                $('#'+textAreaID).focus();
 
             }
 
@@ -131,7 +137,15 @@ function updateConstat(user, audit, thematique, constat, textAreaID) {
 
 }
 
-function updateObservation(user, audit, thematique, observation, textAreaID) {
+function updateObservation(userID, audit, thematique, observation, textAreaID) {
+
+    if(observation.length <= 3) {
+
+        alert("Le motif n'est pas valable");
+        document.getElementById(textareaID).value = "";
+        return;
+
+    }
 
     textArea = document.getElementById(textAreaID);
 
@@ -139,7 +153,7 @@ function updateObservation(user, audit, thematique, observation, textAreaID) {
 
     newObservation = {
         method,
-        user,
+        userID,
         audit,
         thematique,
         observation
@@ -160,6 +174,8 @@ function updateObservation(user, audit, thematique, observation, textAreaID) {
                 
             }
 
+            $('#'+textAreaID).focus();
+
         },
 
         error: function(xhr, textStatus, error) {
@@ -174,7 +190,7 @@ function updateObservation(user, audit, thematique, observation, textAreaID) {
 
 }
 
-function sendAudit(audit, user) {
+function sendAudit(audit, userID) {
 
     let content = document.getElementById('content');
     let messageWindow = document.getElementById('message');
@@ -225,7 +241,7 @@ function sendAudit(audit, user) {
     finaliseAudit = {
         method,
         audit,
-        user
+        userID
     }
 
     $.ajax({
@@ -236,9 +252,9 @@ function sendAudit(audit, user) {
         dataType: 'JSON',
         success: function(data) {
             
-            content.innerHTML = "<div id='resultats-audit'></div><div id='tableau-nonconformites'></div>";
+            content.innerHTML = "<div id='graphique-resultats'></div><div id='tableau-graphique'></div>";
 
-            createChart("resultats-audit", "Résultats de l'audit", data);
+            createChart("graphique-resultats", "Résultats de l'audit", data);
 
 
             function hideMessages() {
@@ -274,7 +290,7 @@ function sendAudit(audit, user) {
     finaliseAudit = {
         method,
         audit,
-        user
+        userID
     }
 
     $.ajax({
@@ -296,8 +312,8 @@ function sendAudit(audit, user) {
 
                 setTimeout(() => {
 
-                    document.getElementById('tableau-nonconformites').style.display = "block";
-                    document.getElementById('tableau-nonconformites').innerHTML = data;
+                    document.getElementById('tableau-graphique').style.display = "block";
+                    document.getElementById('tableau-graphique').innerHTML = data;
 
                 }, 750);
 
@@ -463,6 +479,12 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
 
             }
 
+            if(answer == "Non") {
+
+                $('#'+textAreaID).focus();
+
+            }
+
         },
 
         error: function(xhr, textStatus, error) {
@@ -510,44 +532,40 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
 
 function addReason(evalNumber, question, reason, textareaID) {
 
-    if(reason.length !== 0) {
+    if(reason.length <= 3) {
 
-        if(reason.length <= 3) {
-
-            alert("Le motif n'est pas valable");
-            document.getElementById(textareaID).value = "";
-            return;
-
-        }
-
-
-        myReason = {
-            evalNumber,
-            question,
-            reason
-        };
-
-        $.ajax({
-
-            type: 'POST',
-            url: 'traitements/traitementAutoeval.php',
-            data: myReason,
-            dataType: 'text',
-            success: function(data) {
-            
-            },
-
-            error: function(xhr, textStatus, error) {
-
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
-                
-            }
-
-        });
+        alert("Le motif n'est pas valable");
+        document.getElementById(textareaID).value = "";
+        return;
 
     }
+
+
+    myReason = {
+        evalNumber,
+        question,
+        reason
+    };
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/traitementAutoeval.php',
+        data: myReason,
+        dataType: 'text',
+        success: function(data) {
+        
+        },
+
+        error: function(xhr, textStatus, error) {
+
+            alert(error);
+            alert(xhr);
+            alert(textStatus);
+            
+        }
+
+    });
 
 }
 
@@ -616,9 +634,9 @@ function sendEval(eval) {
                     
                 }
 
-                content.innerHTML = "<div id='resultats-autoevaluation'></div><div id='tableau-nonconformites'></div>";
+                content.innerHTML = "<div id='graphique-resultats'></div><div id='tableau-graphique'></div>";
 
-                createChart("resultats-autoevaluation", "Vos résultats", data);
+                createChart("graphique-resultats", "Vos résultats", data);
 
 
                 function hideMessages() {
@@ -671,8 +689,8 @@ function sendEval(eval) {
 
                     setTimeout(() => {
 
-                        document.getElementById('tableau-nonconformites').style.display = "block";
-                        document.getElementById('tableau-nonconformites').innerHTML = data;
+                        document.getElementById('tableau-graphique').style.display = "block";
+                        document.getElementById('tableau-graphique').innerHTML = data;
 
                     }, 750);
 

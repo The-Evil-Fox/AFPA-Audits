@@ -29,9 +29,9 @@ function showChart(evaldate, autoeval_number) {
                     
                 }
 
-                contentWindow.innerHTML = "<div id='resultats-autoevaluation'></div><div id='tableau-nonconformites'></div>";
+                contentWindow.innerHTML = "<div id='graphique-resultats'></div><div id='tableau-graphique'></div>";
 
-                createChart("resultats-autoevaluation", "Autoévaluation du " + date, data);
+                createChart("graphique-resultats", "Autoévaluation du " + date, data);
 
                 function hideMessages() {
 
@@ -78,8 +78,8 @@ function showChart(evaldate, autoeval_number) {
 
                     setTimeout(() => {
 
-                        document.getElementById('tableau-nonconformites').style.display = "block";
-                        document.getElementById('tableau-nonconformites').innerHTML = data;
+                        document.getElementById('tableau-graphique').style.display = "block";
+                        document.getElementById('tableau-graphique').innerHTML = data;
 
                     }, 250);
 

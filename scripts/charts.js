@@ -4,8 +4,8 @@ function createChart(container, title, myData) {
         [//colorSet Array
         "#76CC63",
         "#F16137",
-        "#2FD09F",
-        "#565AB3"         
+        "#308B7C",
+        "#2F4A72"         
         ]
     );
 

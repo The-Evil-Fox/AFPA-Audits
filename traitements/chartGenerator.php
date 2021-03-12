@@ -94,17 +94,19 @@ if(isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
 		$compteur = 1;
 		?>
 		
-		<h3>Liste des non conformités</h3>
-		<?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
-
-			<div class="resultat-question">
-				<?= $compteur . ") " . $nonCompliances['Question']; ?>
-			</div>
-		
-			<?php $compteur++; ?>
-		<?php }
+		<h3>Liste des non-conformités</h3>
+        <div class="non-conformites">
+            <?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
+                
+                <div class="resultat-question">
+                    <?= $compteur . ") " . $nonCompliances['Question']; ?>
+                </div>
+            
+                <?php $compteur++; ?>
+            <?php } ?>
+        </div>
 	
-	}
+	<?php }
 
 }
 

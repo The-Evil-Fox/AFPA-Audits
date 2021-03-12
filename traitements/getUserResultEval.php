@@ -9,7 +9,7 @@ if(!isset($_SESSION['ID'])) {
 
 }
 
-if(isset($_POST['userID']) && isset($_POST['eval']) && !isset($_POST['getNonCompliances'])) {
+if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['eval']) && !empty($_POST['eval']) && !isset($_POST['getNonCompliances'])) {
 
     $user = intval($_POST['userID']);
     $evalNumber = intval($_POST['eval']);
@@ -72,10 +72,10 @@ if(isset($_POST['userID']) && isset($_POST['eval']) && !isset($_POST['getNonComp
 
 }
 
-if(isset($_POST['user']) && isset($_POST['evalNumber']) && isset($_POST['getNonCompliances'])) {
+if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['evalNumber']) && !empty($_POST['evalNumber']) && isset($_POST['getNonCompliances'])) {
 
     $evalNumber = intval($_POST['evalNumber']);
-    $user = intval($_POST['user']);
+    $user = intval($_POST['userID']);
 
     $numberAllNonCompliances = $db->prepare('SELECT COUNT(qa.Question) as nbr_non_compliances FROM RaisonsNonConformitesAutoevaluation rnca JOIN QuestionsAutoevaluation qa ON rnca.Question_ID = qa.ID WHERE rnca.User = :user AND Eval_Number = :eval ');
     $numberAllNonCompliances->bindParam(':user', $user, PDO::PARAM_INT);
@@ -97,14 +97,17 @@ if(isset($_POST['user']) && isset($_POST['evalNumber']) && isset($_POST['getNonC
 
         ?>
 
-        <h3>Liste des non conformités</h3>
-        <?php while($userNonCompliances = $getUserNonCompliances->fetch()) { ?>
-            <div class="resultat-question">
-                <?= $compteur . ") " . $userNonCompliances['Question']; ?>
-            </div>
-        
-            <?php $compteur++; ?>
-        <?php } ?>
+        <h3>Liste des non-conformités</h3>
+        <div class="non-conformites">
+            <?php while($nonCompliances = $getUserNonCompliances->fetch()) { ?>
+                
+                <div class="resultat-question">
+                    <?= $compteur . ") " . $nonCompliances['Question']; ?>
+                </div>
+            
+                <?php $compteur++; ?>
+            <?php } ?>
+        </div>
 
     <?php }
 

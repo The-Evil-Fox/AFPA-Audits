@@ -203,7 +203,7 @@ label #sidebar_btn:hover{
     text-align: center;
 }
 
-#questionnaire, #resultat-autoevaluation, #startContainer, #autoevalParams, #tableauDocuments {
+#questionnaire, #resultat-autoevaluation, #startContainer, #autoevalParams, #tableauDocuments, #tableau-graphique {
     background: rgb(29,37,28);
     background: -moz-radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
     background: -webkit-radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
@@ -386,18 +386,35 @@ button:hover {
     margin: 3vh auto;
 }
 
-#resultats-autoevaluation, #resultats-audit {
+#graphique-resultats {
     height: 50vh;
     width: 90%;
     margin: 0.5vh auto;
 }
 
-#tableau-nonconformites {
-    background-color: #F16137;
-    text-align: center;
+#tableau-graphique {
     padding: 3vh 3vw;
+    border: none;
     margin-top: 5vh;
     display: none;
+}
+
+#tableau-graphique .non-conformites, #tableau-graphique .non-applicables, #tableau-graphique .NDA {
+    padding: 2vh 5vw;
+    margin: 2vh 0;
+    border-radius: 25px;
+}
+
+#tableau-graphique .non-conformites {
+    background-color: #F16137;
+}
+
+#tableau-graphique .non-applicables {
+    background-color: #308B7C;
+}
+
+#tableau-graphique .NDA {
+    background-color: #2F4A72;
 }
 
 .resultat-question {

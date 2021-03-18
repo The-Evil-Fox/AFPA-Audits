@@ -203,7 +203,7 @@ label #sidebar_btn:hover{
     text-align: center;
 }
 
-#questionnaire, #resultat-autoevaluation, #startContainer, #autoevalParams, #tableauDocuments, #tableau-graphique {
+#questionnaire, #resultat-autoevaluation, #startContainer, #questionnairesParams, #tableauDocuments, #tableau-graphique, #usersList {
     background: rgb(29,37,28);
     background: -moz-radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
     background: -webkit-radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
@@ -224,6 +224,20 @@ label #sidebar_btn:hover{
     flex-direction: row;
     align-items: center;
     justify-content: center;
+}
+
+#startContainer #startAuditButton, #startContainer #auditSelectMessage {
+    display: none;
+}
+
+#auditedCenterContainer {
+    display: none;
+    margin-top: 2.5vh;
+}
+
+#assistantsContainer {
+    display: none;
+    margin-bottom: 2.5vh;
 }
 
 .question-number img {
@@ -253,7 +267,11 @@ label #sidebar_btn:hover{
 }
 
 .audit-selectuser-buttonstart-container select {
-    margin: 2vh 20%;
+    margin: 2vh auto;
+}
+
+.selectAssistant {
+    margin: 2.5vh 0;
 }
 
 .audit-selectuser-buttonstart-container button {
@@ -283,6 +301,13 @@ label #sidebar_btn:hover{
     display: flex;
     flex-direction: column;
     margin-top: 5vh;
+}
+
+#questionnaire #radioDiv {
+    margin: 0 auto;
+    width: auto;
+    text-align: left;
+    display: table;
 }
 
 #questionnaire .radiobox {
@@ -365,9 +390,8 @@ button:hover {
     text-decoration: none;
 }
 
-#message {
+#message, #auditSelectMessage {
     display: none;
-    flex-direction: column;
     margin: 5vh auto;
     white-space: break-spaces;
     background: rgba(255,255,255,0.7);
@@ -378,6 +402,10 @@ button:hover {
     -moz-box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.75);
 }
 
+#message {
+    flex-direction: column;
+}
+
 #message .phrase {
     margin: 2vh auto;
 }
@@ -386,10 +414,18 @@ button:hover {
     margin: 3vh auto;
 }
 
+#dateGraphique {
+    background-color: black;
+    display: block;
+    padding: 1vh 1vw;
+    position: absolute;
+    right: 1%;
+}
+
 #graphique-resultats {
     height: 50vh;
     width: 90%;
-    margin: 0.5vh auto;
+    margin: 10vh auto 0.5vh auto;
 }
 
 #tableau-graphique {
@@ -465,64 +501,65 @@ button:hover {
     margin-bottom: 5vh;
 }
 
-#autoevalParams, #tableauDocuments {
+#questionnairesParams, #tableauDocuments, #usersList {
     padding-top: 5vh;
 }
 
-#autoevalParams .autoeval-param-ajoutquestion input, .autoeval-input-edit, #autoevalParams .autoeval-param-ajoutquestion select {
+#questionnairesParams .questionnaires-param-ajoutquestion input, #questionnairesParams .questionnaires-param-ajoutquestion select {
     width: 35%;
     height: 5vh;
 }
 
-.autoeval-input-edit {
-    width: 50%;
+#questionnairesParams .questionnaires-input-edit {
+    margin: 2.5vh auto;
+    width: 100%;
 }
 
-#autoevalParams .autoeval-param-questions {
+#questionnairesParams .questionnaires-param-questions {
     margin: 5vh auto;
 }
 
-#autoevalParams .tableau {
+#questionnairesParams .tableau {
     margin: 3vh 10vw;
     border-top: 2px solid white;
     padding-top: 3vh;
 }
 
-#autoevalParams .question {
+#questionnairesParams .question {
     font-weight: bold;
 }
 
-#autoevalParams .buttons {
+#questionnairesParams .buttons {
     margin: 5vh 0;
 }
 
-#autoevalParams button {
+#questionnairesParams button {
     margin: 0 1.5vw;
 }
 
-#autoevalParams .autoeval-param-ajoutquestion {
+#questionnairesParams .questionnaires-param-ajoutquestion {
     margin: 10vh auto;
     display: flex;
     flex-direction: column;
 }
 
-#autoevalParams .autoeval-param-ajoutquestion input, #autoevalParams .autoeval-param-ajoutquestion select {
+#questionnairesParams .questionnaires-param-ajoutquestion input, #questionnairesParams .questionnaires-param-ajoutquestion select {
     margin: 5vh auto;
     width: 75%;
 }
 
-#autoevalParams .autoeval-param-ajoutquestion button {
+#questionnairesParams .questionnaires-param-ajoutquestion button {
     margin: 5vh auto;
 }
 
-#autoevalParams h3, #tableauDocuments h3 {
+#questionnairesParams h3, #tableauDocuments h3, #usersList h3 {
     background-color: black;
     padding: 2vh 0;
     margin: 0 10vw;
     border-radius: 20px;
 }
 
-#autoevalParams .edit-notification {
+#questionnairesParams .edit-notification {
     font-weight: bolder;
     display: block;
     margin-top: 3vh;
@@ -559,6 +596,31 @@ button:hover {
 
 #tableauDocuments .document-buttons {
     margin: 3vh;
+}
+
+#usersList select {
+    margin: 5vh auto;
+}
+
+#userAutoevals, #userAudits {
+    padding: 5vh 5vw;
+}
+
+#userAutoevals {
+    display: none;
+}
+
+#userAudits {
+    display: none;
+}
+
+#usersList h3 {
+    margin: 5vh auto;
+}
+
+#usersList .noresultfound {
+    color: #FF781B;
+    font-weight: bold;
 }
 
 /* Responsive CSS */

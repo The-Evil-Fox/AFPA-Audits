@@ -16,66 +16,275 @@ function showTip(helperid) {
 
 }
 
-function startAudit() {
+function checkAuditInProgress(user) {
 
+    let spanMessage = document.getElementById('auditSelectMessage');
+    let startAuditButton = document.getElementById('startAuditButton');
+    let auditedCenterContainer = document.getElementById('auditedCenterContainer');
+    let assistantsContainer = document.getElementById('assistantsContainer');
+
+    if(assistantsContainer.style.display == "block") {
+        
+        assistantsContainer.style.display = "none";
+        assistantsContainer.innerHTML = "";
+
+    }
+
+    if(startAuditButton.style.display == "block") {
+
+        startAuditButton.style.display = "none";
+        startAuditButton.innerHTML = "";
+
+    }
+
+    if(spanMessage.style.display == "block") {
+
+        spanMessage.style.display = "none";
+        spanMessage.innerHTML = "";
+        
+    }
+
+    if(auditedCenterContainer.style.display == "block") {
+
+        auditedCenterContainer.style.display = "none";
+        auditedCenterContainer.innerHTML = "";
+
+    }
+
+    if(user == "") {
+
+        return;
+
+    }
+
+    checkAudit = true;
+
+    dataSend = {
+        checkAudit,
+        user
+    }
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/createAudit.php',
+        data: dataSend,
+        dataType: 'text',
+        success: function(data) {
+
+            if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                window.location.replace('index.php');
+                return;
+                
+            }
+            
+            if(data == "Un audit est déjà en cours !") {
+
+                spanMessage.innerHTML = data;
+                spanMessage.style.color = "#FF781B";
+                spanMessage.style.display = "block";
+                startAuditButton.innerHTML = "Reprendre l'audit";
+                startAuditButton.style.display = "block";
+                startAuditButton.value = "Continuer";
+
+            } else {
+
+                startAuditButton.innerHTML = "Démarrer l'audit";
+                startAuditButton.style.display = "block";
+                startAuditButton.value = "Demarrer";
+        
+                getCenters = true;
+        
+                dataSend = {
+                    getCenters
+                };
+        
+                $.ajax({
+        
+                    type: 'POST',
+                    url: 'traitements/createAudit.php',
+                    data: dataSend,
+                    dataType: 'text',
+                    success: function(data) {
+            
+                        if(data == "Acces refusé ! Veuillez vous connectez !") {
+            
+                            window.location.replace('index.php');
+                            return;
+                            
+                        }
+                        
+                        auditedCenterContainer.style.display = "block";
+                        auditedCenterContainer.innerHTML = data;
+                        
+                    },
+            
+                    error: function(xhr, textStatus, error) {
+            
+                        alert(error);
+                        alert(xhr);
+                        alert(textStatus);
+                        
+                    }
+            
+                });
+
+                getAuditeurs = true;
+        
+                dataSend = {
+                    getAuditeurs
+                };
+
+                $.ajax({
+        
+                    type: 'POST',
+                    url: 'traitements/createAudit.php',
+                    data: dataSend,
+                    dataType: 'text',
+                    success: function(data) {
+            
+                        if(data == "Acces refusé ! Veuillez vous connectez !") {
+            
+                            window.location.replace('index.php');
+                            return;
+                            
+                        }
+                        
+                        assistantsContainer.style.display = "block";
+                        assistantsContainer.innerHTML = data;
+                        
+                    },
+            
+                    error: function(xhr, textStatus, error) {
+            
+                        alert(error);
+                        alert(xhr);
+                        alert(textStatus);
+                        
+                    }
+            
+                });
+
+            }
+
+        },
+
+        error: function(xhr, textStatus, error) {
+
+            alert(error);
+            alert(xhr);
+            alert(textStatus);
+            
+        }
+
+    });
+
+}
+
+function startAudit(buttonvalue) {
+
+    let spanMessage = document.getElementById('auditSelectMessage');
     let contentWindow = document.getElementById('content');
     let startContainer = document.getElementById('startContainer');
 
     selectauditedUser = document.getElementById('auditedUser');
     auditedUserID = selectauditedUser.value;
 
-    if(auditedUserID.length !== 0) {
+    if(buttonvalue == "Continuer") {
 
-        startContainer.style.opacity = 0;
-        startContainer.style.display = "none";
-
-        createNewAudit = "createNeAudit";
+        continueAudit = "continueAudit";
 
         dataSend = {
-            createNewAudit,
+            continueAudit,
             auditedUserID
         }
 
-        $.ajax({
+    } else if(buttonvalue == "Demarrer") {
 
-            type: 'POST',
-            url: 'traitements/createAudit.php',
-            data: dataSend,
-            dataType: 'text',
-            success: function(data) {
+        auditedCenter = document.getElementById('auditedCenter').value;
+        let assistantAudit1 = document.getElementById('assistant1').value;
+        let assistantAudit2 = document.getElementById('assistant2').value;
 
-                if(data == "Acces refusé ! Veuillez vous connectez !") {
+        if(auditedCenter == "") {
 
-                    window.location.replace('index.php');
-                    return;
-                    
-                }
-                
-                contentWindow.innerHTML = data;
+            spanMessage.innerHTML = "Veuillez sélectionner le centre audité !";
+            spanMessage.style.color = "#FF781B";
+            spanMessage.style.display = "block";
+            return;
+            
+        }
 
-            },
+        demarrerAudit = "demarrerAudit";
 
-            error: function(xhr, textStatus, error) {
-    
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+        if(assistantAudit1 !== "" && assistantAudit2 !== "" && assistantAudit1 == assistantAudit2) {
+
+            spanMessage.innerHTML = "Vous ne vous pas selectionner deux fois le même assistant !";
+            spanMessage.style.color = "#FF781B";
+            spanMessage.style.display = "block";
+            return;
+            
+        }
+
+        if(assistantAudit1 == "") {
+
+            assistantAudit1 = false;
+
+        }
+
+        if(assistantAudit2 == "") {
+
+            assistantAudit2 = false;
+
+        }
+
+        dataSend = {
+            demarrerAudit,
+            auditedUserID,
+            auditedCenter,
+            assistantAudit1,
+            assistantAudit2
+        }
+
+    }
+
+    startContainer.style.opacity = 0;
+    startContainer.style.display = "none";
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/createAudit.php',
+        data: dataSend,
+        dataType: 'text',
+        success: function(data) {
+
+            if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                window.location.replace('index.php');
+                return;
                 
             }
+            
+            contentWindow.innerHTML = data;
 
-        });
-    
-    } else {
+        },
 
-        alert("Veuillez selectionner un utilisateur à auditer !");
-        return;
-    }
+        error: function(xhr, textStatus, error) {
+
+            alert(error);
+            alert(xhr);
+            alert(textStatus);
+            
+        }
+
+    });
 
 }
 
 function updateConstat(userID, audit, thematique, constat, textAreaID) {
 
-    textArea = document.getElementById(textAreaID);
+    let textArea = document.getElementById(textAreaID);
 
     method = "updateConstat";
 
@@ -117,7 +326,7 @@ function updateConstat(userID, audit, thematique, constat, textAreaID) {
 
             }
 
-            if(constat !== "Conforme") {
+            if(constat == "NC") {
 
                 $('#'+textAreaID).focus();
 
@@ -196,6 +405,7 @@ function sendAudit(audit, userID) {
     let messageWindow = document.getElementById('message');
     let buttonSend = document.getElementById('questionnaire-button-send');
     let allTextAreas = document.getElementsByTagName('textarea');
+    let localisation = document.getElementById('localisation').value;
 
     for (var i = 0; i < allTextAreas.length; i++) {
 
@@ -241,7 +451,8 @@ function sendAudit(audit, userID) {
     finaliseAudit = {
         method,
         audit,
-        userID
+        userID,
+        localisation
     }
 
     $.ajax({
@@ -437,7 +648,7 @@ function nextQuestion(partNumber) {
 
 function updateAnswer(evalNumber, question, answer, textAreaID) {
 
-    textArea = document.getElementById(textAreaID);
+    let textArea = document.getElementById(textAreaID);
 
     checkReason = "checkReason";
 

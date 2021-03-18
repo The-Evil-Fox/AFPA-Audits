@@ -1,14 +1,8 @@
-function showChart(evaldate, autoeval_number) {
+function showChart(autoeval_number, date) {
     
     $(document).ready(function() {
 
         let contentWindow = document.getElementById('content');
-        
-        if(typeof(evaldate !== "undefined")) {
-            
-            date = evaldate;
-
-        }
         
         let evalNumber = autoeval_number;
 
@@ -29,9 +23,9 @@ function showChart(evaldate, autoeval_number) {
                     
                 }
 
-                contentWindow.innerHTML = "<div id='graphique-resultats'></div><div id='tableau-graphique'></div>";
+                contentWindow.innerHTML = "<div id='dateGraphique'>le "+date+"</div><div id='graphique-resultats'></div><div id='tableau-graphique'></div>";
 
-                createChart("graphique-resultats", "Autoévaluation du " + date, data);
+                createChart("graphique-resultats", "Résultats de mon autoévaluation", data);
 
                 function hideMessages() {
 
@@ -51,7 +45,9 @@ function showChart(evaldate, autoeval_number) {
 
             },
             error: function(xhr, textStatus, error){
+
                 alert(error);
+                
             }
 
         });

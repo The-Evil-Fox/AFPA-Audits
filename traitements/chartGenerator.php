@@ -34,7 +34,7 @@ if(!isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
 	if($compliances !== 0) {
 
 		$compliancesTab = array(
-			"label"=> "Conformités", "y"=> $compliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+			"label"=> "Conformité(s)", "y"=> $compliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
 		);
 
 	}
@@ -42,7 +42,7 @@ if(!isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
 	if($nonCompliances !== 0) {
 
 		$nonCompliancesTab = array(
-			"label"=> "Non-conformités", "y"=> $nonCompliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+			"label"=> "Non-conformité(s)", "y"=> $nonCompliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
 		);
 
 	}
@@ -94,12 +94,12 @@ if(isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
 		$compteur = 1;
 		?>
 		
-		<h3>Liste des non-conformités</h3>
+		<h3>Liste des non-conformité(s)</h3>
         <div class="non-conformites">
             <?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
                 
                 <div class="resultat-question">
-                    <?= $compteur . ") " . $nonCompliances['Question']; ?>
+                    <?= $compteur . ") " . str_replace('?', '', $nonCompliances['Question']); ?>
                 </div>
             
                 <?php $compteur++; ?>

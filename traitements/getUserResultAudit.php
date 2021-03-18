@@ -50,7 +50,7 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
     if($compliances !== 0) {
 
         $compliancesTab = array(
-            "label"=> "Conformités", "y"=> $compliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+            "label"=> "Conformité(s)", "y"=> $compliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
         );
 
     }
@@ -58,7 +58,7 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
     if($nonCompliances !== 0) {
 
         $nonCompliancesTab = array(
-            "label"=> "Non-conformités", "y"=> $nonCompliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+            "label"=> "Non-conformité(s)", "y"=> $nonCompliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
         );
 
     }
@@ -66,7 +66,7 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
     if($notApplicables !== 0) {
 
         $notApplicablesTab = array(
-            "label"=> "Non-applicables", "y"=> $notApplicables, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+            "label"=> "Non-applicable(s)", "y"=> $notApplicables, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
         );
 
     }
@@ -74,7 +74,7 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
     if($NDA !== 0) {
 
         $NDATab = array(
-            "label"=> "NDA", "y"=> $NDA, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+            "label"=> "Non disponible(s) actuellement", "y"=> $NDA, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
         );
 
     }
@@ -193,11 +193,11 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
         <h3>Liste</h3>
         <?php if($numberNonCompliances !== 0) { ?>
             <div class="non-conformites">
-                <h4>Non conformités</h4>
+                <h4>Non conformité(s)</h4>
                 <?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
                     
                     <div class="resultat-question">
-                        <?= $compteurNC . ") " . $nonCompliances['Thematique']; ?>
+                        <?= $compteurNC . ") " . str_replace('?', '', $nonCompliances['Thematique']); ?>
                     </div>
                 
                     <?php $compteurNC++; ?>
@@ -206,11 +206,11 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
         <?php } ?>
         <?php if($numberNotApplicables !== 0) { ?>
             <div class="non-applicables">
-                <h4>Non applicables</h4>
+                <h4>Non applicable(s)</h4>
                 <?php while($notApplicable = $getNotApplicables->fetch()) { ?>
                     
                     <div class="resultat-question">
-                        <?= $compteurNA . ") " . $notApplicable['Thematique']; ?>
+                        <?= $compteurNA . ") " . str_replace('?', '', $notApplicable['Thematique']); ?>
                     </div>
                 
                     <?php $compteurNA++; ?>
@@ -219,11 +219,11 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
         <?php } ?>
         <?php if($numberNDA !== 0) { ?>
             <div class="NDA">
-                <h4>NDA</h4>
+                <h4>Non disponible(s) actuellement</h4>
                 <?php while($questionNDA = $getNDA->fetch()) { ?>
                     
                     <div class="resultat-question">
-                        <?= $compteurNDA . ") " . $questionNDA['Thematique']; ?>
+                        <?= $compteurNDA . ") " . str_replace('?', '', $questionNDA['Thematique']); ?>
                     </div>
                 
                     <?php $compteurNDA++; ?>

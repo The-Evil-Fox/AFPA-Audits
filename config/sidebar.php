@@ -12,7 +12,7 @@
         <?php } ?>
         <a onclick="showContent('autoevaluation');" href="#autoevaluation"><i class="fas fa-briefcase"></i><span>M'auto-évaluer</span></a>
         <a onclick="showContent('monespace');" href="#monespace"><i class="fas fa-chart-line"></i><span>Mes résultats</span></a>
-        <?php if(isAdmin($userInfos['Role'])) { ?>
+        <?php if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) { ?>
             <a onclick="showContent('administration');" href="#administration"><i class="fas fa-user-lock"></i><span>Espace administration</span></a>
         <?php } ?>
         </div>

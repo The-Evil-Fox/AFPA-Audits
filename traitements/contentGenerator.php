@@ -13,7 +13,7 @@ if(!isset($_SESSION['ID'])) {
 
 if(isset($_POST['auditer'])) {
 
-    $getUsers = $db->query('SELECT ID, Name, FirstName FROM Users WHERE Role = 1'); ?>
+    $getFormateurs = $db->query('SELECT ID, Name, FirstName FROM Users WHERE Role = 1'); ?>
 
     <div id="startContainer">
         <div class="audit-logos-container">
@@ -41,17 +41,20 @@ if(isset($_POST['auditer'])) {
                 </div>
             </div>
             <div class="helper-content">
-                Durée moyenne: 10 à 20 minutes.
+                Durée moyenne: 1 heure minimum.
             </div>
         </div>
         <div class="audit-selectuser-buttonstart-container">
-            <select id="auditedUser">
+            <select id="auditedUser" onchange="checkAuditInProgress(this.value)">
                 <option value="">Veuillez selectionner l'utilisateur que vous voulez auditer</option>
-                <?php while($allUsers = $getUsers->fetch()) {?>
-                    <option value="<?= $allUsers['ID']; ?>"><?= $allUsers['Name'] . " " . $allUsers['FirstName']; ?></option>
+                <?php while($allFormateurs = $getFormateurs->fetch()) {?>
+                    <option value="<?= $allFormateurs['ID']; ?>"><?= $allFormateurs['Name'] . " " . $allFormateurs['FirstName']; ?></option>
                 <?php } ?>
             </select>
-            <button class="button-start" onclick="startAudit()">Démarrer</button>
+            <span id="auditSelectMessage"></span>
+            <div id="auditedCenterContainer"></div>
+            <div id="assistantsContainer"></div>
+            <button id="startAuditButton" class="button-start" onclick="startAudit(this.value)">Démarrer</button>
         </div>
     </div>
 
@@ -72,12 +75,12 @@ if(isset($_POST['monespace'])) {
     </div>
 
     <?php } else { ?>
-
+            
         <?php while($eval = $checkEval->fetch()) { ?>
             <div class="card text-center">
                 <div class="card-content">
                     Vous vous êtes autoévalué le <?php echo dateConvert($eval['DateAndHour']); ?>
-                    <button class="button-show-autoeval-result" type="button" onclick="showChart('<?php echo dateConvert($eval['DateAndHour']); ?>','<?= $eval['Evaluation_Number']; ?>')">Voir mes résultats</button>
+                    <button class="button-show-autoeval-result" type="button" onclick="showChart('<?= $eval['Evaluation_Number']; ?>','<?php echo dateConvert($eval['DateAndHour']); ?>')">Voir mes résultats</button>
                 </div>
             </div>
         <?php } ?>
@@ -254,7 +257,7 @@ if(isset($_POST['monespace'])) {
 
     $userRole = $checkRole->fetch();
 
-    if(isAuditeur($userRole['Role'] || isAuditeur($userinfos['Role']) == false)) { ?>
+    if(isFormateur($userRole['Role'])) { ?>
 
         <div class="card text-center">
             <div class="card-content">
@@ -271,12 +274,27 @@ if(isset($_POST['monespace'])) {
         </div>
         <div class="card text-center">
             <div class="card-content">
+                <button class="button-show-administration" onclick="showAdministration('utilisateurs')">Examiner les résultats d'un utilisateur</button>
+            </div>
+        </div>
+        <div class="card text-center">
+            <div class="card-content">
                 <button class="button-show-administration" onclick="showAdministration('documents')">Consulter et gérer les documents</button>
             </div>
         </div>
         <div class="card text-center">
             <div class="card-content">
+                <button class="button-show-administration" onclick="showStats()">Voir les statistiques totales des audits</button>
+            </div>
+        </div>
+        <div class="card text-center">
+            <div class="card-content">
                 <button class="button-show-administration" onclick="showAdministration('autoEvalution')">Modifier le questionnaire d'auto-évaluation</button>
+            </div>
+        </div>
+        <div class="card text-center">
+            <div class="card-content">
+                <button class="button-show-administration" onclick="showAdministration('audit')">Modifier le questionnaire d'audit</button>
             </div>
         </div>
 

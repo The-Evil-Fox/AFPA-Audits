@@ -229,7 +229,7 @@ if(isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
             <?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
                 
                 <div class="resultat-question">
-                    <?= $compteur . ") " . $nonCompliances['Question']; ?>
+                    <?= $compteur . ") " . str_replace('?', '', $nonCompliances['Question']); ?>
                 </div>
             
                 <?php $compteur++; ?>

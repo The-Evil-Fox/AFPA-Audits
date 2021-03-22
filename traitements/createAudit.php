@@ -177,7 +177,7 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
                             <button type="button" class="button-next" onclick="nextQuestion(<?= $compteur; ?>)">Suivant <i class="fas fa-long-arrow-alt-right"></i></button>
                         <?php } ?>
                         <?php if($compteur == $questionsNumber) { ?>
-                            <button type="button" class="button-send" id="questionnaire-button-send" onclick="sendAudit(<?= $auditNumber; ?>, <?= $auditInProgress['User_ID']; ?>)">Finaliser l'audit</button>
+                            <button type="button" class="button-send greenButton" id="questionnaire-button-send" onclick="sendAudit(<?= $auditNumber; ?>, <?= $auditInProgress['User_ID']; ?>)">Finaliser l'audit</button>
                             <input type="hidden" id="questionsNumber" value="<?= $compteur; ?>">
                             <input type="hidden" id="localisation" value="<?= $questions['Centre']; ?>">
                         <?php } ?>
@@ -343,7 +343,7 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
                             <button type="button" class="button-next" onclick="nextQuestion(<?= $compteur; ?>)">Suivant <i class="fas fa-long-arrow-alt-right"></i></button>
                         <?php } ?>
                         <?php if($compteur == $ThematiquesNumber) { ?>
-                            <button type="button" class="button-send" id="questionnaire-button-send" onclick="sendAudit(<?= $auditNumber; ?>, <?= $_POST['auditedUserID']; ?>)">Finaliser l'audit</button>
+                            <button type="button" class="button-send greenButton" id="questionnaire-button-send" onclick="sendAudit(<?= $auditNumber; ?>, <?= $_POST['auditedUserID']; ?>)">Finaliser l'audit</button>
                             <input type="hidden" id="questionsNumber" value="<?= $compteur; ?>">
                             <input type="hidden" id="localisation" value="<?= htmlspecialchars($_POST['auditedCenter']); ?>">
                         <?php } ?>

@@ -14,6 +14,11 @@ function showAdministration(category) {
             dataType: 'text',
             success: function(data) {
 
+                if(category == "exitAdministration") {
+                    document.getElementById('sidebar').innerHTML = data;
+                    return;
+                }
+
                 contentWindow.className = "content";
 
                 contentWindow.style.opacity = 0;
@@ -25,7 +30,7 @@ function showAdministration(category) {
 
                 }, 500);
 
-                if ($('#mobileNavDropdown').attr('class').indexOf('active') > -1) {
+                if($('#mobileNavDropdown').attr('class').indexOf('active') > -1) {
 
                     $('#mobileNavDropdown').removeClass('active');
 
@@ -62,11 +67,18 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
         url: 'traitements/getUserResultEval.php',
         data: userData,
         dataType: 'JSON',
-        success: function(data) {
+        success: function(datagraphique) {
 
-            content.innerHTML = "<div id='dateGraphique'>le "+date+"</div><div id='graphique-resultats'></div><div id='tableau-graphique'></div>";
+            if(datagraphique == "Acces refusé ! Veuillez vous connectez !") {
 
-            createChart("graphique-resultats", "Résultats de l'autoévaluation de " + userName + " " + userFirstName, data);
+                window.location.replace('index.php');
+                return;
+                
+            }
+
+            content.innerHTML = "<div id='dateGraphique'>le "+date+"</div><div id='graphique-resultats'></div><div id='tableauContainer'></div>";
+
+            createChart("graphique-resultats", "Résultats de l'autoévaluation de " + userName + " " + userFirstName, datagraphique);
 
 
             function hideMessages() {
@@ -99,14 +111,21 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
             'userID': userID
         },
         dataType: 'text',
-        success: function(data) {
+        success: function(dataTableau) {
 
-            if(data !== "") {
+            if(dataTableau == "Acces refusé ! Veuillez vous connectez !") {
+
+                window.location.replace('index.php');
+                return;
+                
+            }
+
+            if(dataTableau !== "") {
 
                 setTimeout(() => {
 
-                    document.getElementById('tableau-graphique').style.display = "block";
-                    document.getElementById('tableau-graphique').innerHTML = data;
+                    document.getElementById('tableauContainer').style.display = "block";
+                    document.getElementById('tableauContainer').innerHTML = dataTableau;
     
                 }, 750);
 
@@ -139,11 +158,11 @@ function showUserResultAudit(userID, audit, userName, userFirstName, date, centr
         url: 'traitements/getUserResultAudit.php',
         data: userData,
         dataType: 'JSON',
-        success: function(data) {
+        success: function(dataGraphique) {
 
-            content.innerHTML = "<div id='dateGraphique'>Effectué au centre de " + centre + " le "+date+"</div><div id='graphique-resultats'></div><div id='tableau-graphique'></div>";
+            content.innerHTML = "<div id='dateGraphique'>Effectué au centre de " + centre + " le "+date+"</div><div id='graphique-resultats'></div><div id='tableauContainer'></div>";
 
-            createChart("graphique-resultats", "Résultats de l'audit de " + userName + " " + userFirstName, data);
+            createChart("graphique-resultats", "Résultats de l'audit de " + userName + " " + userFirstName, dataGraphique);
 
 
             function hideMessages() {
@@ -176,14 +195,14 @@ function showUserResultAudit(userID, audit, userName, userFirstName, date, centr
             'userID': userID
         },
         dataType: 'text',
-        success: function(data) {
+        success: function(dataTableau) {
 
-            if(data !== "") {
+            if(dataTableau !== "") {
 
                 setTimeout(() => {
 
-                    document.getElementById('tableau-graphique').style.display = "block";
-                    document.getElementById('tableau-graphique').innerHTML = data;
+                    document.getElementById('tableauContainer').style.display = "block";
+                    document.getElementById('tableauContainer').innerHTML = dataTableau;
     
                 }, 750);
 
@@ -204,6 +223,46 @@ function showUserResultAudit(userID, audit, userName, userFirstName, date, centr
 }
 
 // Edition of the questionnaires
+
+function showAdminForm(questionnaire) {
+
+    if(questionnaire == "autoeval") {
+
+        let formContainer = document.getElementById('autoevalFormContainer');
+        let button = document.getElementById('autoevalAddQuestionButton');
+
+        if(formContainer.style.display == "flex") {
+
+            formContainer.style.display = "none";
+            button.style.display = "block";
+
+        } else {
+
+            formContainer.style.display = "flex";
+            button.style.display = "none";
+
+        }
+
+    } else if(questionnaire == "audit") {
+
+        let formContainer = document.getElementById('auditFormContainer');
+        let button = document.getElementById('auditAddQuestionButton');
+
+        if(formContainer.style.display == "flex") {
+
+            formContainer.style.display = "none";
+            button.style.display = "block";
+
+        } else {
+
+            formContainer.style.display = "flex";
+            button.style.display = "none";
+
+        }
+
+    }
+
+}
 
 function addQuestionQuestionnaire(questionnaire) {
 
@@ -365,7 +424,6 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
 
     let operation = button.value;
 
-    let questionDiv = document.getElementById('question'+questionID);
     let questionStatus = document.getElementById('questionStatus'+questionID);
 
     dataSend = {
@@ -385,20 +443,45 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
 
                 if(operation == "delete") {
 
-                    questionDiv.parentNode.removeChild(questionDiv);
+                    $.ajax({
+
+                        type: 'POST',
+                        url: 'traitements/administrationGenerator.php',
+                        data: "autoEvalution",
+                        dataType: 'text',
+                        success: function(data) {
+                
+                            setTimeout(() => {
+                
+                                let contentWindow = document.getElementById('content');
+                                contentWindow.innerHTML = data;
+                
+                            }, 500);
+                
+                        },
+                
+                        error: function(xhr, textStatus, error) {
+                
+                            alert(error);
+                            alert(xhr);
+                            alert(textStatus);
+                            
+                        }
+                
+                    });
 
                 }
 
                 if(operation == "disable") {
 
-                    questionStatus.innerHTML = "[INACTIVE] ";
-                    button.value="enable";
+                    questionStatus.innerHTML = "[INACTIVE]";
+                    button.value = "enable";
 
                 }
 
                 if(operation == "enable") {
 
-                    questionStatus.innerHTML = "[ACTIVE] ";
+                    questionStatus.innerHTML = "[ACTIVE]";
                     button.value="disable";
 
                 }
@@ -426,20 +509,45 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
 
                 if(operation == "delete") {
 
-                    questionDiv.parentNode.removeChild(questionDiv);
+                    $.ajax({
+
+                        type: 'POST',
+                        url: 'traitements/administrationGenerator.php',
+                        data: "audit",
+                        dataType: 'text',
+                        success: function(data) {
+                
+                            setTimeout(() => {
+                
+                                let contentWindow = document.getElementById('content');
+                                contentWindow.innerHTML = data;
+                
+                            }, 500);
+                
+                        },
+                
+                        error: function(xhr, textStatus, error) {
+                
+                            alert(error);
+                            alert(xhr);
+                            alert(textStatus);
+                            
+                        }
+                
+                    });
 
                 }
 
                 if(operation == "disable") {
 
-                    questionStatus.innerHTML = "[INACTIVE] ";
+                    questionStatus.innerHTML = "[INACTIVE]";
                     button.value="enable";
 
                 }
 
                 if(operation == "enable") {
 
-                    questionStatus.innerHTML = "[ACTIVE] ";
+                    questionStatus.innerHTML = "[ACTIVE]";
                     button.value="disable";
 
                 }
@@ -580,21 +688,25 @@ function updateQuestionQuestionnaire(questionnaire, questionID) {
 // Documents functions
 
 function addDocument() {
-
+    
     $('#addDocument').click();
     $('#addDocument').on('change', function() {
-    
+
         let userfile = $(this).val();
         if(userfile) {
-            
+
             $('#formDocument').submit();
-            
-        }
-    
-    });
-    
-    $('#formDocument').on('submit', function(e) {
         
+        } else {
+
+            return;
+
+        }
+
+    });
+
+    $('#formDocument').on('submit', function(e) {
+    
         e.preventDefault();
 
         $.ajax({
@@ -609,14 +721,15 @@ function addDocument() {
 
                 if(data == "Acces refusé ! Veuillez vous connectez !") {
 
-                    window.location.replace('index.php');
-                    return;
+                    alert('something strange is happening :)');
                     
                 }
 
                 if(data.includes("Erreur:")) {
                     
                     alert(data);
+                    document.getElementById('addDocument').value = "";
+                    
                     
                 } else {
 
@@ -728,9 +841,25 @@ function showStats() {
                     
                 }
 
-                contentWindow.innerHTML = "<div id='graphique-resultats'></div><div id='tableau-graphique'></div>";
+                if($('#mobileNavDropdown').attr('class').indexOf('active') > -1) {
 
-                createChart("graphique-resultats", "Statistiques globales des audits", data);
+                    $('#mobileNavDropdown').removeClass('active');
+
+                }
+
+                contentWindow.className = "content";
+
+                contentWindow.style.opacity = 0;
+
+                setTimeout(function() {
+
+                    contentWindow.innerHTML = "<div id='graphique-resultats'></div>";
+
+                    createChart("graphique-resultats", "Statistiques globales des audits", data);
+
+                    contentWindow.style.opacity = 1;
+
+                }, 500);
 
                 function hideMessages() {
 
@@ -811,9 +940,9 @@ function getAllResultsUser(user) {
 
     if(user == "") {
 
-        evalsContainer.style.display == "none";
+        evalsContainer.style.opacity = 0;
         evalsContainer.innerHTML = "";
-        auditsContainer.style.display == "none";
+        auditsContainer.style.opacity = 0;
         auditsContainer.innerHTML = "";
 
     }
@@ -835,8 +964,14 @@ function getAllResultsUser(user) {
             dataType: 'text',
             success: function(data) {
 
-                evalsContainer.innerHTML = data;
-                evalsContainer.style.display = "block";
+                evalsContainer.style.opacity = 0;
+
+                setTimeout(function() {
+
+                    evalsContainer.innerHTML = data;
+                    evalsContainer.style.opacity = 1;
+
+                }, 500)
     
             },
     
@@ -865,8 +1000,14 @@ function getAllResultsUser(user) {
             dataType: 'text',
             success: function(data) {
 
+                auditsContainer.style.opacity = 0;
+
+                setTimeout(function() {
+
                     auditsContainer.innerHTML = data;
-                    auditsContainer.style.display = "block";
+                    auditsContainer.style.opacity = 1;
+
+                }, 500)
     
             },
     

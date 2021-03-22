@@ -14,18 +14,18 @@ function showChart(autoeval_number, date) {
                 'evalNumber' : evalNumber 
             }, 
             dataType: 'JSON',
-            success: function(data) {
+            success: function(dataGraphique) {
 
-                if(data == "Acces refusé ! Veuillez vous connectez !") {
+                if(dataGraphique == "Acces refusé ! Veuillez vous connectez !") {
 
                     window.location.replace('index.php');
                     return;
                     
                 }
 
-                contentWindow.innerHTML = "<div id='dateGraphique'>le "+date+"</div><div id='graphique-resultats'></div><div id='tableau-graphique'></div>";
+                contentWindow.innerHTML = "<div id='dateGraphique'>Le "+date+"</div><div id='graphique-resultats'></div><div id='tableauContainer'></div>";
 
-                createChart("graphique-resultats", "Résultats de mon autoévaluation", data);
+                createChart("graphique-resultats", "Résultats de mon autoévaluation", dataGraphique);
 
                 function hideMessages() {
 
@@ -61,21 +61,21 @@ function showChart(autoeval_number, date) {
                 'evalNumber' : evalNumber 
             }, 
             dataType: 'text',
-            success: function(data) {
+            success: function(dataTableau) {
 
-                if(data == "Acces refusé ! Veuillez vous connectez !") {
+                if(dataTableau == "Acces refusé ! Veuillez vous connectez !") {
 
                     window.location.replace('index.php');
                     return;
                     
                 }
 
-                if(data !== "") {
+                if(dataTableau !== "") {
 
                     setTimeout(() => {
 
-                        document.getElementById('tableau-graphique').style.display = "block";
-                        document.getElementById('tableau-graphique').innerHTML = data;
+                        document.getElementById('tableauContainer').style.display = "block";
+                        document.getElementById('tableauContainer').innerHTML = dataTableau;
 
                     }, 250);
 

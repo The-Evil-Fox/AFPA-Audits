@@ -2,7 +2,6 @@
 
 require_once('../config/dbConnection.php');
 require_once('../config/dateConvert.php');
-require_once('../config/roles.php');
 
 if(!isset($_SESSION['ID'])) {
 
@@ -70,20 +69,32 @@ if(isset($_POST['monespace'])) {
 
     if($countEvals == 0) { ?>
 
-    <div class="card text-center">
-        <div class="card-content">Aucun résultats à afficher pour le moment !</div>
-    </div>
+        <div id="errorMessage">
+            Vous ne vous êtes pas encore autoévalué !
+        </div>
 
     <?php } else { ?>
-            
-        <?php while($eval = $checkEval->fetch()) { ?>
-            <div class="card text-center">
-                <div class="card-content">
-                    Vous vous êtes autoévalué le <?php echo dateConvert($eval['DateAndHour']); ?>
-                    <button class="button-show-autoeval-result" type="button" onclick="showChart('<?= $eval['Evaluation_Number']; ?>','<?php echo dateConvert($eval['DateAndHour']); ?>')">Voir mes résultats</button>
-                </div>
-            </div>
-        <?php } ?>
+
+        <div id="titleContainer">
+            <h3>Mes résultats</h3>
+        </div>
+
+        <table id="tableauQuestionnaire">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while($eval = $checkEval->fetch()) { ?>
+                    <tr>
+                        <td data-label="Date">Autoévaluation du <?php echo dateConvert($eval['DateAndHour']); ?></td>
+                        <td><button class="button-show-autoeval-result" type="button" onclick="showChart('<?= $eval['Evaluation_Number']; ?>','<?php echo dateConvert($eval['DateAndHour']); ?>')">Voir mes résultats</button></td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
 
      <?php } ?>
 
@@ -169,7 +180,7 @@ if(isset($_POST['monespace'])) {
                     <div class="category-question">
                         <?= $questions['Name']; ?>
                     </div>
-                    <span class="question-label"><?= $questions['Question']; ?></label>
+                    <span class="question-label"><?= $questions['Question']; ?></span>
                     <div class="inputGroup">
                         <div class="radiobox">
                             <input type="radio" id="<?= $questions['ID']; ?>Oui" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateAnswer(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Oui" <?php if($questions['Answer'] == "Oui") {?> checked <?php } ?>>
@@ -191,7 +202,7 @@ if(isset($_POST['monespace'])) {
                                 <button type="button" class="button-next" onclick="nextQuestion(<?= $compteur; ?>)">Suivant <i class="fas fa-long-arrow-alt-right"></i></button>
                             <?php } ?>
                             <?php if($compteur == $questionsNumber) { ?>
-                                <button type="button" class="button-send" id="questionnaire-button-send" onclick="sendEval(<?= $evaluationNumber; ?>)">Finaliser mon auto-évaluation</button>
+                                <button type="button" class="button-send greenButton" id="questionnaire-button-send" onclick="sendEval(<?= $evaluationNumber; ?>)">Finaliser mon auto-évaluation</button>
                                 <input type="hidden" id="questionsNumber" value="<?= $compteur; ?>">
                             <?php } ?>
                         </div>
@@ -234,68 +245,6 @@ if(isset($_POST['monespace'])) {
                 </div>
             </div>
             <button class="button-start" onclick="startEval()">Démarrer</button>
-        </div>
-
-    <?php } ?>
-
-<?php } ?>
-
-<?php if(isset($_POST['administration'])) {
-
-    $checkRole = $db->prepare('SELECT Role FROM Users WHERE ID = :user');
-    $checkRole->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-    $checkRole->execute();
-
-    $countResult = $checkRole->rowCount();
-
-    if($countResult != 1) {
-
-        header('Location: ../logout.php');
-        exit();
-
-    }
-
-    $userRole = $checkRole->fetch();
-
-    if(isFormateur($userRole['Role'])) { ?>
-
-        <div class="card text-center">
-            <div class="card-content">
-                Vous n'êtes pas autorisé à accéder à ce contenu !
-            </div>
-        </div>
-
-    <?php } else { ?>
-
-        <div class="card text-center">
-            <div class="card-content">
-                <button class="button-show-administration" onclick="showAdministration('actualites')">Fil d'actualité</button>
-            </div>
-        </div>
-        <div class="card text-center">
-            <div class="card-content">
-                <button class="button-show-administration" onclick="showAdministration('utilisateurs')">Examiner les résultats d'un utilisateur</button>
-            </div>
-        </div>
-        <div class="card text-center">
-            <div class="card-content">
-                <button class="button-show-administration" onclick="showAdministration('documents')">Consulter et gérer les documents</button>
-            </div>
-        </div>
-        <div class="card text-center">
-            <div class="card-content">
-                <button class="button-show-administration" onclick="showStats()">Voir les statistiques totales des audits</button>
-            </div>
-        </div>
-        <div class="card text-center">
-            <div class="card-content">
-                <button class="button-show-administration" onclick="showAdministration('autoEvalution')">Modifier le questionnaire d'auto-évaluation</button>
-            </div>
-        </div>
-        <div class="card text-center">
-            <div class="card-content">
-                <button class="button-show-administration" onclick="showAdministration('audit')">Modifier le questionnaire d'audit</button>
-            </div>
         </div>
 
     <?php } ?>

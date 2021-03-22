@@ -72,6 +72,13 @@ function showContent(category) {
                     
                 }
 
+                if(category == "administration") {
+
+                    document.getElementById('sidebar').innerHTML = data;
+                    return;
+
+                }
+
                 contentWindow.className = "content";
 
                 contentWindow.style.opacity = 0;
@@ -98,7 +105,6 @@ function showContent(category) {
 
             },
 
-            
             error: function(xhr, textStatus, error){
 
                 alert(error);

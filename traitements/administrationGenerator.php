@@ -1,6 +1,7 @@
 <?php
 
 require_once('../config/dbConnection.php');
+require_once('../config/roles.php');
 require_once('../config/dateConvert.php');
 
 if(!isset($_SESSION['ID'])) {
@@ -13,40 +14,59 @@ if(!isset($_SESSION['ID'])) {
 if(isset($_POST['actualites'])) {
 
     $reqActus = $db->query('SELECT u.ID, u.Name, u.FirstName, a.Actualite, a.Eval_Number, a.Audit_Number, a.DateAndHour, ca.Localisation FROM Actualites a 
-    LEFT JOIN Users u ON a.User = u.ID LEFT JOIN CentresAFPA ca ON a.Centre = ca.ID ORDER BY DateAndHour DESC');
+    LEFT JOIN Users u ON a.User = u.ID LEFT JOIN CentresAFPA ca ON a.Centre = ca.ID ORDER BY DateAndHour DESC'); ?>
 
-    while($actu = $reqActus->fetch()) { ?>
+    <div id="titleContainer">
+        <h3>Fil d'actualité</h3>
+    </div>
+    <table id="tableauActualites">
+        <thead>
+            <tr>
+                <th>Utilisateur</th>
+                <th>Actualité</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php while($actu = $reqActus->fetch()) { ?>
 
-        <?php if($_SESSION['ID'] !== $actu['ID']) { ?>
-            
-            <div class="card text-center">
-                <div class="card-content">
-                    <span class="actu-date"><?= dateConvert($actu['DateAndHour']); ?></span>
-                    <?= $actu['Name'] . " " . $actu['FirstName'] . " " . $actu['Actualite']; ?>
+            <?php if($_SESSION['ID'] !== $actu['ID']) { ?>
+
+                <tr>
+                    <td data-label="Utilisateur"><?= $actu['Name'] . " " . $actu['FirstName']; ?></td>
+                    <td data-label="Actualité"><?= $actu['Actualite']; ?></td>
+                    <td data-label="Date">le <?= dateConvert($actu['DateAndHour']); ?></td>
                     <?php if($actu['Eval_Number'] !== null) { ?>
-                        <button class="button-show-autoeval-result" onclick="showUserResultEval(<?= $actu['ID']; ?>, <?= $actu['Eval_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['FirstName']; ?>', '<?= dateConvert($actu['DateAndHour']); ?>')">Voir ses résultats</button>
+                        <td><button class="button-show-autoeval-result" onclick="showUserResultEval(<?= $actu['ID']; ?>, <?= $actu['Eval_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['FirstName']; ?>', '<?= dateConvert($actu['DateAndHour']); ?>')">Voir les résultats</button></td>
                     <?php } ?>
                     <?php if($actu['Audit_Number'] !== null) {?>
-                        <button class="button-show-audit-result" onclick="showUserResultAudit(<?= $actu['ID']; ?>, <?= $actu['Audit_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['FirstName']; ?>', '<?= dateConvert($actu['DateAndHour']); ?>', '<?= $actu['Localisation']; ?>')">Voir ses résultats</button>
+                        <td><button class="button-show-audit-result" onclick="showUserResultAudit(<?= $actu['ID']; ?>, <?= $actu['Audit_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['FirstName']; ?>', '<?= dateConvert($actu['DateAndHour']); ?>', '<?= $actu['Localisation']; ?>')">Voir les résultats</button></td>
                     <?php } ?>
-                </div>
-            </div>
+                </tr>
+
+            <?php } ?>
 
         <?php } ?>
+        </tbody>
+    </table>
 
-    <?php }
-
-}
+<?php }
 
 if(isset($_POST['autoEvalution'])) {
 
-    $getQuestions = $db->query('SELECT * FROM QuestionsAutoevaluation ORDER BY ID ASC');
+    $getQuestions = $db->query('SELECT qa.ID, qa.Question, qa.Category, qa.Active, cqa.Name FROM QuestionsAutoevaluation qa LEFT JOIN CategoriesQuestionsAutoevaluation cqa ON qa.Category = cqa.Category ORDER BY cqa.Category ASC');
     $getCategories = $db->query('SELECT * FROM CategoriesQuestionsAutoevaluation ORDER BY Category ASC');
 
 ?>
-    <div id="questionnairesParams">
-        <h3>Ajouter une question au formulaire d'autoevaluation</h3>
-        <div class="questionnaires-param-ajoutquestion">
+
+
+    <div id="titleContainer">
+        <h3>Modification de l'autoévaluation</h3>
+    </div>
+    <div class="userInputBar">
+        <button id="autoevalAddQuestionButton" onclick="showAdminForm('autoeval')">Ajouter une question</button>
+        <div class="autoeval-param-ajoutquestion" id="autoevalFormContainer">
             <input type="text" id="newQuestion" placeholder="Ajouter une nouvelle question...">
             <select id="categorie">
                 <option value="">Veuillez selectionner une catégorie</option>
@@ -54,25 +74,39 @@ if(isset($_POST['autoEvalution'])) {
                     <option value="<?= $categories['Category']; ?>"><?= $categories['Name']; ?></option>
                 <?php } ?>
             </select>
-            <button onclick="addQuestionQuestionnaire('autoevaluation')">Ajouter</button>
-        </div>
-        <h3>Liste des questions présentes dans la base de données</h3>
-        <div class="questionnaires-param-questions" id="tableauQuestionsQuestionnaires">
-            <?php while($question = $getQuestions->fetch()) { ?>
-                <div class="tableau" id="question<?= $question['ID']; ?>">
-                    <div class="question" id="question-container-<?= $question['ID']; ?>">
-                        <span id="questionStatus<?= $question['ID']; ?>"><?php if($question['Active'] == true) { ?>[ACTIVE] <?php } else { ?>[INACTIVE] <?php } ?></span>
-                        <span id="question-label-<?= $question['ID']; ?>"><?= $question['Question']; ?></span>
-                    </div>
-                    <div class="buttons">
-                        <button <?php if($question['Active'] == true) { ?> id="disable<?= $question['ID']; ?>" <?php } else { ?> id="enable<?= $question['ID']; ?>"<?php } ?> onclick="updateStatusRemoveQuestionQuestionnaire('autoeval', this, <?= $question['ID']; ?>)" <?php if($question['Active'] == true) { ?> value="disable" <?php } else { ?> value="enable" <?php } ?>>Activer / Désactiver</button>
-                        <button onclick="updateQuestionQuestionnaire('autoeval', <?= $question['ID']; ?>)" value="edit">Modifier</button>
-                        <button onclick="updateStatusRemoveQuestionQuestionnaire('autoeval', this, <?= $question['ID']; ?>)" value="delete">Supprimer</button>
-                    </div>
-                </div>
-            <?php } ?>
+            <div class="autoeval-param-ajoutquestion-buttonsContainer">
+                <button class="greenButton" onclick="addQuestionQuestionnaire('autoevaluation')">Ajouter</button>
+                <button class="redButton" onclick="showAdminForm('autoeval')">Annuler</button>
+            </div>
         </div>
     </div>
+
+    <table id="tableauQuestionnaire">
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>Question</th>
+                <th>Categorie</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php while($question = $getQuestions->fetch()) { ?>
+                <tr>
+                    <td id="questionStatus<?= $question['ID']; ?>"><?php if($question['Active'] == true) { ?>[ACTIVE]<?php } else { ?>[INACTIVE]<?php } ?></td>
+                    <td class="questionnaire-border-white" id="question-label-<?= $question['ID']; ?>"><?= $question['Question']; ?></td>
+                    <td class="questionnaire-border-white"><?= $question['Name']; ?></td>
+                    <td>
+                        <div class="buttonsModificationQuestionnaire">
+                            <button <?php if($question['Active'] == true) { ?> id="disable<?= $question['ID']; ?>" <?php } else { ?> id="enable<?= $question['ID']; ?>"<?php } ?> onclick="updateStatusRemoveQuestionQuestionnaire('autoeval', this, <?= $question['ID']; ?>)" <?php if($question['Active'] == true) { ?> value="disable" <?php } else { ?> value="enable" <?php } ?>>Activer / Désactiver</button>
+                            <button onclick="updateQuestionQuestionnaire('autoeval', <?= $question['ID']; ?>)" value="edit">Modifier</button>
+                            <button class="redButton" onclick="updateStatusRemoveQuestionQuestionnaire('autoeval', this, <?= $question['ID']; ?>)" value="delete"><i class="fas fa-trash-alt"></i> Supprimer</button>
+                        </div>
+                    </td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
 
 <?php 
 
@@ -83,26 +117,36 @@ if(isset($_POST['documents'])) {
     $getDocuments = $db->query('SELECT * FROM Documents ORDER BY Documents.Document ASC');
 
 ?>
-    <div id="tableauDocuments">
-        <h3>Ajouter un document</h3>
-            <div class="ajout-document">
-            <form id="formDocument" method="POST" enctype="multipart/form-data">
-                <input type="file" name="addDocument" id="addDocument">
-            </form>
-            <button onclick="addDocument()">Ajouter</button>
-            </div>
-        <h3>Liste des documents disponibles</h3>
-        <?php while($documents = $getDocuments->fetch()) { ?>
-            <div class="document" id="<?= $documents['ID']; ?>">
-                <div class="document-name"><i class="fas fa-paperclip"></i><a target="_blank" href="documents/<?= $documents['Link']; ?>"><?= $documents['Document']; ?></a></div>
-                <div class="document-buttons"><button onclick="deleteDocument(this.value, <?= $documents['ID']; ?>, '<?= $documents['Link']; ?>')" value="delete">Supprimer</button></div>
-            </div>
-        <?php } ?>
+
+    <div id="titleContainer">
+        <h3>Documents</h3>
     </div>
+    <div class="userInputBar">
+    <button onclick="addDocument()" id="addDocumentButton">Ajouter un document</button>
+    <form id="formDocument" method="POST" enctype="multipart/form-data">
+        <input type="file" name="addDocument" id="addDocument">
+    </form>
+    </div>
+    
+    <table id="tableauDocuments">
+        <thead>
+            <tr>
+                <th>Document</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php while($documents = $getDocuments->fetch()) { ?>
+                <tr>
+                    <td id="<?= $documents['ID']; ?>" data-label="Document"><a target="_blank" href="documents/<?= $documents['Link']; ?>"><?= $documents['Document']; ?></a></td>
+                    <td data-label="Supprimer"><button class="redButton" onclick="deleteDocument(this.value, <?= $documents['ID']; ?>, '<?= $documents['Link']; ?>')" value="delete"><i class="fas fa-trash-alt"></i> Supprimer</button></td>
+                </tr>
 
-<?php
+            <?php } ?>
+        </tbody>
+    </table>
 
-}
+<?php }
 
 if(isset($_POST['getStats'])) {
 
@@ -141,7 +185,7 @@ if(isset($_POST['getStats'])) {
     if($compliances !== 0) {
 
         $compliancesTab = array(
-            "label"=> "Conformités", "y"=> $compliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+            "label"=> "Conformes", "y"=> $compliances, "indexLabelFontColor" => "#000000", "indexLabelFontWeight" => "bolder"
         );
 
     }
@@ -149,7 +193,7 @@ if(isset($_POST['getStats'])) {
     if($NC !== 0) {
 
         $NCTab = array(
-            "label"=> "Non-conformités", "y"=> $NC, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+            "label"=> "Non conformes", "y"=> $NC, "indexLabelFontColor" => "#000000", "indexLabelFontWeight" => "bolder"
         );
 
     }
@@ -157,7 +201,7 @@ if(isset($_POST['getStats'])) {
     if($NA !== 0) {
 
         $NATab = array(
-            "label"=> "Non applicables", "y"=> $NA, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+            "label"=> "Non applicables", "y"=> $NA, "indexLabelFontColor" => "#000000", "indexLabelFontWeight" => "bolder"
         );
 
     }
@@ -165,7 +209,7 @@ if(isset($_POST['getStats'])) {
     if($NDA !== 0) {
 
         $NDATab = array(
-            "label"=> "Non disponibles actuellement", "y"=> $NDA, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+            "label"=> "Non disponibles actuellement", "y"=> $NDA, "indexLabelFontColor" => "#000000", "indexLabelFontWeight" => "bolder"
         );
 
     }
@@ -208,42 +252,60 @@ if(isset($_POST['getStats'])) {
 
 if(isset($_POST['audit'])) {
 
-    $getQuestions = $db->query('SELECT * FROM QuestionsAudit ORDER BY ID ASC');
+    $getQuestions = $db->query('SELECT qa.ID, qa.Thematique, qa.Preuves, qa.Active, cqa.Name FROM QuestionsAudit qa LEFT JOIN 
+    CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID ORDER BY cqa.ID ASC');
     $getCategories = $db->query('SELECT * FROM CategoriesQuestionsAudit ORDER BY ID ASC');
 
 ?>
-    <div id="questionnairesParams">
-        <h3>Ajouter une question au formulaire d'audit</h3>
-        <div class="questionnaires-param-ajoutquestion">
+    <div id="titleContainer">
+        <h3>Modification de l'audit</h3>
+    </div>
+    <div class="userInputBar">
+        <button id="auditAddQuestionButton" onclick="showAdminForm('audit')">Ajouter une question</button>
+        <div class="audit-param-ajoutquestion" id="auditFormContainer">
             <input type="text" id="newQuestion" placeholder="Ajouter une nouvelle question...">
             <input type="text" id="preuvesQuestion" placeholder="Insérer les preuves à fournir (optionnel)">
             <select id="categorie">
                 <option value="">Veuillez selectionner une catégorie</option>
                 <?php while($categories = $getCategories->fetch()) { ?>
-                    <option value="<?= $categories['ID']; ?>"><?= $categories['Name']; ?></option>
+                    <option value="<?=  $categories['ID']; ?>"><?= $categories['Name']; ?></option>
                 <?php } ?>
             </select>
-            <button onclick="addQuestionQuestionnaire('audit')">Ajouter</button>
-        </div>
-        <h3>Liste des questions présentes dans la base de données</h3>
-        <div class="questionnaires-param-questions" id="tableauQuestionsQuestionnaires">
-            <?php while($question = $getQuestions->fetch()) { ?>
-                <div class="tableau" id="question<?= $question['ID']; ?>">
-                    <div class="question" id="question-container-<?= $question['ID']; ?>">
-                        <span id="questionStatus<?= $question['ID']; ?>"><?php if($question['Active'] == true) { ?>[ACTIVE] <?php } else { ?>[INACTIVE] <?php } ?></span>
-                        <span id="question-label-<?= $question['ID']; ?>"><?= $question['Thematique']; ?></span>
-                    </div>
-                    <div class="buttons">
-                        <button <?php if($question['Active'] == true) { ?> id="disable<?= $question['ID']; ?>" <?php } else { ?> id="enable<?= $question['ID']; ?>"<?php } ?> onclick="updateStatusRemoveQuestionQuestionnaire('audit', this, <?= $question['ID']; ?>)" <?php if($question['Active'] == true) { ?> value="disable" <?php } else { ?> value="enable" <?php } ?>>Activer / Désactiver</button>
-                        <button onclick="updateQuestionQuestionnaire('audit', <?= $question['ID']; ?>)" value="edit">Modifier</button>
-                        <button onclick="updateStatusRemoveQuestionQuestionnaire('audit', this, <?= $question['ID']; ?>)" value="delete">Supprimer</button>
-                    </div>
-                </div>
-            <?php } ?>
+            <div class="audit-param-ajoutquestion-buttonsContainer">
+                <button class="greenButton" onclick="addQuestionQuestionnaire('audit')">Ajouter</button>
+                <button class="redButton" onclick="showAdminForm('audit')">Annuler</button>
+            </div>
         </div>
     </div>
 
-
+    <table id="tableauQuestionnaire">
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>Question</th>
+                <th>Preuves</th>
+                <th>Categorie</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php while($question = $getQuestions->fetch()) { ?>
+                <tr>
+                    <td data-label="Status" id="questionStatus<?= $question['ID']; ?>"><?php if($question['Active'] == true) { ?>[ACTIVE]<?php } else { ?>[INACTIVE]<?php } ?></td>
+                    <td data-label="Question" class="questionnaire-border-white" id="question-label-<?= $question['ID']; ?>"><?= $question['Thematique']; ?></td>
+                    <td data-label="Preuves" class="questionnaire-border-white"><?php if($question['Preuves'] !== NULL) { echo $question['Preuves']; } else { echo "/"; } ?></td>
+                    <td data-label="Categorie" class="questionnaire-border-white"><?= $question['Name']; ?></td>
+                    <td>
+                        <div class="buttonsModificationQuestionnaire">
+                            <button <?php if($question['Active'] == true) { ?> id="disable<?= $question['ID']; ?>" <?php } else { ?> id="enable<?= $question['ID']; ?>"<?php } ?> onclick="updateStatusRemoveQuestionQuestionnaire('audit', this, <?= $question['ID']; ?>)" <?php if($question['Active'] == true) { ?> value="disable" <?php } else { ?> value="enable" <?php } ?>>Activer / Désactiver</button>
+                            <button onclick="updateQuestionQuestionnaire('audit', <?= $question['ID']; ?>)" value="edit">Modifier</button>
+                            <button class="redButton" onclick="updateStatusRemoveQuestionQuestionnaire('audit', this, <?= $question['ID']; ?>)" value="delete"><i class="fas fa-trash-alt"></i> Supprimer</button>
+                        </div>
+                    </td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
 
 <?php }
 
@@ -253,17 +315,18 @@ if(isset($_POST['utilisateurs'])) {
 
     ?>
     
-    <div id="usersList">
+    <div id="titleContainer">
+        <h3>Examiner les résultats d'un utilisateur</h3>
+    </div>
+    <div class="userInputBar">
         <select id="listUsersSelect" onchange="getAllResultsUser(this.value)">
-            <option value="">Selectionner un utilisateur</option>
+            <option value="">Séléctionnez un utilisateur</option>
             <?php while($users = $getUsers->fetch()) {?>
                 <option value="<?= $users['ID']; ?>"><?= $users['Name'] . " " . $users['FirstName']; ?></option>
             <?php } ?>
         </select>
-        <div id="userAutoevals"></div>
-        <div id="userAudits"></div>
     </div>
+    <div id="userAutoevals"></div>
+    <div id="userAudits"></div>
 
-<?php }
-
-?>
+<?php } ?>

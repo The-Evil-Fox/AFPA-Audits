@@ -2,10 +2,10 @@ function createChart(container, title, myData) {
 
     CanvasJS.addColorSet("redGreen",
         [//colorSet Array
-        "#76CC63",
-        "#F16137",
-        "#308B7C",
-        "#2F4A72"         
+        "#35B5A0", // Conforme
+        "#F4700E", // Non conforme
+        "#A8A8A8", // Non applicable
+        "#EDCF18"  // Non disponible actuellement
         ]
     );
 
@@ -14,22 +14,35 @@ function createChart(container, title, myData) {
         colorSet: "redGreen",
         animationEnabled: true,
         exportEnabled: true,
-        backgroundColor: "#6A6A6A",
+        zoomEnabled: false,
+        
         title: {
+        
             text: title,
-            fontColor: "#FFFFFF",
-            fontSize: 20,
-            fontWeight: "bold",
-        },
-        /* subtitles: [{
-            text: "Currency Used: Thai Baht (฿)"
-        }], */
-        toolTip: {
-            backgroundColor: "#FFFFFF",
             fontColor: "#000000",
+            fontSize: 20,
+            margin: 55,
+            fontWeight: "bold",
+        
         },
+        
+        /* subtitles: [{
+        
+            text: "Currency Used: Thai Baht (฿)"
+        
+        }], */
+        
+        toolTip: {
+        
+            backgroundColor: "black",
+            fontColor: "#FFFFFF",
+            content: "{label}: {y} questions",
+        
+        },
+        
         data: [{
-            type: "pie",
+        
+            type: "doughnut",
             startAngle: 268,
             showInLegend: true,
             legendText: "{label}",
@@ -38,21 +51,33 @@ function createChart(container, title, myData) {
             highlightEnabled: true,
             explodeOnClick: true,
             dataPoints: myData
+        
         }],
+        
         // axisX: {
+
         //     labelFontColor: "#FFFFFF", 
-        // },
+
+        //  },
+        
         axisY: {
+
             titleFontWeight: "bolder",
-            labelFontColor: "#FFFFFF",
+            labelFontColor: "#000000",
             labelFontWeight: "bolder"
+        
         },
+
         legend: {
-            fontColor: "#FFFFFF",
+        
+            fontColor: "#000000",
             fontWeight: "bolder",
             horizontalAlign: "center",
+            verticalAlign: "bottom",
             maxHeight: 200,
+        
         }
+
     });
 
     chart.render();

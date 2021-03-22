@@ -34,7 +34,7 @@ if(!isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
 	if($compliances !== 0) {
 
 		$compliancesTab = array(
-			"label"=> "Conformité(s)", "y"=> $compliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+			"label"=> "Conforme(s)", "y"=> $compliances, "indexLabelFontColor" => "#000000", "indexLabelFontWeight" => "bolder"
 		);
 
 	}
@@ -42,7 +42,7 @@ if(!isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
 	if($nonCompliances !== 0) {
 
 		$nonCompliancesTab = array(
-			"label"=> "Non-conformité(s)", "y"=> $nonCompliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+			"label"=> "Non conforme(s)", "y"=> $nonCompliances, "indexLabelFontColor" => "#000000", "indexLabelFontWeight" => "bolder"
 		);
 
 	}
@@ -91,20 +91,22 @@ if(isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
 		$getNonCompliances->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
 		$getNonCompliances->execute();
 		
-		$compteur = 1;
 		?>
-		
-		<h3>Liste des non-conformité(s)</h3>
-        <div class="non-conformites">
-            <?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
-                
-                <div class="resultat-question">
-                    <?= $compteur . ") " . str_replace('?', '', $nonCompliances['Question']); ?>
-                </div>
-            
-                <?php $compteur++; ?>
-            <?php } ?>
-        </div>
+
+		<table id="tableauNonConformites">
+            <thead>
+                <tr>
+                    <th><?php if($numberNonCompliances > 1) { echo "Questions non-conformes"; } else { echo "Question non-conforme"; } ?></th>
+                </tr>
+            </thead>
+            <tbody>
+			<?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
+                    <tr>
+                        <td data-label="Non conformité"><?= str_replace('?', '', $nonCompliances['Question']); ?></td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
 	
 	<?php }
 

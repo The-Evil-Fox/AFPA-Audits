@@ -1,4 +1,4 @@
-body{
+body {
     margin: 0;
     padding: 0;
     font-family: "Arial", sans-serif;
@@ -8,7 +8,7 @@ body{
     display: block !important;
 }
 
-header{
+header {
     z-index: 3;
     position: fixed;
     background: white;
@@ -19,20 +19,21 @@ header{
     border-bottom: 1px solid black;
 }
 
-.left_area h3{
+.left_area h3 {
     margin: 0;
     text-transform: uppercase;
     font-size: 22px;
     font-weight: 900;
+    text-align: left;
 }
 
-.left_area span{
+.left_area span {
     color: #0070ca;
 }
 
-.logout_btn{
+.logout_btn {
     padding: 5px;
-    background: #0070ca;
+    background: #F75118;
     text-decoration: none;
     float: right;
     margin-top: -30px;
@@ -45,11 +46,14 @@ header{
     transition-property: background;
 }
 
-.logout_btn:hover{
-    background: #0062b9;
+.logout_btn:hover {
+    background: #EF342B;
+    box-shadow: 0px 0px 9px 2px #EF342B;
+    -moz-box-shadow: 0px 0px 9px 2px #EF342B;
+    -webkit-box-shadow: 0px 0px 9px 2px #EF342B;
 }
 
-.sidebar{
+.sidebar {
     z-index: 2;
     top: 0;
     background: rgb(68,163,61);
@@ -69,28 +73,37 @@ header{
     border-right: 1px solid black;
 }
 
-.profile_info{
+.profile_info {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.sidebar .profile_info .profile_image{
+.sidebar .profile_info .profile_image {
     width: 100px;
     height: 100px;
     border-radius: 100px;
     margin-bottom: 10px;
 }
 
-.sidebar .profile_info h4{
+.sidebar .profile_info h4 {
     color: white;
     margin-top: 0;
     margin-bottom: 20px;
     user-select: none;
 }
 
-.sidebar a{
+.sidebar .navTitle {
+    text-align: center;
+    color: #6272B1;
+}
+
+.sidebar #sidebarLinks {
+    padding-bottom: 15vh;
+}
+
+.sidebar a {
     color: #fff;
     display: block;
     width: 100%;
@@ -104,14 +117,13 @@ header{
 
 .sidebar a:hover {
     font-weight: bold;
-    /* color: #0062b9; */
 }
 
-.sidebar i{
+.sidebar i {
     padding-right: 10px;
 }
 
-label #sidebar_btn{
+label #sidebar_btn {
     z-index: 2;
     color: grey;
     position: fixed;
@@ -123,19 +135,19 @@ label #sidebar_btn{
     transition-property: color;
 }
 
-label #sidebar_btn:hover{
+label #sidebar_btn:hover {
     color: #0062b9;
 }
 
-#check:checked ~ .sidebar{
+#check:checked ~ .sidebar {
     left: -185px;
 }
 
-#check:checked ~ .sidebar a span{
+#check:checked ~ .sidebar a span, #check:checked ~ .sidebar .navTitle {
     display: none;
 }
 
-#check:checked ~ .sidebar a{
+#check:checked ~ .sidebar a {
     font-size: 20px;
     margin-left: 165px;
     width: 100%;
@@ -147,7 +159,7 @@ label #sidebar_btn:hover{
     padding: 20px;
     margin-left: 250px;
     transition: 0.5s;
-    color: white;
+    color: black;
     font-size: 3vh;
 }
 
@@ -174,19 +186,8 @@ label #sidebar_btn:hover{
     display: none;
 }
 
-.content .card .card-content {
-    background: rgb(29,37,28);
-    background: -moz-radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
-    background: -webkit-radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
-    background: radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#1d251c",endColorstr="#0d1425",GradientType=1);
-    border: 1px solid black;
-    padding: 15px;
-    margin-bottom: 10px;
-    opacity: 0.8;
-    border-radius: 25px;
-    display: flex;
-    flex-direction: column;
+h3 {
+    text-align: center;
 }
 
 #avatar:hover, #avatarResponsive:hover {
@@ -203,18 +204,16 @@ label #sidebar_btn:hover{
     text-align: center;
 }
 
-#questionnaire, #resultat-autoevaluation, #startContainer, #questionnairesParams, #tableauDocuments, #tableau-graphique, #usersList {
-    background: rgb(29,37,28);
-    background: -moz-radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
-    background: -webkit-radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
-    background: radial-gradient(circle, rgba(29,37,28,0.7) 37%, rgba(13,20,37,0.7) 75%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#1d251c",endColorstr="#0d1425",GradientType=1);
-    border: 1px solid black;
+#startContainer, #questionnaire {
+    background-image: url('../assets/overlay.png'), url('../assets/questionnaire_background.jpg');
+    -webkit-background-size: cover;
+    background-size: 100% 100%;
     text-align: center;
+    border: 1px solid black;
 }
 
 #questionnaire, #startContainer{
-    padding: 5%;
+    margin-top: 5vh;
     color: white;
     transition: 0.5s;
 }
@@ -228,6 +227,11 @@ label #sidebar_btn:hover{
 
 #startContainer #startAuditButton, #startContainer #auditSelectMessage {
     display: none;
+    font-size: 2.5vh;
+}
+
+#startContainer button {
+    margin-bottom: 5vh;
 }
 
 #auditedCenterContainer {
@@ -254,10 +258,12 @@ label #sidebar_btn:hover{
 
 .autoevaluation-logos-container .logo-qualite, .audit-logos-container .logo-qualite {
     float: left;
+    margin: 5vh 0 0 3vw;
 }
 
 .autoevaluation-logos-container .logo-afpa, .audit-logos-container .logo-afpa {
     float: right;
+    margin: 5vh 3vw 0 0;
 }
 
 .audit-selectuser-buttonstart-container {
@@ -287,6 +293,8 @@ label #sidebar_btn:hover{
     font-weight: bold;
     border: 2px solid white;
     padding: 1% 0;
+    margin-left: 8vw;
+    margin-right: 8vw;
 }
 
 #questionnaire .question-label {
@@ -320,6 +328,8 @@ label #sidebar_btn:hover{
     resize: none;
     margin-top: 5vh;
     display: none;
+    margin-left: 8vw;
+    margin-right: 8vw;
 }
 
 #questionnaire h3, #questionnaire .answer{
@@ -336,18 +346,16 @@ label #sidebar_btn:hover{
 
 .form-buttons {
     margin-top: 3vh;
+    margin-bottom: 5vh;
 }
 
 button {
+    padding: 5px;
     background: white;
     -webkit-border-radius: 20px;
     -moz-border-radius: 20px;
     border-radius: 20px;
     font-family: "Arial", sans-serif;
-    -webkit-box-shadow: 1px 1px 20px 0 #000000;
-    -moz-box-shadow: 1px 1px 20px 0 #000000;
-    box-shadow: 1px 1px 20px 0 #000000;
-    text-shadow: 1px 1px 20px #000000;
     border: solid #000000 1px;
     text-decoration: none;
     cursor: pointer;
@@ -355,14 +363,41 @@ button {
     padding: 10px;
     color: black;
     outline: none;
+    transition: background 0.5s;
+}
+
+button:hover{
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    box-shadow: 0px 0px 9px 2px #6c9feb;
+    -moz-box-shadow: 0px 0px 9px 2px #6c9feb;
+    -webkit-box-shadow: 0px 0px 9px 2px #6c9feb;
+}
+
+.greenButton:hover {
+    background: #A7DB55;
+    box-shadow: 0px 0px 9px 2px #A7DB55;
+    -moz-box-shadow: 0px 0px 9px 2px #A7DB55;
+    -webkit-box-shadow: 0px 0px 9px 2px #A7DB55;
+}
+
+.redButton:hover {
+    background: #EE5046;
+    box-shadow: 0px 0px 9px 2px #EE5046;
+    -moz-box-shadow: 0px 0px 9px 2px #EE5046;
+    -webkit-box-shadow: 0px 0px 9px 2px #EE5046;
 }
 
 .button-next {
     float: right;
+    margin-right: 3vw;
 }
 
 .button-previous {
     float: left;
+    margin-left: 3vw;
 }
 
 .button-previous, .button-next, .button-send{
@@ -374,20 +409,7 @@ button {
 
 .button-send {
     float: right;
-}
- 
-button:hover {
-    border: solid #337FED 1px;
-    background: #00FFFF;
-    background-image: -webkit-linear-gradient(top, #00FFFF, #FFFFFF);
-    background-image: -moz-linear-gradient(top, #00FFFF, #FFFFFF);
-    background-image: -ms-linear-gradient(top, #00FFFF, #FFFFFF);
-    background-image: -o-linear-gradient(top, #00FFFF, #FFFFFF);
-    background-image: -webkit-gradient(to bottom, #00FFFF, #FFFFFF);
-    -webkit-border-radius: 20px;
-    -moz-border-radius: 20px;
-    border-radius: 20px;
-    text-decoration: none;
+    margin-right: 3vw;
 }
 
 #message, #auditSelectMessage {
@@ -410,16 +432,26 @@ button:hover {
     margin: 2vh auto;
 }
 
+#errorMessage {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 5vh;
+    background-color: #192C3C;
+    padding: 5vh 0 5vh 0;
+    color: white;
+}
+
 .button-show-autoeval-result, .button-show-audit-result, .button-show-administration {
     margin: 3vh auto;
 }
 
 #dateGraphique {
-    background-color: black;
+    background-color: #192C3C;
     display: block;
     padding: 1vh 1vw;
     position: absolute;
     right: 1%;
+    color: white;
 }
 
 #graphique-resultats {
@@ -428,29 +460,10 @@ button:hover {
     margin: 10vh auto 0.5vh auto;
 }
 
-#tableau-graphique {
+#tableauContainer {
     padding: 3vh 3vw;
-    border: none;
     margin-top: 5vh;
     display: none;
-}
-
-#tableau-graphique .non-conformites, #tableau-graphique .non-applicables, #tableau-graphique .NDA {
-    padding: 2vh 5vw;
-    margin: 2vh 0;
-    border-radius: 25px;
-}
-
-#tableau-graphique .non-conformites {
-    background-color: #F16137;
-}
-
-#tableau-graphique .non-applicables {
-    background-color: #308B7C;
-}
-
-#tableau-graphique .NDA {
-    background-color: #2F4A72;
 }
 
 .resultat-question {
@@ -461,7 +474,7 @@ button:hover {
     display: flex;
     flex-direction: column;
     border: 2px solid #00FFFF;
-    margin: 3vh auto 5vh auto;
+    margin: 3vh 5vw 5vh 5vw;
     box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.75);
     -webkit-box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.75);
@@ -501,7 +514,7 @@ button:hover {
     margin-bottom: 5vh;
 }
 
-#questionnairesParams, #tableauDocuments, #usersList {
+#questionnairesParams, #usersList {
     padding-top: 5vh;
 }
 
@@ -552,75 +565,196 @@ button:hover {
     margin: 5vh auto;
 }
 
-#questionnairesParams h3, #tableauDocuments h3, #usersList h3 {
+#questionnairesParams h3 {
     background-color: black;
     padding: 2vh 0;
     margin: 0 10vw;
     border-radius: 20px;
 }
 
-#questionnairesParams .edit-notification {
-    font-weight: bolder;
-    display: block;
-    margin-top: 3vh;
-    color: aqua;
-}
-
-#tableauDocuments .ajout-document {
-    margin: 8vh auto;
-}
-
-#tableauDocuments #formDocument {
-    display: none;
-}
-
-#tableauDocuments .document {
-    display: flex;
-    flex-direction: column;
-    margin: 5vh 8vw;
-    text-align: center;
-    border-top: 2px solid white;
-    padding: 6vh 0;
-}
-
-#tableauDocuments a {
+#titleContainer {
+    background-image: url('../assets/overlay.png'), url('../assets/title_background.jpg');
+    -webkit-background-size: cover;
+    background-size: 100% 100%;
+    height: 30vh;
     color: white;
-    text-decoration: none;
-    margin-left: 1vw;
+    margin-top: 5vh;
 }
 
-#tableauDocuments a:hover {
-    color: #00FFFF;
-    text-decoration: underline;
+#titleContainer select {
+    margin: 10vh auto;
+    display: block;
 }
 
-#tableauDocuments .document-buttons {
-    margin: 3vh;
+.userInputBar {
+    background-color: #192C3C;
+    display: inline-block;
+    width: 100%;
+    padding: 3vh 0;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
-#usersList select {
-    margin: 5vh auto;
+.userInputBar #listUsersSelect, .userInputBar #addDocumentButton, .userInputBar #showDocumentFormButton, .userInputBar #autoevalAddQuestionButton, .userInputBar #auditAddQuestionButton  {
+    margin-left: 5vw;
+}
+
+.userInputBar #preuvesQuestion, .autoeval-param-ajoutquestion select, .audit-param-ajoutquestion select {
+    margin-top: 5vh;
 }
 
 #userAutoevals, #userAudits {
-    padding: 5vh 5vw;
+    padding: 5vh 0;
+    transition: 0.5s;
 }
 
-#userAutoevals {
+#titleContainer h3 {
+    margin: 0 auto;
+    padding-top: 15vh;
+}
+
+#formDocument {
     display: none;
 }
 
-#userAudits {
+.autoeval-param-ajoutquestion, .audit-param-ajoutquestion {
     display: none;
+    flex-direction: column;
+    margin: 5vh auto;
+    width: 60%;
 }
 
-#usersList h3 {
+.autoeval-param-ajoutquestion-buttonsContainer, .audit-param-ajoutquestion-buttonsContainer {
     margin: 5vh auto;
 }
 
-#usersList .noresultfound {
-    color: #FF781B;
+.autoeval-param-ajoutquestion-buttonsContainer button, .audit-param-ajoutquestion-buttonsContainer button {
+    margin: 0 2vw;
+}
+
+table {
+    font-family: "Arial Black", Gadget, sans-serif;
+    border: 2px solid #6C9FEB;
+    background-color: #FFFFFF;
+    color: black;
+    width: 100%;
+    height: 200px;
+    text-align: center;
+    border-collapse: collapse;
+    margin: 5vh auto;
+}
+
+table td a {
+    color: black;
+    text-decoration: none;
+}
+
+table td a:hover {
+    color: black;
+    text-decoration: none;
+}
+
+table td {
+    border-bottom: 1px solid black;
+}
+
+table td, table#tableauActualites th {
+    padding: 3vh 2px;
+}
+
+table tbody td {
+    font-size: 2vh;
+}
+
+table thead {
+    background: #6C9FEB;
+    border-bottom: 3px solid #6C9FEB;
+}
+
+table thead th {
     font-weight: bold;
+    color: #E6E6E6;
+    text-align: center;
+    font-size: 2vh;
+}
+
+table thead th:first-child {
+    border-left: none;
+}
+  
+table tfoot {
+    font-size: 2vh;
+    font-weight: bold;
+    color: black;
+    background: #000000;
+    background: -moz-linear-gradient(top, #404040 0%, #191919 66%, #000000 100%);
+    background: -webkit-linear-gradient(top, #404040 0%, #191919 66%, #000000 100%);
+    background: linear-gradient(to bottom, #404040 0%, #191919 66%, #000000 100%);
+    border-top: 1px solid #4A4A4A;
+}
+
+table tfoot td {
+    font-size: 2vh;
+}
+
+table#tableauQuestionnaire tbody td {
+    padding: 1vh 1vw;
+}
+
+table#tableauQuestionnaire .questionnaire-border-white {
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+}
+
+.buttonsModificationQuestionnaire {
+    display: flex;
+    flex-direction: column;
+    margin: 2vh 2vh;
+}
+
+.buttonsModificationQuestionnaire button {
+    margin: 1vh;
+}
+
+table#tableauQuestionnaire .edit-notification {
+    font-weight: bolder;
+    color: aqua;
+    position: relative;
+    top: 50px;
+    white-space: break-spaces;
+    text-align: center;
+    display: block;
+}
+
+table#tableauNonConformites {
+    border: 2px solid #F16137;
+}
+
+table#tableauNonConformites thead {
+    background: #F16137;
+    border-bottom: 3px solid #F16137;
+}
+
+table#tableauNonApplicables {
+    border: 2px solid #308B7C;
+}
+
+table#tableauNonApplicables thead {
+    background: #308B7C;
+    border-bottom: 3px solid #308B7C;
+}
+
+table#tableauNonDisponiblesActuellement {
+    border: 2px solid #2F4A72;
+}
+
+table#tableauNonDisponiblesActuellement thead {
+    background: #2F4A72;
+    border-bottom: 3px solid #2F4A72;
+}
+
+table#tableauNonConformites td, table#tableauNonApplicables td, table#tableauNonDisponiblesActuellement td {
+    text-align: left;
 }
 
 /* Responsive CSS */
@@ -712,3 +846,29 @@ button:hover {
     }
 }
 
+@media (max-width: 700px){
+    table thead {
+        display: none;
+    }
+    table tr{
+        display: block;
+        margin-bottom: 40px;
+    }
+    table td {
+        display: block;
+        text-align: right;
+    }
+    table td:before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        margin-right: 35px;
+    }
+    table button {
+        width: 20%;
+        margin: 1.5vh auto !important;
+    }
+    table .edit-notification {
+        display: none !important;
+    }
+}

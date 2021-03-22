@@ -211,6 +211,12 @@ function startAudit(buttonvalue) {
             spanMessage.innerHTML = "Veuillez sélectionner le centre audité !";
             spanMessage.style.color = "#FF781B";
             spanMessage.style.display = "block";
+            setTimeout(() => {
+
+                spanMessage.innerHTML = "";
+                spanMessage.style.display = "none";
+
+            }, 2500);
             return;
             
         }
@@ -222,6 +228,12 @@ function startAudit(buttonvalue) {
             spanMessage.innerHTML = "Vous ne vous pas selectionner deux fois le même assistant !";
             spanMessage.style.color = "#FF781B";
             spanMessage.style.display = "block";
+            setTimeout(() => {
+
+                spanMessage.innerHTML = "";
+                spanMessage.style.display = "none";
+
+            }, 2500);
             return;
             
         }
@@ -461,11 +473,11 @@ function sendAudit(audit, userID) {
         url: 'traitements/traitementAudit.php',
         data: finaliseAudit,
         dataType: 'JSON',
-        success: function(data) {
+        success: function(dataGraphique) {
             
-            content.innerHTML = "<div id='graphique-resultats'></div><div id='tableau-graphique'></div>";
+            content.innerHTML = "<div id='graphique-resultats'></div><div id='tableauContainer'></div>";
 
-            createChart("graphique-resultats", "Résultats de l'audit", data);
+            createChart("graphique-resultats", "Résultats de l'audit", dataGraphique);
 
 
             function hideMessages() {
@@ -510,21 +522,21 @@ function sendAudit(audit, userID) {
         url: 'traitements/traitementAudit.php',
         data: finaliseAudit,
         dataType: 'text',
-        success: function(data) {
+        success: function(dataTableau) {
 
-            if(data == "Acces refusé ! Veuillez vous connectez !") {
+            if(dataTableau == "Acces refusé ! Veuillez vous connectez !") {
 
                 window.location.replace('index.php');
                 return;
                 
             }
 
-            if(data !== "") {
+            if(dataTableau !== "") {
 
                 setTimeout(() => {
 
-                    document.getElementById('tableau-graphique').style.display = "block";
-                    document.getElementById('tableau-graphique').innerHTML = data;
+                    document.getElementById('tableauContainer').style.display = "block";
+                    document.getElementById('tableauContainer').innerHTML = dataTableau;
 
                 }, 750);
 
@@ -845,7 +857,7 @@ function sendEval(eval) {
                     
                 }
 
-                content.innerHTML = "<div id='graphique-resultats'></div><div id='tableau-graphique'></div>";
+                content.innerHTML = "<div id='graphique-resultats'></div><div id='tableauContainer'></div>";
 
                 createChart("graphique-resultats", "Vos résultats", data);
 
@@ -887,21 +899,21 @@ function sendEval(eval) {
                 'evalNumber' : eval 
             }, 
             dataType: 'text',
-            success: function(data) {
+            success: function(dataTableau) {
 
-                if(data == "Acces refusé ! Veuillez vous connectez !") {
+                if(dataTableau == "Acces refusé ! Veuillez vous connectez !") {
 
                     window.location.replace('index.php');
                     return;
                     
                 }
 
-                if(data !== "") {
+                if(dataTableau !== "") {
 
                     setTimeout(() => {
 
-                        document.getElementById('tableau-graphique').style.display = "block";
-                        document.getElementById('tableau-graphique').innerHTML = data;
+                        document.getElementById('tableauContainer').style.display = "block";
+                        document.getElementById('tableauContainer').innerHTML = dataTableau;
 
                     }, 750);
 

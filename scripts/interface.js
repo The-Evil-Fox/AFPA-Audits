@@ -3,3 +3,44 @@ $(document).ready(function(){
       $('.mobile_nav_items').toggleClass('active');
     });
 });
+
+function getNavbar(category) {
+    
+  $(document).ready(function() {
+
+      let sidebarLinks = document.getElementById('sidebarLinks');
+      let mobileNavDropdown = document.getElementById('mobileNavDropdown');
+
+      $.ajax({
+
+          type: 'POST',
+          url: 'traitements/navbarGenerator.php',
+          data: category,
+          dataType: 'text',
+          success: function(data) {
+
+              if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                  window.location.replace('index.php');
+                  return;
+                  
+              }
+
+              sidebarLinks.innerHTML = data;
+              mobileNavDropdown.innerHTML = data;
+
+          },
+
+          error: function(xhr, textStatus, error){
+
+              alert(error);
+              alert(xhr);
+              alert(textStatus);
+              
+          }
+
+      });
+
+  });
+
+}

@@ -155,7 +155,7 @@ if(isset($_POST['eval']) && !empty($_POST['eval'])) {
         if($compliances !== 0) {
 
             $compliancesTab = array(
-                "label"=> "Conformités", "y"=> $compliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+                "label"=> "Conformités", "y"=> $compliances, "indexLabelFontColor" => "#000000", "indexLabelFontWeight" => "bolder"
             );
 
         }
@@ -163,7 +163,7 @@ if(isset($_POST['eval']) && !empty($_POST['eval'])) {
         if($nonCompliances !== 0) {
 
             $nonCompliancesTab = array(
-                "label"=> "Non-conformités", "y"=> $nonCompliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+                "label"=> "Non-conformités", "y"=> $nonCompliances, "indexLabelFontColor" => "#000000", "indexLabelFontWeight" => "bolder"
             );
 
         }
@@ -220,21 +220,23 @@ if(isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
         $getNonCompliances->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
         $getNonCompliances->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
         $getNonCompliances->execute();
-        
-        $compteur = 1;
+
         ?>
 
-        <h3>Liste des non-conformités</h3>
-        <div class="non-conformites">
-            <?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
-                
-                <div class="resultat-question">
-                    <?= $compteur . ") " . str_replace('?', '', $nonCompliances['Question']); ?>
-                </div>
-            
-                <?php $compteur++; ?>
-            <?php } ?>
-        </div>
+        <table id="tableauNonConformites">
+            <thead>
+                <tr>
+                    <th><?php if($numberNonCompliances > 1) { echo "Questions non-conformes"; } else { echo "Question non-conforme"; } ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
+                    <tr>
+                        <td data-label="Non conformité"><?= str_replace('?', '', $nonCompliances['Question']); ?></td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
 
     <?php }
 

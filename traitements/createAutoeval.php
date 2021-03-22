@@ -97,7 +97,7 @@ if(isset($_POST['createNewEval'])) {
                     <div class="category-question">
                         <?= $questions['Name']; ?>
                     </div>
-                    <span class="question-label"><?= $questions['Question']; ?></label>
+                    <span class="question-label"><?= $questions['Question']; ?></span>
                     <div class="inputGroup">
                         <div class="radiobox">
                             <input type="radio" id="<?= $questions['ID']; ?>Oui" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateAnswer(<?= $evaluationNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Oui">
@@ -119,7 +119,7 @@ if(isset($_POST['createNewEval'])) {
                                 <button type="button" class="button-next" onclick="nextQuestion(<?= $compteur; ?>)">Suivant <i class="fas fa-long-arrow-alt-right"></i></button>
                             <?php } ?>
                             <?php if($compteur == $questionsNumber) { ?>
-                                <button type="button" class="button-send" id="questionnaire-button-send" onclick="sendEval(<?= $evaluationNumber; ?>)">Finaliser mon auto-évaluation</button>
+                                <button type="button" class="button-send greenButton" id="questionnaire-button-send" onclick="sendEval(<?= $evaluationNumber; ?>)">Finaliser mon auto-évaluation</button>
                                 <input type="hidden" id="questionsNumber" value="<?= $compteur; ?>">
                             <?php } ?>
                         </div>

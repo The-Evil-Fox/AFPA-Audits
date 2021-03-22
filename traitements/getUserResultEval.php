@@ -35,7 +35,7 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['eval']) 
     if($compliances !== 0) {
 
         $compliancesTab = array(
-            "label"=> "Conformité(s)", "y"=> $compliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+            "label"=> "Conformité(s)", "y"=> $compliances, "indexLabelFontColor" => "#000000", "indexLabelFontWeight" => "bolder"
         );
 
     }
@@ -43,7 +43,7 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['eval']) 
     if($nonCompliances !== 0) {
 
         $nonCompliancesTab = array(
-            "label"=> "Non-conformité(s)", "y"=> $nonCompliances, "indexLabelFontColor" => "#FFFFFF", "indexLabelFontWeight" => "bolder"
+            "label"=> "Non-conformité(s)", "y"=> $nonCompliances, "indexLabelFontColor" => "#000000", "indexLabelFontWeight" => "bolder"
         );
 
     }
@@ -92,22 +92,23 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['evalNumb
         $getUserNonCompliances->bindParam(':user', $user, PDO::PARAM_INT);
         $getUserNonCompliances->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
         $getUserNonCompliances->execute();
-        
-        $compteur = 1;
 
         ?>
 
-        <h3>Liste des non-conformité(s)</h3>
-        <div class="non-conformites">
-            <?php while($nonCompliances = $getUserNonCompliances->fetch()) { ?>
-                
-                <div class="resultat-question">
-                    <?= $compteur . ") " . str_replace('?', '', $nonCompliances['Question']); ?>
-                </div>
-            
-                <?php $compteur++; ?>
-            <?php } ?>
-        </div>
+        <table id="tableauNonConformites">
+            <thead>
+                <tr>
+                    <th>Question(s) non-conforme</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while($nonCompliances = $getUserNonCompliances->fetch()) { ?>
+                    <tr>
+                        <td data-label="Non conformité"><?= str_replace('?', '', $nonCompliances['Question']); ?></td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
 
     <?php }
 

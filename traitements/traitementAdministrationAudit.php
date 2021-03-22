@@ -98,4 +98,10 @@ if(isset($_POST['newQuestion']) && !empty($_POST['newQuestion'])) {
 
 }
 
+if(isset($message) && !empty($message)) {
+
+    echo $message;
+
+}
+
 ?>

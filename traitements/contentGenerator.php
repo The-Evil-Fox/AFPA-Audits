@@ -90,7 +90,7 @@ if(isset($_POST['monespace'])) {
                 <?php while($eval = $checkEval->fetch()) { ?>
                     <tr>
                         <td data-label="Date">Autoévaluation du <?php echo dateConvert($eval['DateAndHour']); ?></td>
-                        <td><button class="button-show-autoeval-result" type="button" onclick="showChart('<?= $eval['Evaluation_Number']; ?>','<?php echo dateConvert($eval['DateAndHour']); ?>')">Voir mes résultats</button></td>
+                        <td data-label="Action"><button class="button-show-autoeval-result" type="button" onclick="showChart('<?= $eval['Evaluation_Number']; ?>','<?php echo dateConvert($eval['DateAndHour']); ?>')">Voir mes résultats</button></td>
                     </tr>
                 <?php } ?>
             </tbody>

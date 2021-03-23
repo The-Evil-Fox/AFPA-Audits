@@ -65,7 +65,7 @@ if(isset($_POST['autoEvalution'])) {
         <h3>Modification de l'autoévaluation</h3>
     </div>
     <div class="userInputBar">
-        <button id="autoevalAddQuestionButton" onclick="showAdminForm('autoeval')">Ajouter une question</button>
+        <button id="autoevalAddQuestionButton" onclick="showAdminForm('autoeval')"><i class="fas fa-plus"></i> Ajouter une question</button>
         <div class="autoeval-param-ajoutquestion" id="autoevalFormContainer">
             <input type="text" id="newQuestion" placeholder="Ajouter une nouvelle question...">
             <select id="categorie">
@@ -75,8 +75,8 @@ if(isset($_POST['autoEvalution'])) {
                 <?php } ?>
             </select>
             <div class="autoeval-param-ajoutquestion-buttonsContainer">
-                <button class="greenButton" onclick="addQuestionQuestionnaire('autoevaluation')">Ajouter</button>
-                <button class="redButton" onclick="showAdminForm('autoeval')">Annuler</button>
+                <button class="greenButton" onclick="addQuestionQuestionnaire('autoevaluation')"><i class="fas fa-check"></i></button>
+                <button class="redButton" onclick="showAdminForm('autoeval')"><i class="fas fa-times"></i></button>
             </div>
         </div>
     </div>
@@ -93,13 +93,18 @@ if(isset($_POST['autoEvalution'])) {
         <tbody>
             <?php while($question = $getQuestions->fetch()) { ?>
                 <tr>
-                    <td id="questionStatus<?= $question['ID']; ?>"><?php if($question['Active'] == true) { ?>[ACTIVE]<?php } else { ?>[INACTIVE]<?php } ?></td>
-                    <td class="questionnaire-border-white" id="question-label-<?= $question['ID']; ?>"><?= $question['Question']; ?></td>
-                    <td class="questionnaire-border-white"><?= $question['Name']; ?></td>
-                    <td>
+                    <td data-label="Statut" id="questionStatus<?= $question['ID']; ?>"><?php if($question['Active'] == true) { ?>Active<?php } else { ?>Inactive<?php } ?></td>
+                    <td data-label="Question" class="questionnaire-border-white" id="question-label-<?= $question['ID']; ?>"><?= $question['Question']; ?></td>
+                    <td data-label="Catégorie" class="questionnaire-border-white"><?= $question['Name']; ?></td>
+                    <td data-label="Actions">
                         <div class="buttonsModificationQuestionnaire">
-                            <button <?php if($question['Active'] == true) { ?> id="disable<?= $question['ID']; ?>" <?php } else { ?> id="enable<?= $question['ID']; ?>"<?php } ?> onclick="updateStatusRemoveQuestionQuestionnaire('autoeval', this, <?= $question['ID']; ?>)" <?php if($question['Active'] == true) { ?> value="disable" <?php } else { ?> value="enable" <?php } ?>>Activer / Désactiver</button>
-                            <button onclick="updateQuestionQuestionnaire('autoeval', <?= $question['ID']; ?>)" value="edit">Modifier</button>
+                            <button <?php if($question['Active'] == true) { ?> class="redButton"<?php } else { ?> class="greenButton"<?php } ?>
+                            <?php if($question['Active'] == true) { ?> id="disable<?= $question['ID']; ?>" <?php } else { ?> id="enable<?= $question['ID']; ?>"<?php } ?> 
+                            onclick="updateStatusRemoveQuestionQuestionnaire('autoeval', this, <?= $question['ID']; ?>)" 
+                            <?php if($question['Active'] == true) { ?> value="disable" <?php } else { ?> value="enable" <?php } ?>>
+                                <?php if($question['Active'] == true) { ?> <i class="fas fa-toggle-on"></i> Désactiver<?php } else { ?><i class="fas fa-toggle-off"></i> Activer<?php } ?>
+                            </button>
+                            <button onclick="updateQuestionQuestionnaire('autoeval', <?= $question['ID']; ?>)" value="edit"><i class="far fa-edit"></i> Modifier</button>
                             <button class="redButton" onclick="updateStatusRemoveQuestionQuestionnaire('autoeval', this, <?= $question['ID']; ?>)" value="delete"><i class="fas fa-trash-alt"></i> Supprimer</button>
                         </div>
                     </td>
@@ -122,7 +127,7 @@ if(isset($_POST['documents'])) {
         <h3>Documents</h3>
     </div>
     <div class="userInputBar">
-    <button onclick="addDocument()" id="addDocumentButton">Ajouter un document</button>
+    <button onclick="addDocument()" id="addDocumentButton"><i class="fas fa-plus"></i> Ajouter un document</button>
     <form id="formDocument" method="POST" enctype="multipart/form-data">
         <input type="file" name="addDocument" id="addDocument">
     </form>
@@ -139,7 +144,7 @@ if(isset($_POST['documents'])) {
         <?php while($documents = $getDocuments->fetch()) { ?>
                 <tr>
                     <td id="<?= $documents['ID']; ?>" data-label="Document"><a target="_blank" href="documents/<?= $documents['Link']; ?>"><?= $documents['Document']; ?></a></td>
-                    <td data-label="Supprimer"><button class="redButton" onclick="deleteDocument(this.value, <?= $documents['ID']; ?>, '<?= $documents['Link']; ?>')" value="delete"><i class="fas fa-trash-alt"></i> Supprimer</button></td>
+                    <td data-label="Action"><button class="redButton" onclick="deleteDocument(this.value, <?= $documents['ID']; ?>, '<?= $documents['Link']; ?>')" value="delete"><i class="fas fa-trash-alt"></i> Supprimer</button></td>
                 </tr>
 
             <?php } ?>
@@ -147,108 +152,6 @@ if(isset($_POST['documents'])) {
     </table>
 
 <?php }
-
-if(isset($_POST['getStats'])) {
-
-    $countCompliances = $db->query("SELECT COUNT(*) AS 'conformités' FROM ConstatsAudits ca INNER JOIN Audits a 
-    ON ca.Audit_Number = a.Audit_Number AND ca.User_ID = a.User_ID WHERE a.Completed = 1 
-    AND ca.Constat = 'Conforme'");
-
-    $resultCount1 = $countCompliances->fetch();
-
-    $compliances = (int) $resultCount1['conformités'];
-
-    $countNC = $db->query("SELECT COUNT(*) AS 'NC' FROM ConstatsAudits ca INNER JOIN Audits a 
-    ON ca.Audit_Number = a.Audit_Number AND ca.User_ID = a.User_ID WHERE a.Completed = 1 
-    AND ca.Constat = 'NC'");
-
-    $resultCount2 = $countNC->fetch();
-
-    $NC = (int) $resultCount2['NC'];
-
-    $countNA = $db->query("SELECT COUNT(*) AS 'NA' FROM ConstatsAudits ca INNER JOIN Audits a 
-    ON ca.Audit_Number = a.Audit_Number AND ca.User_ID = a.User_ID WHERE a.Completed = 1 
-    AND ca.Constat = 'NA'");
-
-    $resultCount3 = $countNA->fetch();
-
-    $NA = (int) $resultCount3['NA'];
-
-    $countNDA = $db->query("SELECT COUNT(*) AS 'NDA' FROM ConstatsAudits ca INNER JOIN Audits a 
-    ON ca.Audit_Number = a.Audit_Number AND ca.User_ID = a.User_ID WHERE a.Completed = 1 
-    AND ca.Constat = 'NDA'");
-
-    $resultCount4 = $countNDA->fetch();
-
-    $NDA = (int) $resultCount4['NDA'];
-
-    if($compliances !== 0) {
-
-        $compliancesTab = array(
-            "label"=> "Conformes", "y"=> $compliances, "indexLabelFontColor" => "#000000", "indexLabelFontWeight" => "bolder"
-        );
-
-    }
-
-    if($NC !== 0) {
-
-        $NCTab = array(
-            "label"=> "Non conformes", "y"=> $NC, "indexLabelFontColor" => "#000000", "indexLabelFontWeight" => "bolder"
-        );
-
-    }
-
-    if($NA !== 0) {
-
-        $NATab = array(
-            "label"=> "Non applicables", "y"=> $NA, "indexLabelFontColor" => "#000000", "indexLabelFontWeight" => "bolder"
-        );
-
-    }
-
-    if($NDA !== 0) {
-
-        $NDATab = array(
-            "label"=> "Non disponibles actuellement", "y"=> $NDA, "indexLabelFontColor" => "#000000", "indexLabelFontWeight" => "bolder"
-        );
-
-    }
-
-    $dataPoints = array(
-
-    );
-
-    if(is_array($compliancesTab)) {
-
-        array_push($dataPoints, $compliancesTab);
-
-    }
-
-    if(isset($NCTab)) {
-
-        if(is_array($NCTab)) {
-
-            array_push($dataPoints, $NCTab);
-    
-        }
-
-    }
-
-    if(is_array($NATab)) {
-
-        array_push($dataPoints, $NATab);
-
-    }
-
-    if(is_array($NDATab)) {
-
-        array_push($dataPoints, $NDATab);
-
-    }
-
-    echo json_encode($dataPoints, JSON_NUMERIC_CHECK);
-
-}
 
 if(isset($_POST['audit'])) {
 
@@ -261,7 +164,7 @@ if(isset($_POST['audit'])) {
         <h3>Modification de l'audit</h3>
     </div>
     <div class="userInputBar">
-        <button id="auditAddQuestionButton" onclick="showAdminForm('audit')">Ajouter une question</button>
+        <button id="auditAddQuestionButton" onclick="showAdminForm('audit')"><i class="fas fa-plus"></i> Ajouter une question</button>
         <div class="audit-param-ajoutquestion" id="auditFormContainer">
             <input type="text" id="newQuestion" placeholder="Ajouter une nouvelle question...">
             <input type="text" id="preuvesQuestion" placeholder="Insérer les preuves à fournir (optionnel)">
@@ -272,8 +175,8 @@ if(isset($_POST['audit'])) {
                 <?php } ?>
             </select>
             <div class="audit-param-ajoutquestion-buttonsContainer">
-                <button class="greenButton" onclick="addQuestionQuestionnaire('audit')">Ajouter</button>
-                <button class="redButton" onclick="showAdminForm('audit')">Annuler</button>
+                <button class="greenButton" onclick="addQuestionQuestionnaire('audit')"><i class="fas fa-check"></i></button>
+                <button class="redButton" onclick="showAdminForm('audit')"><i class="fas fa-times"></i></button>
             </div>
         </div>
     </div>
@@ -291,13 +194,16 @@ if(isset($_POST['audit'])) {
         <tbody>
             <?php while($question = $getQuestions->fetch()) { ?>
                 <tr>
-                    <td data-label="Status" id="questionStatus<?= $question['ID']; ?>"><?php if($question['Active'] == true) { ?>[ACTIVE]<?php } else { ?>[INACTIVE]<?php } ?></td>
+                    <td data-label="Statut" id="questionStatus<?= $question['ID']; ?>"><?php if($question['Active'] == true) { ?>Active<?php } else { ?>Inactive<?php } ?></td>
                     <td data-label="Question" class="questionnaire-border-white" id="question-label-<?= $question['ID']; ?>"><?= $question['Thematique']; ?></td>
                     <td data-label="Preuves" class="questionnaire-border-white"><?php if($question['Preuves'] !== NULL) { echo $question['Preuves']; } else { echo "/"; } ?></td>
                     <td data-label="Categorie" class="questionnaire-border-white"><?= $question['Name']; ?></td>
-                    <td>
+                    <td data-label="Actions">
                         <div class="buttonsModificationQuestionnaire">
-                            <button <?php if($question['Active'] == true) { ?> id="disable<?= $question['ID']; ?>" <?php } else { ?> id="enable<?= $question['ID']; ?>"<?php } ?> onclick="updateStatusRemoveQuestionQuestionnaire('audit', this, <?= $question['ID']; ?>)" <?php if($question['Active'] == true) { ?> value="disable" <?php } else { ?> value="enable" <?php } ?>>Activer / Désactiver</button>
+                            <button <?php if($question['Active'] == true) { ?> id="disable<?= $question['ID']; ?>" <?php } else { ?> id="enable<?= $question['ID']; ?>"<?php } ?>
+                             onclick="updateStatusRemoveQuestionQuestionnaire('audit', this, <?= $question['ID']; ?>)"
+                              <?php if($question['Active'] == true) { ?> value="disable" <?php } else { ?> value="enable" <?php } ?>>
+                              <?php if($question['Active'] == true) { ?> <i class="fas fa-toggle-on"></i> Désactiver<?php } else { ?><i class="fas fa-toggle-off"></i> Activer<?php } ?>
                             <button onclick="updateQuestionQuestionnaire('audit', <?= $question['ID']; ?>)" value="edit">Modifier</button>
                             <button class="redButton" onclick="updateStatusRemoveQuestionQuestionnaire('audit', this, <?= $question['ID']; ?>)" value="delete"><i class="fas fa-trash-alt"></i> Supprimer</button>
                         </div>

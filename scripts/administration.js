@@ -4,7 +4,7 @@ function showAdministration(category) {
     
     $(document).ready(function() {
 
-        let contentWindow = document.getElementById('content');
+        showLoading(contentWindow);
 
         $.ajax({
 
@@ -60,6 +60,9 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
         userID,
         eval 
     };
+
+    contentWindow.innerHTML = "";
+    contentWindow.innerHTML = "<img class='contentLoadingImage' src='assets/loading2.gif'>";
 
     $.ajax({
 
@@ -346,7 +349,6 @@ function addQuestionQuestionnaire(questionnaire) {
     
                 setTimeout(() => {
     
-                    let contentWindow = document.getElementById('content');
                     contentWindow.innerHTML = data;
     
                 }, 500);
@@ -397,7 +399,6 @@ function addQuestionQuestionnaire(questionnaire) {
     
                 setTimeout(() => {
     
-                    let contentWindow = document.getElementById('content');
                     contentWindow.innerHTML = data;
     
                 }, 500);
@@ -453,7 +454,6 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
                 
                             setTimeout(() => {
                 
-                                let contentWindow = document.getElementById('content');
                                 contentWindow.innerHTML = data;
                 
                             }, 500);
@@ -470,19 +470,19 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
                 
                     });
 
-                }
+                } else if(operation == "disable") {
 
-                if(operation == "disable") {
-
-                    questionStatus.innerHTML = "[INACTIVE]";
+                    questionStatus.innerHTML = "Inactive";
                     button.value = "enable";
+                    button.innerHTML = "<i class='fas fa-toggle-off'></i> Activer";
+                    button.className = "greenButton";
 
-                }
+                } else if(operation == "enable") {
 
-                if(operation == "enable") {
-
-                    questionStatus.innerHTML = "[ACTIVE]";
-                    button.value="disable";
+                    questionStatus.innerHTML = "Active";
+                    button.value = "disable";
+                    button.innerHTML = "<i class='fas fa-toggle-on'></i> Désactiver";
+                    button.className = "redButton";
 
                 }
 
@@ -519,7 +519,6 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
                 
                             setTimeout(() => {
                 
-                                let contentWindow = document.getElementById('content');
                                 contentWindow.innerHTML = data;
                 
                             }, 500);
@@ -540,15 +539,19 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
 
                 if(operation == "disable") {
 
-                    questionStatus.innerHTML = "[INACTIVE]";
-                    button.value="enable";
+                    questionStatus.innerHTML = "Inactive";
+                    button.value = "enable";
+                    button.innerHTML = "<i class='fas fa-toggle-off'></i> Activer";
+                    button.className = "greenButton";
 
                 }
 
                 if(operation == "enable") {
 
-                    questionStatus.innerHTML = "[ACTIVE]";
-                    button.value="disable";
+                    questionStatus.innerHTML = "Active";
+                    button.value = "disable";
+                    button.innerHTML = "<i class='fas fa-toggle-on'></i> Désactiver";
+                    button.className = "redButton";
 
                 }
 
@@ -787,6 +790,8 @@ function deleteDocument(action, id, link) {
 
 function refreshDocuments() {
 
+    showLoading(contentWindow);
+
     $.ajax({
 
         type: 'POST',
@@ -795,7 +800,6 @@ function refreshDocuments() {
         dataType: 'text',
         success: function(data) {
 
-            let contentWindow = document.getElementById('content');
             contentWindow.innerHTML = data;
 
         },
@@ -818,18 +822,20 @@ function showStats() {
 
     $(document).ready(function() {
 
-        let contentWindow = document.getElementById('content');
+        showLoading(contentWindow);
 
         let getStats = true;
 
         dataSend = {
+
             getStats
+            
         }
 
         $.ajax({
 
             type: 'POST',
-            url: 'traitements/administrationGenerator.php',
+            url: 'traitements/getGlobalStats.php',
             data: dataSend,
             dataType: 'JSON',
             success: function(data) {
@@ -948,7 +954,10 @@ function getAllResultsUser(user) {
     }
 
     if(user !== "") {
-
+        
+        showLoading(evalsContainer);
+        showLoading(auditsContainer);
+        
         getEvals = true;
 
         dataSend = {

@@ -24,8 +24,8 @@ if(isset($_POST['getEvals']) && isset($_POST['user']) && !empty($_POST['user']))
             <tbody>
                 <?php while($evals = $getEvals->fetch()) { ?>
                     <tr>
-                        <td data-label="Date autoévaluation"><?= dateConvert($audits['DateAndHour']); ?></td>
-                        <td data-label="Resultats autoévaluation"><button class="button-show-autoeval-result" onclick="showUserResultEval(<?= $evals['ID']; ?>, <?= $evals['Evaluation_Number']; ?>, '<?= $evals['Name']; ?>', '<?= $evals['FirstName']; ?>', '<?= dateConvert($evals['DateAndHour']); ?>')">Résultats</button></td>
+                        <td data-label="Date autoévaluation"><?= dateConvert($evals['DateAndHour']); ?></td>
+                        <td data-label="Action"><button class="button-show-autoeval-result" onclick="showUserResultEval(<?= $evals['ID']; ?>, <?= $evals['Evaluation_Number']; ?>, '<?= $evals['Name']; ?>', '<?= $evals['FirstName']; ?>', '<?= dateConvert($evals['DateAndHour']); ?>')">Résultats</button></td>
                     </tr>
                 <?php } ?>
             </tbody>
@@ -75,7 +75,7 @@ if(isset($_POST['getAudits']) && isset($_POST['user']) && !empty($_POST['user'])
                 <?php while($audits = $getAudits->fetch()) { ?>
                     <tr>
                         <td data-label="Date audit"><?= dateConvert($audits['DateAndHour']); ?></td>
-                        <td data-label="Resultats audit"><button class="button-show-autoeval-result" onclick="showUserResultAudit(<?= $audits['ID']; ?>, <?= $audits['Audit_Number']; ?>, '<?= $audits['Name']; ?>', '<?= $audits['FirstName']; ?>', '<?= dateConvert($audits['DateAndHour']); ?>','<?= $audits['Localisation']; ?>')">Résultats</button></td>
+                        <td data-label="Action"><button class="button-show-autoeval-result" onclick="showUserResultAudit(<?= $audits['ID']; ?>, <?= $audits['Audit_Number']; ?>, '<?= $audits['Name']; ?>', '<?= $audits['FirstName']; ?>', '<?= dateConvert($audits['DateAndHour']); ?>','<?= $audits['Localisation']; ?>')">Résultats</button></td>
                     </tr>
                 <?php } ?>
             </tbody>

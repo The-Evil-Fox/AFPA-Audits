@@ -1,3 +1,11 @@
+const contentWindow = document.getElementById('content');
+
+function showLoading(container) {
+
+    container.innerHTML = "<img class='contentLoadingImage' src='assets/loading2.gif'>";
+
+}
+
 function showContent(category) {
     
     $(document).ready(function() {
@@ -8,8 +16,6 @@ function showContent(category) {
             document.body.removeEventListener('keydown', autoEvalShortcutsControls);
             page = 1;
         }
-
-        let contentWindow = document.getElementById('content');
 
         autoEvalShortcutsControls = (e) => {
 
@@ -46,6 +52,8 @@ function showContent(category) {
             }
         
         }
+
+        contentWindow.innerHTML = "<img class='contentLoadingImage' src='assets/loading2.gif'>";
 
         if(category == "home") {
 

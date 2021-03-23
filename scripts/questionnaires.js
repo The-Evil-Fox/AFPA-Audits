@@ -185,7 +185,6 @@ function checkAuditInProgress(user) {
 function startAudit(buttonvalue) {
 
     let spanMessage = document.getElementById('auditSelectMessage');
-    let contentWindow = document.getElementById('content');
     let startContainer = document.getElementById('startContainer');
 
     selectauditedUser = document.getElementById('auditedUser');
@@ -262,6 +261,7 @@ function startAudit(buttonvalue) {
 
     startContainer.style.opacity = 0;
     startContainer.style.display = "none";
+    showLoading(contentWindow);
 
     $.ajax({
 
@@ -558,11 +558,11 @@ function sendAudit(audit, userID) {
 
 function startEval() {
 
-    let contentWindow = document.getElementById('content');
     let startContainer = document.getElementById('startContainer');
 
     startContainer.style.opacity = 0;
     startContainer.style.display = "none";
+    showLoading(contentWindow);
 
     $.ajax({
 

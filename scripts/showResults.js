@@ -1,10 +1,10 @@
 function showChart(autoeval_number, date) {
     
     $(document).ready(function() {
-
-        let contentWindow = document.getElementById('content');
         
         let evalNumber = autoeval_number;
+
+        showLoading(contentWindow);
 
         $.ajax({
 

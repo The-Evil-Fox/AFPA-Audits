@@ -73,6 +73,48 @@ header {
     border-right: 1px solid black;
 }
 
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.sidebar::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #e1e1e1;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #ffffff;
+}
+
+.sidebar::-webkit-scrollbar-thumb:active {
+  background: #3ff3f0;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #666666;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+
+.sidebar::-webkit-scrollbar-track:hover {
+  background: #666666;
+}
+
+.sidebar::-webkit-scrollbar-track:active {
+  background: #333333;
+}
+
+.sidebar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 .profile_info {
     display: flex;
     flex-direction: column;
@@ -163,6 +205,13 @@ label #sidebar_btn:hover {
     font-size: 3vh;
 }
 
+.content .contentLoadingImage {
+    margin: auto auto;
+    display: block;
+    position: relative;
+    top: 25vh;
+}
+
 .backgroundImage {
     background-image: url('../assets/homeBackground.jpg');
     background-size: cover;
@@ -188,6 +237,7 @@ label #sidebar_btn:hover {
 
 h3 {
     text-align: center;
+    user-select: none;
 }
 
 #avatar:hover, #avatarResponsive:hover {
@@ -576,9 +626,10 @@ button:hover{
     background-image: url('../assets/overlay.png'), url('../assets/title_background.jpg');
     -webkit-background-size: cover;
     background-size: 100% 100%;
-    height: 30vh;
+    height: 15vh;
     color: white;
     margin-top: 5vh;
+    border: 1px solid black;
 }
 
 #titleContainer select {
@@ -593,6 +644,10 @@ button:hover{
     padding: 3vh 0;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+}
+
+.userInputBar .fa-plus {
+    color: green;
 }
 
 .userInputBar #listUsersSelect, .userInputBar #addDocumentButton, .userInputBar #showDocumentFormButton, .userInputBar #autoevalAddQuestionButton, .userInputBar #auditAddQuestionButton  {
@@ -610,7 +665,7 @@ button:hover{
 
 #titleContainer h3 {
     margin: 0 auto;
-    padding-top: 15vh;
+    padding-top: 7vh;
 }
 
 #formDocument {
@@ -655,7 +710,7 @@ table td a:hover {
 }
 
 table td {
-    border-bottom: 1px solid black;
+    border-bottom: 2px solid black;
 }
 
 table td, table#tableauActualites th {
@@ -676,6 +731,7 @@ table thead th {
     color: #E6E6E6;
     text-align: center;
     font-size: 2vh;
+    user-select: none;
 }
 
 table thead th:first-child {
@@ -702,8 +758,12 @@ table#tableauQuestionnaire tbody td {
 }
 
 table#tableauQuestionnaire .questionnaire-border-white {
-    border-left: 2px solid black;
-    border-right: 2px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+
+.questionnaires-input-edit {
+    width: 90%;
 }
 
 .buttonsModificationQuestionnaire {
@@ -852,11 +912,11 @@ table#tableauNonConformites td, table#tableauNonApplicables td, table#tableauNon
     }
     table tr{
         display: block;
-        margin-bottom: 40px;
     }
     table td {
         display: block;
         text-align: right;
+        border-bottom: 1px solid black;
     }
     table td:before {
         content: attr(data-label);
@@ -870,5 +930,13 @@ table#tableauNonConformites td, table#tableauNonApplicables td, table#tableauNon
     }
     table .edit-notification {
         display: none !important;
+    }
+    table#tableauQuestionnaire .questionnaire-border-white {
+        border-bottom: 1px solid black;
+        border-left: none;
+        border-right: none;
+    }
+    table#tableauQuestionnaire td:last-child {
+        border-bottom: 2px solid black;
     }
 }

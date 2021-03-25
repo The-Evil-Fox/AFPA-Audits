@@ -101,7 +101,7 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
     LEFT JOIN Audits a ON a.User_ID = :user
                        AND a.Audit_Number = :auditNumber
     WHERE qa.Active = true 
-    ORDER BY qa.ID;');
+    ORDER BY cqa.ID;');
     $selectQuestions->bindParam(':user', $_POST['auditedUserID'], PDO::PARAM_INT);
     $selectQuestions->bindParam(':auditNumber', $auditNumber, PDO::PARAM_INT);
     $selectQuestions->execute();
@@ -143,9 +143,11 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
                     <?= $questions['Name']; ?>
                 </div>
                 <span class="question-label"><?= $questions['Thematique']; ?></span>
-                <div class="preuves-container">
-                    <span class="preuves-label">Preuve(s) attendue(s):</span><span><?= $questions['Preuves']; ?></span>
-                </div>
+                <?php if($questions['Preuves'] !== NULL) { ?>
+                    <div class="preuves-container">
+                        <span class="preuves-label">Preuve(s) attendue(s):</span><span><?= $questions['Preuves']; ?></span>
+                    </div>
+                <?php } ?>
                 <div class="inputGroup">
                     <div id="radioDiv">
                         <div class="radiobox">
@@ -249,7 +251,7 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
     $result = $countThematiques->fetch();
     $ThematiquesNumber = (int) $result['nb_thematiques'];
 
-    $selectThematiques = $db->query('SELECT qa.Thematique, qa.ID, qa.Preuves, cqa.Name FROM QuestionsAudit qa LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID WHERE qa.Active = true ORDER BY qa.ID ASC');
+    $selectThematiques = $db->query('SELECT qa.Thematique, qa.ID, qa.Preuves, cqa.Name FROM QuestionsAudit qa LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID WHERE qa.Active = true ORDER BY cqa.ID ASC');
 
     $selectThematiquesID = $db->query('SELECT QuestionsAudit.ID FROM QuestionsAudit WHERE QuestionsAudit.Active = true ORDER BY QuestionsAudit.ID ASC');
     $thematiquesID = array();
@@ -309,9 +311,11 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
                     <?= $questions['Name']; ?>
                 </div>
                 <span class="question-label"><?= $questions['Thematique']; ?></span>
-                <div class="preuves-container">
-                    <span class="preuves-label">Preuve(s) attendue(s):</span><span><?= $questions['Preuves']; ?></span>
-                </div>
+                <?php if($questions['Preuves'] !== NULL) { ?>
+                    <div class="preuves-container">
+                        <span class="preuves-label">Preuve(s) attendue(s):</span><span><?= $questions['Preuves']; ?></span>
+                    </div>
+                <?php } ?>
                 <div class="inputGroup">
                     <div id="radioDiv">
                         <div class="radiobox">

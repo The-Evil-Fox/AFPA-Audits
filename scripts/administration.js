@@ -9,7 +9,7 @@ function showAdministration(category) {
         $.ajax({
 
             type: 'POST',
-            url: 'traitements/administrationGenerator.php',
+            url: 'contentGenerators/administrationGenerator.php',
             data: category,
             dataType: 'text',
             success: function(data) {
@@ -40,9 +40,7 @@ function showAdministration(category) {
             
             error: function(xhr, textStatus, error){
 
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+                alert(xhr.status + " " + xhr.statusText);
                 
             }
 
@@ -67,7 +65,7 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
     $.ajax({
 
         type: 'POST',
-        url: 'traitements/getUserResultEval.php',
+        url: 'contentGenerators/userResultEval.php',
         data: userData,
         dataType: 'JSON',
         success: function(datagraphique) {
@@ -79,7 +77,7 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
                 
             }
 
-            content.innerHTML = "<div id='dateGraphique'>le "+date+"</div><div id='graphique-resultats'></div><div id='tableauContainer'></div>";
+            content.innerHTML = "<div id='graphique-resultats'></div><div id='dateGraphique'>Effectué le "+date+".</div><div id='tableauContainer'></div>";
 
             createChart("graphique-resultats", "Résultats de l'autoévaluation de " + userName + " " + userFirstName, datagraphique);
 
@@ -107,7 +105,7 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
     $.ajax({
 
         type: 'POST',
-        url: 'traitements/getUserResultEval.php',
+        url: 'contentGenerators/userResultEval.php',
         data: {
             'getNonCompliances': true,
             'evalNumber' : eval,
@@ -138,9 +136,7 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
 
         error: function(xhr, textStatus, error){
 
-            alert(error);
-            alert(xhr);
-            alert(textStatus);
+            alert(xhr.status + " " + xhr.statusText);
             
         }
 
@@ -158,12 +154,12 @@ function showUserResultAudit(userID, audit, userName, userFirstName, date, centr
     $.ajax({
 
         type: 'POST',
-        url: 'traitements/getUserResultAudit.php',
+        url: 'contentGenerators/userResultAudit.php',
         data: userData,
         dataType: 'JSON',
         success: function(dataGraphique) {
 
-            content.innerHTML = "<div id='dateGraphique'>Effectué au centre de " + centre + " le "+date+"</div><div id='graphique-resultats'></div><div id='tableauContainer'></div>";
+            content.innerHTML = "<div id='graphique-resultats'></div><div id='dateGraphique'>Effectué au centre de " + centre + " le "+date+".</div><div id='tableauContainer'></div>";
 
             createChart("graphique-resultats", "Résultats de l'audit de " + userName + " " + userFirstName, dataGraphique);
 
@@ -191,7 +187,7 @@ function showUserResultAudit(userID, audit, userName, userFirstName, date, centr
     $.ajax({
 
         type: 'POST',
-        url: 'traitements/getUserResultAudit.php',
+        url: 'contentGenerators/userResultAudit.php',
         data: {
             'getNonCompliances': true,
             'audit' : audit,
@@ -215,9 +211,7 @@ function showUserResultAudit(userID, audit, userName, userFirstName, date, centr
 
         error: function(xhr, textStatus, error){
 
-            alert(error);
-            alert(xhr);
-            alert(textStatus);
+            alert(xhr.status + " " + xhr.statusText);
             
         }
 
@@ -331,9 +325,7 @@ function addQuestionQuestionnaire(questionnaire) {
 
             error: function(xhr, textStatus, error) {
 
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+                alert(xhr.status + " " + xhr.statusText);
 
             }
 
@@ -342,7 +334,7 @@ function addQuestionQuestionnaire(questionnaire) {
         $.ajax({
 
             type: 'POST',
-            url: 'traitements/administrationGenerator.php',
+            url: 'contentGenerators/administrationGenerator.php',
             data: "autoEvalution",
             dataType: 'text',
             success: function(data) {
@@ -357,15 +349,15 @@ function addQuestionQuestionnaire(questionnaire) {
     
             error: function(xhr, textStatus, error) {
     
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+                alert(xhr.status + " " + xhr.statusText);
                 
             }
     
         });
 
     } else if(questionnaire == "audit") {
+
+        console.log(dataSend);
 
         $.ajax({
 
@@ -381,9 +373,7 @@ function addQuestionQuestionnaire(questionnaire) {
 
             error: function(xhr, textStatus, error) {
 
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+                alert(xhr.status + " " + xhr.statusText);
 
             }
 
@@ -392,7 +382,7 @@ function addQuestionQuestionnaire(questionnaire) {
         $.ajax({
 
             type: 'POST',
-            url: 'traitements/administrationGenerator.php',
+            url: 'contentGenerators/administrationGenerator.php',
             data: "audit",
             dataType: 'text',
             success: function(data) {
@@ -407,9 +397,7 @@ function addQuestionQuestionnaire(questionnaire) {
     
             error: function(xhr, textStatus, error) {
     
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+                alert(xhr.status + " " + xhr.statusText);
                 
             }
     
@@ -428,8 +416,10 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
     let questionStatus = document.getElementById('questionStatus'+questionID);
 
     dataSend = {
+
         operation,
         questionID
+        
     };
 
     if(questionnaire == "autoeval") {
@@ -447,7 +437,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
                     $.ajax({
 
                         type: 'POST',
-                        url: 'traitements/administrationGenerator.php',
+                        url: 'contentGenerators/administrationGenerator.php',
                         data: "autoEvalution",
                         dataType: 'text',
                         success: function(data) {
@@ -462,9 +452,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
                 
                         error: function(xhr, textStatus, error) {
                 
-                            alert(error);
-                            alert(xhr);
-                            alert(textStatus);
+                            alert(xhr.status + " " + xhr.statusText);
                             
                         }
                 
@@ -489,9 +477,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
             },
             error: function(xhr, textStatus, error){
 
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+                alert(xhr.status + " " + xhr.statusText);
 
             }
 
@@ -512,7 +498,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
                     $.ajax({
 
                         type: 'POST',
-                        url: 'traitements/administrationGenerator.php',
+                        url: 'contentGenerators/administrationGenerator.php',
                         data: "audit",
                         dataType: 'text',
                         success: function(data) {
@@ -527,9 +513,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
                 
                         error: function(xhr, textStatus, error) {
                 
-                            alert(error);
-                            alert(xhr);
-                            alert(textStatus);
+                            alert(xhr.status + " " + xhr.statusText);
                             
                         }
                 
@@ -558,15 +542,14 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
             },
             error: function(xhr, textStatus, error){
 
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+                alert(xhr.status + " " + xhr.statusText);
 
             }
 
         });
 
     }
+
 }
 
 function updateQuestionQuestionnaire(questionnaire, questionID) {
@@ -645,9 +628,7 @@ function updateQuestionQuestionnaire(questionnaire, questionID) {
 
                 error: function(xhr, textStatus, error) {
 
-                    alert(error);
-                    alert(xhr);
-                    alert(textStatus);
+                    alert(xhr.status + " " + xhr.statusText);
 
                 }
 
@@ -674,9 +655,7 @@ function updateQuestionQuestionnaire(questionnaire, questionID) {
 
                 error: function(xhr, textStatus, error) {
 
-                    alert(error);
-                    alert(xhr);
-                    alert(textStatus);
+                    alert(xhr.status + " " + xhr.statusText);
 
                 }
 
@@ -744,9 +723,7 @@ function addDocument() {
 
             error: function(xhr, textStatus, error){
 
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+                alert(xhr.status + " " + xhr.statusText);
                 
             }
     
@@ -778,9 +755,7 @@ function deleteDocument(action, id, link) {
 
         error: function(xhr, textStatus, error){
 
-            alert(error);
-            alert(xhr);
-            alert(textStatus);
+            alert(xhr.status + " " + xhr.statusText);
             
         }
 
@@ -795,7 +770,7 @@ function refreshDocuments() {
     $.ajax({
 
         type: 'POST',
-        url: 'traitements/administrationGenerator.php',
+        url: 'contentGenerators/administrationGenerator.php',
         data: "documents",
         dataType: 'text',
         success: function(data) {
@@ -806,9 +781,7 @@ function refreshDocuments() {
 
         error: function(xhr, textStatus, error){
 
-            alert(error);
-            alert(xhr);
-            alert(textStatus);
+            alert(xhr.status + " " + xhr.statusText);
             
         }
 
@@ -817,6 +790,44 @@ function refreshDocuments() {
 }
 
 // global stats function
+
+function showTab() {
+
+    showLoading(document.getElementById('tableauContainer'));
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'contentGenerators/globalStats.php',
+        data: dataSend, 
+        dataType: 'text',
+        success: function(data) {
+
+            if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                window.location.replace('index.php');
+                return;
+                
+            }
+
+            if(data !== "") {
+
+                document.getElementById('tableauContainer').style.display = "block";
+                document.getElementById('tableauContainer').innerHTML = data;
+
+            }
+
+        },
+        
+        error: function(xhr, textStatus, error){
+
+            alert(xhr.status + " " + xhr.statusText);
+            
+        }
+
+    });
+
+}
 
 function showStats() {
 
@@ -835,7 +846,7 @@ function showStats() {
         $.ajax({
 
             type: 'POST',
-            url: 'traitements/getGlobalStats.php',
+            url: 'contentGenerators/globalStats.php',
             data: dataSend,
             dataType: 'JSON',
             success: function(data) {
@@ -859,7 +870,7 @@ function showStats() {
 
                 setTimeout(function() {
 
-                    contentWindow.innerHTML = "<div id='graphique-resultats'></div>";
+                    contentWindow.innerHTML = "<div id='graphique-resultats'></div><div id='tableauContainer'></div>";
 
                     createChart("graphique-resultats", "Statistiques globales des audits", data);
 
@@ -886,54 +897,54 @@ function showStats() {
             },
             error: function(xhr, textStatus, error){
 
-                alert(error);
+                alert(xhr.status + " " + xhr.statusText);
 
             }
 
         });
 
-        // $.ajax({
+        let getTab = true;
 
-        //     type: 'POST',
-        //     url: 'traitements/chartGenerator.php',
-        //     data: {
-        //         'getNonCompliances': true,
-        //         'evalNumber' : evalNumber 
-        //     }, 
-        //     dataType: 'text',
-        //     success: function(data) {
+        dataSend = {
 
-        //         if(data == "Acces refusé ! Veuillez vous connectez !") {
+            getTab
 
-        //             window.location.replace('index.php');
-        //             return;
-                    
-        //         }
+        }
 
-        //         if(data !== "") {
+        setTimeout(() => {
 
-        //             setTimeout(() => {
+            showTab();
 
-        //                 document.getElementById('tableau-graphique').style.display = "block";
-        //                 document.getElementById('tableau-graphique').innerHTML = data;
-
-        //             }, 250);
-
-        //         }
-
-        //     },
-            
-        //     error: function(xhr, textStatus, error){
-
-        //         alert(error);
-        //         alert(xhr);
-        //         alert(textStatus);
-                
-        //     }
-
-        // });
+        }, 750);
 
     });
+
+}
+
+function statsOrderBy(orderBy) {
+
+    let getTab = true;
+
+    if(orderBy !== "") {
+
+        dataSend = {
+
+            getTab,
+            orderBy
+
+        }
+    
+    } else {
+
+        dataSend = {
+
+            getTab
+
+        }
+
+    }
+
+    showTab();
 
 }
 
@@ -968,7 +979,7 @@ function getAllResultsUser(user) {
         $.ajax({
 
             type: 'POST',
-            url: 'traitements/getUserEvalAndAuditsList.php',
+            url: 'contentGenerators/userEvalAndAuditsList.php',
             data: dataSend,
             dataType: 'text',
             success: function(data) {
@@ -986,9 +997,7 @@ function getAllResultsUser(user) {
     
             error: function(xhr, textStatus, error){
     
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+                alert(xhr.status + " " + xhr.statusText);
                 
             }
     
@@ -1004,7 +1013,7 @@ function getAllResultsUser(user) {
         $.ajax({
 
             type: 'POST',
-            url: 'traitements/getUserEvalAndAuditsList.php',
+            url: 'contentGenerators/userEvalAndAuditsList.php',
             data: dataSend,
             dataType: 'text',
             success: function(data) {
@@ -1022,9 +1031,7 @@ function getAllResultsUser(user) {
     
             error: function(xhr, textStatus, error){
     
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+                alert(xhr.status + " " + xhr.statusText);
                 
             }
     

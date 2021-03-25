@@ -74,7 +74,7 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
     if($NDA !== 0) {
 
         $NDATab = array(
-            "label"=> "Non disponible(s) actuellement", "y"=> $NDA, "indexLabelFontColor" => "#000000", "indexLabelFontWeight" => "bolder"
+            "label"=> "Non disponible(s)", "y"=> $NDA, "indexLabelFontColor" => "#000000", "indexLabelFontWeight" => "bolder"
         );
 
     }

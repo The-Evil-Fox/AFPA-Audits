@@ -68,7 +68,7 @@ function showContent(category) {
         $.ajax({
 
             type: 'POST',
-            url: 'traitements/contentGenerator.php',
+            url: 'contentGenerators/contentGenerator.php',
             data: category,
             dataType: 'text',
             success: function(data) {
@@ -115,9 +115,7 @@ function showContent(category) {
 
             error: function(xhr, textStatus, error){
 
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+                alert(xhr.status + " " + xhr.statusText);
                 
             }
 

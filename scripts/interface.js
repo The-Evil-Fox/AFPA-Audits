@@ -14,7 +14,7 @@ function getNavbar(category) {
       $.ajax({
 
           type: 'POST',
-          url: 'traitements/navbarGenerator.php',
+          url: 'contentGenerators/navbarGenerator.php',
           data: category,
           dataType: 'text',
           success: function(data) {
@@ -33,9 +33,7 @@ function getNavbar(category) {
 
           error: function(xhr, textStatus, error){
 
-              alert(error);
-              alert(xhr);
-              alert(textStatus);
+            alert(xhr.status + " " + xhr.statusText);
               
           }
 

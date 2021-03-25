@@ -18,12 +18,34 @@ if(isset($_POST['method']) && !empty($_POST['method'])) {
 
             if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit']) && !empty($_POST['audit']) && isset($_POST['thematique'])) {
 
-                $updateConstat = $db->prepare('UPDATE ConstatsAudits SET Constat = :constat WHERE User_ID = :user AND Audit_Number = :auditNumber AND Thematique = :thematique');
-                $updateConstat->bindParam(':constat', $_POST['constat'], PDO::PARAM_STR);
-                $updateConstat->bindParam(':user', $_POST['userID'], PDO::PARAM_INT);
-                $updateConstat->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
-                $updateConstat->bindParam(':thematique', $_POST['thematique'], PDO::PARAM_INT);
-                $updateConstat->execute();
+                $checkConstatExist = $db->prepare('SELECT * FROM ConstatsAudits WHERE User_ID = :user AND Audit_Number = :auditNumber AND Thematique = :thematique');
+                $checkConstatExist->bindParam(':user', $_POST['userID'], PDO::PARAM_INT);
+                $checkConstatExist->bindParam('auditNumber', $_POST['audit'], PDO::PARAM_INT);
+                $checkConstatExist->bindParam(':thematique', $_POST['thematique'], PDO::PARAM_INT);
+                $checkConstatExist->execute();
+
+                $countConstat = $checkConstatExist->rowCount();
+
+                if($countConstat == 1) {
+
+                    $updateConstat = $db->prepare('UPDATE ConstatsAudits SET Constat = :constat WHERE User_ID = :user AND Audit_Number = :auditNumber AND Thematique = :thematique');
+                    $updateConstat->bindParam(':constat', $_POST['constat'], PDO::PARAM_STR);
+                    $updateConstat->bindParam(':user', $_POST['userID'], PDO::PARAM_INT);
+                    $updateConstat->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
+                    $updateConstat->bindParam(':thematique', $_POST['thematique'], PDO::PARAM_INT);
+                    $updateConstat->execute();
+
+                } else {
+
+                    $insertConstat = $db->prepare('INSERT INTO ConstatsAudits(Audit_Number, Thematique, Constat, User_ID, Auditor) VALUES(:auditNumber, :thematique, :constat, :user, :auditor)');
+                    $insertConstat->bindParam(':constat', $_POST['constat'], PDO::PARAM_STR);
+                    $insertConstat->bindParam(':user', $_POST['userID'], PDO::PARAM_INT);
+                    $insertConstat->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
+                    $insertConstat->bindParam(':thematique', $_POST['thematique'], PDO::PARAM_INT);
+                    $insertConstat->bindParam(':auditor', $_SESSION['ID'], PDO::PARAM_INT);
+                    $insertConstat->execute();
+
+                }
 
             }
 

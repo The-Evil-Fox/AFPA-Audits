@@ -14,6 +14,10 @@ if(isset($_POST['operation']) && !empty($_POST['operation'])) {
             $deleteQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
             $deleteQuestion->execute();
 
+            $deleteConstatsAudits = $db->prepare('DELETE FROM ConstatsAudits WHERE Thematique = :questionID');
+            $deleteConstatsAudits->bindParam(':questionID', $question, PDO::PARAM_INT);
+            $deleteConstatsAudits->execute();
+
             $message = "La question a bien été supprimée !";
 
         } else if($_POST['operation'] == "disable") {
@@ -69,7 +73,7 @@ if(isset($_POST['newQuestion']) && !empty($_POST['newQuestion'])) {
 
             try {
 
-                $addQuestion = $db->prepare('INSERT INTO QuestionsAudit(User_ID, Thematique, Preuves, Category) VALUES (:user, :question, :preuves, :category)');
+                $addQuestion = $db->prepare('INSERT INTO QuestionsAudit(CreatedBy, Thematique, Preuves, Category) VALUES(:user, :question, :preuves, :category)');
                 $addQuestion->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
                 $addQuestion->bindParam(':question', $_POST['newQuestion'], PDO::PARAM_STR);
                 if($preuvesQuestion !== NULL) {

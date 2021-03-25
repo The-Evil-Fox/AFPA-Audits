@@ -122,9 +122,7 @@ function checkAuditInProgress(user) {
             
                     error: function(xhr, textStatus, error) {
             
-                        alert(error);
-                        alert(xhr);
-                        alert(textStatus);
+                        alert(xhr.status + " " + xhr.statusText);
                         
                     }
             
@@ -158,9 +156,7 @@ function checkAuditInProgress(user) {
             
                     error: function(xhr, textStatus, error) {
             
-                        alert(error);
-                        alert(xhr);
-                        alert(textStatus);
+                        alert(xhr.status + " " + xhr.statusText);
                         
                     }
             
@@ -172,9 +168,7 @@ function checkAuditInProgress(user) {
 
         error: function(xhr, textStatus, error) {
 
-            alert(error);
-            alert(xhr);
-            alert(textStatus);
+            alert(xhr.status + " " + xhr.statusText);
             
         }
 
@@ -284,9 +278,7 @@ function startAudit(buttonvalue) {
 
         error: function(xhr, textStatus, error) {
 
-            alert(error);
-            alert(xhr);
-            alert(textStatus);
+            alert(xhr.status + " " + xhr.statusText);
             
         }
 
@@ -348,9 +340,7 @@ function updateConstat(userID, audit, thematique, constat, textAreaID) {
 
         error: function(xhr, textStatus, error) {
 
-            alert(error);
-            alert(xhr);
-            alert(textStatus);
+            alert(xhr.status + " " + xhr.statusText);
             
         }
 
@@ -401,9 +391,7 @@ function updateObservation(userID, audit, thematique, observation, textAreaID) {
 
         error: function(xhr, textStatus, error) {
 
-            alert(error);
-            alert(xhr);
-            alert(textStatus);
+            alert(xhr.status + " " + xhr.statusText);
             
         }
 
@@ -500,9 +488,7 @@ function sendAudit(audit, userID) {
 
         error: function(xhr, textStatus, error) {
 
-            alert(error);
-            alert(xhr);
-            alert(textStatus);
+            alert(xhr.status + " " + xhr.statusText);
             
         }
 
@@ -546,9 +532,7 @@ function sendAudit(audit, userID) {
         
         error: function(xhr, textStatus, error) {
 
-            alert(error);
-            alert(xhr);
-            alert(textStatus);
+            alert(xhr.status + " " + xhr.statusText);
             
         }
 
@@ -585,9 +569,7 @@ function startEval() {
 
         error: function(xhr, textStatus, error) {
 
-            alert(error);
-            alert(xhr);
-            alert(textStatus);
+            alert(xhr.status + " " + xhr.statusText);
             
         }
 
@@ -712,9 +694,7 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
 
         error: function(xhr, textStatus, error) {
 
-            alert(error);
-            alert(xhr);
-            alert(textStatus);
+            alert(xhr.status + " " + xhr.statusText);
             
         }
 
@@ -741,9 +721,7 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
     
             error: function(xhr, textStatus, error) {
     
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+                alert(xhr.status + " " + xhr.statusText);
                 
             }
     
@@ -782,9 +760,7 @@ function addReason(evalNumber, question, reason, textareaID) {
 
         error: function(xhr, textStatus, error) {
 
-            alert(error);
-            alert(xhr);
-            alert(textStatus);
+            alert(xhr.status + " " + xhr.statusText);
             
         }
 
@@ -882,9 +858,7 @@ function sendEval(eval) {
             
             error: function(xhr, textStatus, error) {
 
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+                alert(xhr.status + " " + xhr.statusText);
                 
             }
 
@@ -923,9 +897,7 @@ function sendEval(eval) {
             
             error: function(xhr, textStatus, error) {
 
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+                alert(xhr.status + " " + xhr.statusText);
                 
             }
 

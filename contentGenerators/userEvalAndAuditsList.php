@@ -19,6 +19,7 @@ if(isset($_POST['getEvals']) && isset($_POST['user']) && !empty($_POST['user']))
             <thead>
                 <tr>
                     <th>Date</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -69,6 +70,7 @@ if(isset($_POST['getAudits']) && isset($_POST['user']) && !empty($_POST['user'])
             <thead>
                 <tr>
                     <th>Date</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>

@@ -39,7 +39,7 @@ if(isset($_POST['createNewEval'])) {
     $result = $countQuestions->fetch();
     $questionsNumber = (int) $result['nb_questions'];
 
-    $selectQuestions = $db->query('SELECT * FROM QuestionsAutoevaluation INNER JOIN CategoriesQuestionsAutoevaluation ON QuestionsAutoevaluation.Category = CategoriesQuestionsAutoevaluation.Category WHERE QuestionsAutoevaluation.Active = true ORDER BY QuestionsAutoevaluation.ID ASC');
+    $selectQuestions = $db->query('SELECT * FROM QuestionsAutoevaluation INNER JOIN CategoriesQuestionsAutoevaluation ON QuestionsAutoevaluation.Category = CategoriesQuestionsAutoevaluation.Category WHERE QuestionsAutoevaluation.Active = true ORDER BY QuestionsAutoevaluation.Category ASC');
 
     $selectQuestionsID = $db->query('SELECT QuestionsAutoevaluation.ID FROM QuestionsAutoevaluation WHERE QuestionsAutoevaluation.Active = true ORDER BY QuestionsAutoevaluation.ID ASC');
     $questionID = array();

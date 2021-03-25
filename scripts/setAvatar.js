@@ -55,9 +55,7 @@ function setAvatar() {
 
             error: function(xhr, textStatus, error){
 
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+                alert(xhr.status + " " + xhr.statusText);
                 
             }
     

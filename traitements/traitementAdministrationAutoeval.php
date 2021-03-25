@@ -21,6 +21,14 @@ if(isset($_POST['operation']) && !empty($_POST['operation'])) {
             $deleteQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
             $deleteQuestion->execute();
 
+            $deleteResults = $db->prepare('DELETE FROM ResultatsAutoevaluations WHERE Question = :questionID');
+            $deleteResults->bindParam(':questionID', $question, PDO::PARAM_INT);
+            $deleteResults->execute();
+
+            $deleteReasonsNC = $db->prepare('DELETE FROM RaisonsNonConformitesAutoevaluation WHERE Question_ID = :questionID');
+            $deleteReasonsNC->bindParam(':questionID', $question, PDO::PARAM_INT);
+            $deleteReasonsNC->execute();
+
             $message = "La question a bien été supprimée !";
 
         } else if($_POST['operation'] == "disable") {
@@ -66,7 +74,7 @@ if(isset($_POST['newQuestion']) && !empty($_POST['newQuestion'])) {
 
         try {
 
-            $addQuestion = $db->prepare('INSERT INTO QuestionsAutoevaluation(User_ID, Question, Category) VALUES (:user, :question, :category)');
+            $addQuestion = $db->prepare('INSERT INTO QuestionsAutoevaluation(CreatedBy, Question, Category) VALUES (:user, :question, :category)');
             $addQuestion->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
             $addQuestion->bindParam(':question', $_POST['newQuestion'], PDO::PARAM_STR);
             $addQuestion->bindParam(':category', $_POST['categorieQuestion'], PDO::PARAM_INT);

@@ -25,7 +25,7 @@ if(isset($_POST['actualites'])) {
                 <th>Utilisateur</th>
                 <th>Actualité</th>
                 <th>Date</th>
-                <th></th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -87,7 +87,7 @@ if(isset($_POST['autoEvalution'])) {
                 <th>Status</th>
                 <th>Question</th>
                 <th>Categorie</th>
-                <th></th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -137,14 +137,20 @@ if(isset($_POST['documents'])) {
         <thead>
             <tr>
                 <th>Document</th>
-                <th></th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         <?php while($documents = $getDocuments->fetch()) { ?>
                 <tr>
-                    <td id="<?= $documents['ID']; ?>" data-label="Document"><a target="_blank" href="documents/<?= $documents['Link']; ?>"><?= $documents['Document']; ?></a></td>
-                    <td data-label="Action"><button class="redButton" onclick="deleteDocument(this.value, <?= $documents['ID']; ?>, '<?= $documents['Link']; ?>')" value="delete"><i class="fas fa-trash-alt"></i> Supprimer</button></td>
+                    <td id="<?= $documents['ID']; ?>" data-label="Document"><?= $documents['Document']; ?></td>
+                    
+                    <td data-label="Actions">
+                        <div class="buttonsModificationQuestionnaire">
+                            <button><a target="_blank" href="documents/<?= $documents['Link']; ?>"><i class="fas fa-eye"></i> Voir</a></button>
+                            <button class="redButton" onclick="deleteDocument(this.value, <?= $documents['ID']; ?>, '<?= $documents['Link']; ?>')" value="delete"><i class="fas fa-trash-alt"></i> Supprimer</button>
+                        </div>
+                    </td>
                 </tr>
 
             <?php } ?>
@@ -188,7 +194,7 @@ if(isset($_POST['audit'])) {
                 <th>Question</th>
                 <th>Preuves</th>
                 <th>Categorie</th>
-                <th></th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>

@@ -36,7 +36,7 @@ function createChart(container, title, myData) {
         
             backgroundColor: "black",
             fontColor: "#FFFFFF",
-            content: "{label}: {y} questions",
+            content: "{label}: {y} question(s)",
         
         },
         

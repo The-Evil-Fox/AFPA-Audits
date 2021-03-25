@@ -9,7 +9,7 @@ function showChart(autoeval_number, date) {
         $.ajax({
 
             type: 'POST',
-            url: 'traitements/chartGenerator.php',
+            url: 'contentGenerators/myResultsGenerator.php',
             data: { 
                 'evalNumber' : evalNumber 
             }, 
@@ -23,7 +23,7 @@ function showChart(autoeval_number, date) {
                     
                 }
 
-                contentWindow.innerHTML = "<div id='dateGraphique'>Le "+date+"</div><div id='graphique-resultats'></div><div id='tableauContainer'></div>";
+                contentWindow.innerHTML = "<div id='graphique-resultats'></div><div id='dateGraphique'>Le "+date+".</div><div id='tableauContainer'></div>";
 
                 createChart("graphique-resultats", "Résultats de mon autoévaluation", dataGraphique);
 
@@ -46,7 +46,7 @@ function showChart(autoeval_number, date) {
             },
             error: function(xhr, textStatus, error){
 
-                alert(error);
+                alert(xhr.status + " " + xhr.statusText);
                 
             }
 
@@ -55,7 +55,7 @@ function showChart(autoeval_number, date) {
         $.ajax({
 
             type: 'POST',
-            url: 'traitements/chartGenerator.php',
+            url: 'contentGenerators/myResultsGenerator.php',
             data: {
                 'getNonCompliances': true,
                 'evalNumber' : evalNumber 
@@ -85,9 +85,7 @@ function showChart(autoeval_number, date) {
             
             error: function(xhr, textStatus, error){
 
-                alert(error);
-                alert(xhr);
-                alert(textStatus);
+                alert(xhr.status + " " + xhr.statusText);
                 
             }
 

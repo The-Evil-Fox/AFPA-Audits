@@ -35,14 +35,35 @@ if(isset($_POST['answer']) && !empty($_POST['answer'])) {
 
     try {
 
-        $updateAnswer = $db->prepare('UPDATE ResultatsAutoevaluations SET Answer = :answer WHERE Evaluation_Number = :evalNumber AND Question = :question AND User_ID = :user');
-        $updateAnswer->bindParam(':evalNumber', $_POST['evalNumber'], PDO::PARAM_INT);
-        $updateAnswer->bindParam(':question', $_POST['question'], PDO::PARAM_INT);
-        $updateAnswer->bindParam(':answer', $_POST['answer'], PDO::PARAM_STR);
-        $updateAnswer->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-        $updateAnswer->execute();
+        $checkAnswerExist = $db->prepare('SELECT * FROM ResultatsAutoevaluations WHERE Evaluation_Number = :evalNumber AND Question = :question AND User_ID = :user');
+        $checkAnswerExist->bindParam(':evalNumber', $_POST['evalNumber'], PDO::PARAM_INT);
+        $checkAnswerExist->bindParam(':question', $_POST['question'], PDO::PARAM_INT);
+        $checkAnswerExist->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+        $checkAnswerExist->execute();
 
-        if($_POST['answer'] == "Oui") {
+        $countResultExist = $checkAnswerExist->rowCount();
+
+        if($countResultExist == 1) {
+
+            $updateAnswer = $db->prepare('UPDATE ResultatsAutoevaluations SET Answer = :answer WHERE Evaluation_Number = :evalNumber AND Question = :question AND User_ID = :user');
+            $updateAnswer->bindParam(':evalNumber', $_POST['evalNumber'], PDO::PARAM_INT);
+            $updateAnswer->bindParam(':question', $_POST['question'], PDO::PARAM_INT);
+            $updateAnswer->bindParam(':answer', $_POST['answer'], PDO::PARAM_STR);
+            $updateAnswer->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+            $updateAnswer->execute();
+
+        } else {
+
+            $insertAnswer = $db->prepare('INSERT INTO ResultatsAutoevaluations(Evaluation_Number, Question, Answer, User_ID) VALUES(:evalNumber, :question, :answer, :user)');
+            $insertAnswer->bindParam(':evalNumber', $_POST['evalNumber'], PDO::PARAM_INT);
+            $insertAnswer->bindParam(':question', $_POST['question'], PDO::PARAM_INT);
+            $insertAnswer->bindParam(':answer', $_POST['answer'], PDO::PARAM_STR);
+            $insertAnswer->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+            $insertAnswer->execute();
+
+        }
+
+        if($_POST['answer'] == "Oui" && $countResultExist == 1) {
 
             $checkIfReasonExist1 = $db->prepare('SELECT * FROM RaisonsNonConformitesAutoevaluation WHERE User = :user AND Question_ID = :question AND Eval_Number = :eval');
             $checkIfReasonExist1->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);

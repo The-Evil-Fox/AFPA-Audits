@@ -83,7 +83,7 @@ if(isset($_POST['monespace'])) {
             <thead>
                 <tr>
                     <th>Date</th>
-                    <th></th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -137,7 +137,7 @@ if(isset($_POST['monespace'])) {
                                            AND rnca.User = :user 
                                            AND rnca.Eval_Number = :evalNumber
         WHERE qa.Active = true 
-        ORDER BY qa.ID;');
+        ORDER BY qa.Category ASC');
         $selectQuestions->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
         $selectQuestions->bindParam(':evalNumber', $evaluationNumber, PDO::PARAM_INT);
         $selectQuestions->execute();

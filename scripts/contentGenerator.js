@@ -22,7 +22,9 @@ function showContent(category) {
             keyPressed = e.which || e.keyCode;
         
             if(document.getElementById('questionsNumber') == null) {
+
                 return;
+
             }
 
             questionsNbr = document.getElementById('questionsNumber').value;

@@ -5,14 +5,14 @@
         <i class="fa fa-bars nav_btn"></i>
     </div>
     <div class="mobile_nav_items" id="mobileNavDropdown">
+        <?php if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) { ?>
+            <a onclick="getNavbar('administration');" href="#administration"><i class="fas fa-toggle-off"></i><span>Administration</span></a>
+        <?php } ?>
         <?php if(isAuditeur($userInfos['Role'])) { ?>
             <a onclick="showContent('auditer');" href="#auditer"><i class="fas fa-comments"></i><span>Auditer</span></a>
         <?php } ?>
         <a onclick="showContent('autoevaluation');" href="#autoevaluation"><i class="fas fa-briefcase"></i><span>M'auto-évaluer</span></a>
         <a onclick="showContent('monespace');" href="#monespace"><i class="fas fa-chart-line"></i><span>Mes résultats</span></a>
-        <?php if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) { ?>
-            <a onclick="getNavbar('administration');" href="#administration"><i class="fas fa-toggle-off"></i><span>Administration</span></a>
-        <?php } ?>
     </div>
 </div>
 <!--mobile navigation bar end-->
@@ -24,14 +24,14 @@
         <form id="formAvatar" class="avatar-form" method="POST" enctype="multipart/form-data"><input class="avatar-form" type="file" name="inputAvatar" id="inputAvatar"></form>
     </div>
     <div id="sidebarLinks">
+        <?php if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) { ?>
+            <a onclick="getNavbar('administration');" href="#administration"><i class="fas fa-toggle-off"></i><span>Administration</span></a>
+        <?php } ?>
         <?php if(isAuditeur($userInfos['Role'])) { ?>
             <a onclick="showContent('auditer');" href="#auditer"><i class="fas fa-comments"></i><span>Auditer</span></a>
         <?php } ?>
         <a onclick="showContent('autoevaluation');" href="#autoevaluation"><i class="fas fa-briefcase"></i><span>M'auto-évaluer</span></a>
         <a onclick="showContent('monespace');" href="#monespace"><i class="fas fa-chart-line"></i><span>Mes résultats</span></a>
-        <?php if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) { ?>
-            <a onclick="getNavbar('administration');" href="#administration"><i class="fas fa-toggle-off"></i><span>Administration</span></a>
-        <?php } ?>
     </div>
 </div>
 <!--sidebar end-->

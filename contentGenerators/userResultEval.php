@@ -88,7 +88,7 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['evalNumb
 
     if($numberNonCompliances !== 0) {
 
-        $getUserNonCompliances = $db->prepare('SELECT qa.Question FROM RaisonsNonConformitesAutoevaluation rnca JOIN QuestionsAutoevaluation qa ON rnca.Question_ID = qa.ID WHERE rnca.User = :user AND Eval_Number = :eval');
+        $getUserNonCompliances = $db->prepare('SELECT qa.Question, rnca.Reason FROM RaisonsNonConformitesAutoevaluation rnca JOIN QuestionsAutoevaluation qa ON rnca.Question_ID = qa.ID WHERE rnca.User = :user AND Eval_Number = :eval');
         $getUserNonCompliances->bindParam(':user', $user, PDO::PARAM_INT);
         $getUserNonCompliances->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
         $getUserNonCompliances->execute();
@@ -98,13 +98,15 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['evalNumb
         <table id="tableauNonConformites">
             <thead>
                 <tr>
-                    <th>Question(s) non-conforme</th>
+                    <th><?php if($numberNonCompliances > 1) { ?> Questions non-conformes <?php } else { ?> Question non-conforme <?php } ?></th>
+                    <th><?php if($numberNonCompliances > 1) { ?> Raisons <?php } else { ?> Raison <?php } ?></th>
                 </tr>
             </thead>
             <tbody>
                 <?php while($nonCompliances = $getUserNonCompliances->fetch()) { ?>
                     <tr>
                         <td data-label="Non conformité"><?= str_replace('?', '', $nonCompliances['Question']); ?></td>
+                        <td data-label="Raison"><?= $nonCompliances['Reason']; ?></td>
                     </tr>
                 <?php } ?>
             </tbody>

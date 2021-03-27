@@ -140,12 +140,10 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
 
     if($numberNonCompliances !== 0) {
 
-        $getNonCompliances = $db->prepare("SELECT qa.Thematique FROM ConstatsAudits ca JOIN QuestionsAudit qa ON ca.Thematique = qa.ID WHERE ca.User_ID = :user AND Audit_Number = :auditNumber AND Constat = 'NC'");
+        $getNonCompliances = $db->prepare("SELECT qa.Thematique, ca.Observation FROM ConstatsAudits ca JOIN QuestionsAudit qa ON ca.Thematique = qa.ID WHERE ca.User_ID = :user AND Audit_Number = :auditNumber AND Constat = 'NC'");
         $getNonCompliances->bindParam(':user', $_POST['userID'], PDO::PARAM_INT);
         $getNonCompliances->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
         $getNonCompliances->execute();
-        
-        $compteurNC = 1;
 
     } 
 
@@ -165,8 +163,6 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
         $getNotApplicables->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
         $getNotApplicables->execute();
 
-        $compteurNA = 1;
-
     }
 
     $countNDA = $db->prepare("SELECT COUNT(ca.Constat) as nbr_NDA FROM ConstatsAudits ca JOIN QuestionsAudit qa ON ca.Thematique = qa.ID WHERE ca.User_ID = :user AND Audit_Number = :auditNumber AND ca.Constat = 'NDA'");
@@ -185,8 +181,6 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
         $getNDA->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
         $getNDA->execute();
 
-        $compteurNDA = 1;
-
     }
 
     if($numberNonCompliances !== 0 || $numberNotApplicables !== 0 || $numberNDA !== 0) { ?>
@@ -196,12 +190,14 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
                 <thead>
                     <tr>
                         <th><?php if($numberNonCompliances > 1) { echo "Non conformes"; } else { echo "Non conforme"; } ?></th>
+                        <th>Observation</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
                         <tr>
                             <td data-label="Non conforme"><?= str_replace('?', '', $nonCompliances['Thematique']); ?></td>
+                            <td data-label="Observation"><?= $nonCompliances['Observation']; ?></td>
                         </tr>
                     <?php } ?>
                 </tbody>

@@ -29,30 +29,37 @@ if(isset($_POST['getCenters'])) {
 
 }
 
-if(isset($_POST['getAuditeurs'])) {
+if(isset($_POST['getAuditeurs1'])) {
 
     $getAuditeurs = $db->prepare('SELECT ID, Name, FirstName FROM Users WHERE ID != :user AND Role = 2');
     $getAuditeurs->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-    $getAuditeurs->execute();
-
-    while($allAuditeurs = $getAuditeurs->fetch()) { $auditeurs[] = $allAuditeurs; } ?>
+    $getAuditeurs->execute(); ?>
 
     <div class="selectAssistant">
-        <select id="assistant1">
-            <option value="">Selectionnez un premier assistant</option>
-            <?php foreach($auditeurs as $row) { ?>
-                <option value="<?= $row['ID']; ?>"><?= $row['Name'] . " " . $row['FirstName']; ?></select>
+        <select id="assistant1" onchange="showSecondAssistantSelect(this.value)">
+            <option value="">Selectionnez un assistant</option>
+            <?php while($allAuditeurs = $getAuditeurs->fetch()) { ?>
+                <option value="<?= $allAuditeurs['ID']; ?>"><?= $allAuditeurs['Name'] . " " . $allAuditeurs['FirstName']; ?></option>
             <?php } ?>
         </select><span class="facultatif">(Facultatif)</span>
     </div>
-    <div class="selectAssistant">
-        <select id="assistant2">
-            <option value="">Selectionnez un deuxième assistant</option>
-            <?php foreach($auditeurs as $row) { ?>
-                <option value="<?= $row['ID']; ?>"><?= $row['Name'] . " " . $row['FirstName']; ?></select>
+    <div id="assistant2Container" class="selectAssistant none"></div>
+    
+<?php }
+
+if(isset($_POST['assistant1']) && !empty($_POST['assistant1']) && isset($_POST['getAuditeurs2'])) {
+
+    $getAuditeurs2 = $db->prepare('SELECT ID, Name, FirstName FROM Users WHERE ID != :user AND ID != :assistant AND Role = 2');
+    $getAuditeurs2->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+    $getAuditeurs2->bindParam(':assistant', $_POST['assistant1'], PDO::PARAM_INT);
+    $getAuditeurs2->execute(); ?>
+
+    <select id="assistant2">
+        <option value="">Selectionnez un deuxième assistant</option>
+            <?php while($allAuditeurs2 = $getAuditeurs2->fetch()) { ?>
+                <option value="<?= $allAuditeurs2['ID']; ?>"><?= $allAuditeurs2['Name'] . " " . $allAuditeurs2['FirstName']; ?></option>
             <?php } ?>
-        </select><span class="facultatif">(Facultatif)</span>
-    </div>
+    </select><span class="facultatif">(Facultatif)</span>
     
 <?php }
 
@@ -92,7 +99,7 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
     $result = $countQuestions->fetch();
     $questionsNumber = (int) $result['nb_questions'];
 
-    $selectQuestions = $db->prepare('SELECT a.Centre, qa.ID, qa.Thematique, qa.Preuves, ca.Constat, ca.Observation, cqa.Name 
+    $selectQuestions = $db->prepare('SELECT a.Centre, a.Auditor, a.Assistant1, a.Assistant2, qa.ID, qa.Thematique, qa.Preuves, ca.Constat, ca.Observation, cqa.Name 
     FROM QuestionsAudit qa 
     LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID 
     LEFT JOIN ConstatsAudits ca ON ca.Thematique = qa.ID  
@@ -113,31 +120,32 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
             <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
             <img class="logo-afpa" src="assets/logoAFPAWhite.png" alt="logo afpa blanc">
         </div>
+        <div class="helper-container-questions" id="helper">
+            <img src="assets/close_button.png" title="Cliquez ici pour fermer l'aide" onclick="showTip()">
+            <div class="helper-content">
+                Toutes les questions doivent être répondues.
+            </div>
+            <div class="helper-content">
+                Si vous répondez "non conforme" à une question, veuillez insérer la raison (observation) dans le champ qui apparaitra.
+            </div>
+            <div class="helper-content">
+                Les réponses sont sauvegardées automatiquement lors de leurs ajouts et/ou modifications.
+            </div>
+            <div class="helper-content">
+                <div class="help-shortcuts">Raccourcis clavier:</div>
+                <div class="shortcuts">
+                    <span><i class="far fa-caret-square-left"></i>Question précédente</span>
+                    <span><i class="far fa-caret-square-right"></i>Question suivante</span>
+                </div>
+            </div>
+            <div class="helper-content">
+                Durée moyenne: 1 heure minimum.
+            </div>
+        </div>
         <?php while($questions = $selectQuestions->fetch()) { ?>
             <div class="form-part" id="question<?= $compteur; ?>">
                 <div class="question-number">
-                    <?php if($compteur == $questionsNumber) { echo "Question finale"; } else { echo "Question n°$compteur"; } ?><img src="assets/tooltip.png" alt="infobulle" title="cliquez ici pour afficher l'aide" onclick="showTip('helper<?= $compteur; ?>')">
-                </div>
-                <div class="helper-container-questions" id="helper<?= $compteur; ?>">
-                    <div class="helper-content">
-                        Toutes les questions doivent être répondues.
-                    </div>
-                    <div class="helper-content">
-                        Si vous répondez "non conforme" à une question, veuillez insérer la raison (observation) dans le champ qui apparaitra.
-                    </div>
-                    <div class="helper-content">
-                        Les réponses sont sauvegardées automatiquent lors de leurs ajouts et/ou modifications.
-                    </div>
-                    <div class="helper-content">
-                        <div class="help-shortcuts">Raccourcis clavier:</div>
-                        <div class="shortcuts">
-                            <span><i class="far fa-caret-square-left"></i>Question précédente</span>
-                            <span><i class="far fa-caret-square-right"></i>Question suivante</span>
-                        </div>
-                    </div>
-                    <div class="helper-content">
-                        Durée moyenne: 1 heure minimum.
-                    </div>
+                    <?php if($compteur == $questionsNumber) { echo "Question finale"; } else { echo "Question n°$compteur"; } ?><img src="assets/tooltip.png" alt="infobulle" title="cliquez ici pour afficher l'aide" onclick="showTip()">
                 </div>
                 <div class="category-question">
                     <?= $questions['Name']; ?>
@@ -179,9 +187,8 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
                             <button type="button" class="button-next" onclick="nextQuestion(<?= $compteur; ?>)">Suivant <i class="fas fa-long-arrow-alt-right"></i></button>
                         <?php } ?>
                         <?php if($compteur == $questionsNumber) { ?>
-                            <button type="button" class="button-send greenButton" id="questionnaire-button-send" onclick="sendAudit(<?= $auditNumber; ?>, <?= $auditInProgress['User_ID']; ?>)">Finaliser l'audit</button>
+                            <button type="button" class="button-send greenButton" id="questionnaire-button-send" onclick="sendAudit(<?= $auditNumber; ?>, <?= $auditInProgress['User_ID']; ?>, <?= $questions['Centre']; ?>, <?= $questions['Auditor']; ?><?php if($questions['Assistant1'] != null) {?><?= ', ' . $questions['Assistant1']; ?><?php } ?><?php if($questions['Assistant2'] != null) {?><?= ', ' . $questions['Assistant2']; ?><?php } ?>)">Finaliser l'audit</button>
                             <input type="hidden" id="questionsNumber" value="<?= $compteur; ?>">
-                            <input type="hidden" id="localisation" value="<?= $questions['Centre']; ?>">
                         <?php } ?>
                     </div>
                 </div>
@@ -281,31 +288,32 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
             <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
             <img class="logo-afpa" src="assets/logoAFPAWhite.png" alt="logo afpa blanc">
         </div>
+        <div class="helper-container-questions" id="helper">
+            <img src="assets/close_button.png" title="Cliquez ici pour fermer l'aide" onclick="showTip()">
+            <div class="helper-content">
+                Toutes les questions doivent être répondues.
+            </div>
+            <div class="helper-content">
+                Si vous répondez "non conforme" à une question, veuillez insérer la raison (observation) dans le champ qui apparaitra.
+            </div>
+            <div class="helper-content">
+                Les réponses sont sauvegardées automatiquement lors de leurs ajouts et/ou modifications.
+            </div>
+            <div class="helper-content">
+                <div class="help-shortcuts">Raccourcis clavier:</div>
+                <div class="shortcuts">
+                    <span><i class="far fa-caret-square-left"></i>Question précédente</span>
+                    <span><i class="far fa-caret-square-right"></i>Question suivante</span>
+                </div>
+            </div>
+            <div class="helper-content">
+                Durée moyenne: 1 heure minimum.
+            </div>
+        </div>
         <?php while($questions = $selectThematiques->fetch()) { ?>
             <div class="form-part" id="question<?= $compteur; ?>">
                 <div class="question-number">
-                    <?php if($compteur == $ThematiquesNumber) { echo "Question finale"; } else { echo "Question n°$compteur"; } ?><img src="assets/tooltip.png" alt="infobulle" title="cliquez ici pour afficher l'aide" onclick="showTip('helper<?= $compteur; ?>')">
-                </div>
-                <div class="helper-container-questions" id="helper<?= $compteur; ?>">
-                    <div class="helper-content">
-                        Toutes les questions doivent être répondues.
-                    </div>
-                    <div class="helper-content">
-                        Si vous répondez "non conforme" à une question, veuillez insérer la raison (observation) dans le champ qui apparaitra.
-                    </div>
-                    <div class="helper-content">
-                        Les réponses sont sauvegardées automatiquent lors de leurs ajouts et/ou modifications.
-                    </div>
-                    <div class="helper-content">
-                        <div class="help-shortcuts">Raccourcis clavier:</div>
-                        <div class="shortcuts">
-                            <span><i class="far fa-caret-square-left"></i>Question précédente</span>
-                            <span><i class="far fa-caret-square-right"></i>Question suivante</span>
-                        </div>
-                    </div>
-                    <div class="helper-content">
-                        Durée moyenne: 1 heure minimum.
-                    </div>
+                    <?php if($compteur == $ThematiquesNumber) { echo "Question finale"; } else { echo "Question n°$compteur"; } ?><img src="assets/tooltip.png" alt="infobulle" title="cliquez ici pour afficher l'aide" onclick="showTip()">
                 </div>
                 <div class="category-question">
                     <?= $questions['Name']; ?>
@@ -347,9 +355,8 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
                             <button type="button" class="button-next" onclick="nextQuestion(<?= $compteur; ?>)">Suivant <i class="fas fa-long-arrow-alt-right"></i></button>
                         <?php } ?>
                         <?php if($compteur == $ThematiquesNumber) { ?>
-                            <button type="button" class="button-send greenButton" id="questionnaire-button-send" onclick="sendAudit(<?= $auditNumber; ?>, <?= $_POST['auditedUserID']; ?>)">Finaliser l'audit</button>
+                            <button type="button" class="button-send greenButton" id="questionnaire-button-send" onclick="sendAudit(<?= $auditNumber; ?>, <?= $_POST['auditedUserID']; ?>, <?= $_POST['auditedCenter']; ?>, <?= $_SESSION['ID'] ?> <?php if($auditAssistant1 !== 'false') {?> <?= ', ' . $auditAssistant1; ?> <?php } ?> <?php if($auditAssistant2 !== 'false') {?> <?= ', ' . $auditAssistant2; ?> <?php } ?>)">Finaliser l'audit</button>
                             <input type="hidden" id="questionsNumber" value="<?= $compteur; ?>">
-                            <input type="hidden" id="localisation" value="<?= htmlspecialchars($_POST['auditedCenter']); ?>">
                         <?php } ?>
                     </div>
                 </div>

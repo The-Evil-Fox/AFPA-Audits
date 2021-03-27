@@ -70,7 +70,7 @@ if(isset($_POST['method']) && !empty($_POST['method'])) {
 
     } else if($_POST['method'] == "finaliseAudit") {
 
-        if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit']) && !empty($_POST['audit']) && isset($_POST['localisation']) && !empty($_POST['localisation'])) {
+        if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit']) && !empty($_POST['audit']) && isset($_POST['localisation']) && !empty($_POST['localisation']) && isset($_POST['auditor']) && !empty($_POST['auditor'])) {
 
             $completed = true;
 
@@ -87,11 +87,33 @@ if(isset($_POST['method']) && !empty($_POST['method'])) {
             $userName = $getUserName->fetch();
 
             $actualite = "a été audité !";
-            $insertActualite = $db->prepare('INSERT INTO Actualites(User, Actualite, Audit_Number, Centre) VALUES(:user, :actualite, :eval, :localisation)');
+            $insertActualite = $db->prepare('INSERT INTO Actualites(User, Actualite, Audit_Number, Centre, Auditor, Assistant1, Assistant2) VALUES(:user, :actualite, :eval, :localisation, :auditor, :assistant1, :assistant2)');
             $insertActualite->bindParam(':user', $_POST['userID'], PDO::PARAM_INT);
             $insertActualite->bindParam(':actualite', $actualite, PDO::PARAM_STR);
             $insertActualite->bindParam(':eval', $_POST['audit'], PDO::PARAM_INT);
             $insertActualite->bindParam(':localisation', $_POST['localisation'], PDO::PARAM_INT);
+            $insertActualite->bindParam(':auditor', $_POST['auditor'], PDO::PARAM_INT);
+            if(isset($_POST['assistant1']) && !empty($_POST['assistant1'])) {
+
+                $insertActualite->bindParam(':assistant1', $_POST['assistant1'], PDO::PARAM_INT);
+
+            } else {
+
+                $assistant1 = null;
+                $insertActualite->bindParam(':assistant1', $assistant1, PDO::PARAM_NULL);
+
+            }
+            if(isset($_POST['assistant2']) && !empty($_POST['assistant2'])) {
+
+                $insertActualite->bindParam(':assistant2', $_POST['assistant2'], PDO::PARAM_INT);
+
+            } else {
+
+                $assistant2 = null;
+                $insertActualite->bindParam(':assistant2', $assistant2, PDO::PARAM_NULL);
+
+            }
+            
             $insertActualite->execute();
 
             $countCompliances = $db->prepare('SELECT count(*) as nb_compliance FROM ConstatsAudits WHERE Audit_Number = :auditNumber AND Constat = "Conforme" AND User_ID = :user');
@@ -225,12 +247,10 @@ if(isset($_POST['method']) && !empty($_POST['method'])) {
 
             if($numberNonCompliances !== 0) {
 
-                $getNonCompliances = $db->prepare("SELECT qa.Thematique FROM ConstatsAudits ca JOIN QuestionsAudit qa ON ca.Thematique = qa.ID WHERE ca.User_ID = :user AND Audit_Number = :auditNumber AND Constat = 'NC'");
+                $getNonCompliances = $db->prepare("SELECT qa.Thematique, ca.Observation FROM ConstatsAudits ca JOIN QuestionsAudit qa ON ca.Thematique = qa.ID WHERE ca.User_ID = :user AND Audit_Number = :auditNumber AND Constat = 'NC'");
                 $getNonCompliances->bindParam(':user', $_POST['userID'], PDO::PARAM_INT);
                 $getNonCompliances->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
                 $getNonCompliances->execute();
-                
-                $compteurNC = 1;
 
             } 
             
@@ -250,8 +270,6 @@ if(isset($_POST['method']) && !empty($_POST['method'])) {
                 $getNotApplicables->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
                 $getNotApplicables->execute();
 
-                $compteurNA = 1;
-
             }
 
             $countNDA = $db->prepare("SELECT COUNT(ca.Constat) as nbr_NDA FROM ConstatsAudits ca JOIN QuestionsAudit qa ON ca.Thematique = qa.ID WHERE ca.User_ID = :user AND Audit_Number = :auditNumber AND ca.Constat = 'NDA'");
@@ -270,8 +288,6 @@ if(isset($_POST['method']) && !empty($_POST['method'])) {
                 $getNDA->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
                 $getNDA->execute();
 
-                $compteurNDA = 1;
-
             }
 
             if($numberNonCompliances !== 0 || $numberNotApplicables !== 0 || $numberNDA !== 0) { ?>
@@ -281,12 +297,14 @@ if(isset($_POST['method']) && !empty($_POST['method'])) {
                         <thead>
                             <tr>
                                 <th><?php if($numberNonCompliances > 1) { echo "Non conformes"; } else { echo "Non-conforme"; } ?></th>
+                                <th>Observation</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
                                 <tr>
                                     <td data-label="Non conforme"><?= str_replace('?', '', $nonCompliances['Thematique']); ?></td>
+                                    <td data-label="Observation"><?= $nonCompliances['Observation']; ?></td>
                                 </tr>
                             <?php } ?>
                         </tbody>

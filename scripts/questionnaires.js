@@ -2,15 +2,22 @@ page = 1;
 
 function showTip(helperid) {
 
-    let helper = document.getElementById(helperid);
+    let helper = document.getElementById('helper');
+    let questionsContainers = document.getElementsByClassName('form-part');
 
     if(helper.style.display == "flex") {
 
         helper.style.display = "none";
+        for(var i = 0; i<questionsContainers.length; i++) {
+            questionsContainers[i].className = "form-part";
+        }
 
     } else {
 
         helper.style.display = "flex";
+        for(var i = 0; i<questionsContainers.length; i++) {
+            questionsContainers[i].className = "form-part none";
+        }
 
     }
 
@@ -128,10 +135,10 @@ function checkAuditInProgress(user) {
             
                 });
 
-                getAuditeurs = true;
+                getAuditeurs1 = true;
         
                 dataSend = {
-                    getAuditeurs
+                    getAuditeurs1
                 };
 
                 $.ajax({
@@ -176,6 +183,56 @@ function checkAuditInProgress(user) {
 
 }
 
+function showSecondAssistantSelect(assistant1) {
+
+    if(assistant1 !== "") {
+
+        document.getElementById('assistant2Container').className = "selectAssistant";
+        
+        getAuditeurs2 = true;
+        
+                dataSend = {
+                    assistant1,
+                    getAuditeurs2
+                };
+
+                $.ajax({
+        
+                    type: 'POST',
+                    url: 'traitements/createAudit.php',
+                    data: dataSend,
+                    dataType: 'text',
+                    success: function(data) {
+            
+                        if(data == "Acces refusé ! Veuillez vous connectez !") {
+            
+                            window.location.replace('index.php');
+                            return;
+                            
+                        }
+                        
+                        document.getElementById('assistant2Container').className = "selectAssistant";
+                        document.getElementById('assistant2Container').innerHTML = data;
+                        
+                    },
+            
+                    error: function(xhr, textStatus, error) {
+            
+                        alert(xhr.status + " " + xhr.statusText);
+                        
+                    }
+            
+                });
+
+    } else {
+
+        document.getElementById('assistant2Container').className = "selectAssistant none";
+        document.getElementById('assistant2').value = "";
+
+    }
+
+}
+
 function startAudit(buttonvalue) {
 
     let spanMessage = document.getElementById('auditSelectMessage');
@@ -197,7 +254,15 @@ function startAudit(buttonvalue) {
 
         auditedCenter = document.getElementById('auditedCenter').value;
         let assistantAudit1 = document.getElementById('assistant1').value;
-        let assistantAudit2 = document.getElementById('assistant2').value;
+        if(typeof(document.getElementById('assistant2')) !== "undefined" && document.getElementById('assistant2') != null) {
+        
+            assistantAudit2 = document.getElementById('assistant2').value;
+
+        } else {
+
+            assistantAudit2 = "";
+
+        }
 
         if(auditedCenter == "") {
 
@@ -399,13 +464,12 @@ function updateObservation(userID, audit, thematique, observation, textAreaID) {
 
 }
 
-function sendAudit(audit, userID) {
+function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2) {
 
     let content = document.getElementById('content');
     let messageWindow = document.getElementById('message');
     let buttonSend = document.getElementById('questionnaire-button-send');
     let allTextAreas = document.getElementsByTagName('textarea');
-    let localisation = document.getElementById('localisation').value;
 
     for (var i = 0; i < allTextAreas.length; i++) {
 
@@ -452,7 +516,33 @@ function sendAudit(audit, userID) {
         method,
         audit,
         userID,
-        localisation
+        localisation,
+        auditor
+    }
+
+    if(typeof(assistant1) !== "undefined" && typeof(assistant2) !== "undefined") {
+        
+        finaliseAudit = {
+            method,
+            audit,
+            userID,
+            localisation,
+            auditor,
+            assistant1,
+            assistant2
+        }
+
+    } else if(typeof(assistant1) !== "undefined" && typeof(assistant2) == "undefined") {
+
+        finaliseAudit = {
+            method,
+            audit,
+            userID,
+            localisation,
+            auditor,
+            assistant1
+        }
+
     }
 
     $.ajax({
@@ -602,6 +692,12 @@ function showTextArea(textAreaId, mustBeDisplayed) {
 
 function previousQuestion(partNumber) {
 
+    if(document.getElementById('helper').style.display == "flex") {
+
+        return;
+
+    }
+
     let content = document.getElementById('content');
 
     const questionId = "question";
@@ -621,6 +717,12 @@ function previousQuestion(partNumber) {
 }
 
 function nextQuestion(partNumber) {
+
+    if(document.getElementById('helper').style.display == "flex") {
+
+        return;
+
+    }
 
     let content = document.getElementById('content');
     

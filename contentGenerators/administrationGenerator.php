@@ -13,45 +13,64 @@ if(!isset($_SESSION['ID'])) {
 
 if(isset($_POST['actualites'])) {
 
-    $reqActus = $db->query('SELECT u.ID, u.Name, u.FirstName, a.Actualite, a.Eval_Number, a.Audit_Number, a.DateAndHour, ca.Localisation FROM Actualites a 
-    LEFT JOIN Users u ON a.User = u.ID LEFT JOIN CentresAFPA ca ON a.Centre = ca.ID ORDER BY DateAndHour DESC'); ?>
+    $reqActus = $db->query(
+        "SELECT u.ID, u.Name, u.FirstName, a.Actualite, a.Eval_Number, a.Audit_Number, a.DateAndHour, ca.Localisation,
+            (SELECT u.Name FROM Users u WHERE a.Auditor = u.ID) AS 'auditeurName',
+            (SELECT u.FirstName FROM Users u WHERE a.Auditor = u.ID) AS 'auditeurFirstName',
+            (SELECT u.Name FROM Users u WHERE a.Assistant1 = u.ID) AS 'Assistant1Name',
+            (SELECT u.FirstName AS 'Assistant1FirstName' FROM Users u WHERE a.Assistant1 = u.ID) AS 'Assistant1FirstName',
+            (SELECT u.Name FROM Users u WHERE a.Assistant2 = u.ID) AS 'Assistant2Name',
+            (SELECT u.FirstName AS 'Assistant1FirstName' FROM Users u WHERE a.Assistant2 = u.ID) AS 'Assistant2FirstName'
+        FROM Actualites a 
+        LEFT JOIN Users u ON a.User = u.ID 
+        LEFT JOIN CentresAFPA ca ON a.Centre = ca.ID ORDER BY DateAndHour DESC"
+    );
+    $countActus = $reqActus->rowCount();
 
-    <div id="titleContainer">
-        <h3>Fil d'actualité</h3>
-    </div>
-    <table id="tableauActualites">
-        <thead>
-            <tr>
-                <th>Utilisateur</th>
-                <th>Actualité</th>
-                <th>Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php while($actu = $reqActus->fetch()) { ?>
+    if($countActus == 0) { ?>
 
-            <?php if($_SESSION['ID'] !== $actu['ID']) { ?>
+        <div id="errorMessage">Aucune actualité à afficher pour le moment !</div>
 
+    <?php } else { ?>
+
+        <div id="titleContainer">
+            <h3>Fil d'actualité</h3>
+        </div>
+        <table id="tableauActualites">
+            <thead>
                 <tr>
-                    <td data-label="Utilisateur"><?= $actu['Name'] . " " . $actu['FirstName']; ?></td>
-                    <td data-label="Actualité"><?= $actu['Actualite']; ?></td>
-                    <td data-label="Date">le <?= dateConvert($actu['DateAndHour']); ?></td>
-                    <?php if($actu['Eval_Number'] !== null) { ?>
-                        <td><button class="button-show-autoeval-result" onclick="showUserResultEval(<?= $actu['ID']; ?>, <?= $actu['Eval_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['FirstName']; ?>', '<?= dateConvert($actu['DateAndHour']); ?>')">Voir les résultats</button></td>
-                    <?php } ?>
-                    <?php if($actu['Audit_Number'] !== null) {?>
-                        <td><button class="button-show-audit-result" onclick="showUserResultAudit(<?= $actu['ID']; ?>, <?= $actu['Audit_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['FirstName']; ?>', '<?= dateConvert($actu['DateAndHour']); ?>', '<?= $actu['Localisation']; ?>')">Voir les résultats</button></td>
-                    <?php } ?>
+                    <th>Utilisateur</th>
+                    <th>Actualité</th>
+                    <th>Date</th>
+                    <th>Actions</th>
                 </tr>
+            </thead>
+            <tbody>
+            <?php while($actu = $reqActus->fetch()) { ?>
+
+                <?php if($_SESSION['ID'] !== $actu['ID']) { ?>
+
+                    <tr>
+                        <td data-label="Utilisateur"><?= $actu['Name'] . " " . $actu['FirstName']; ?></td>
+                        <td data-label="Actualité"><?= $actu['Actualite']; ?></td>
+                        <td data-label="Date">le <?= dateConvert($actu['DateAndHour']); ?></td>
+                        <?php if($actu['Eval_Number'] !== null) { ?>
+                            <td><button class="button-show-autoeval-result" onclick="showUserResultEval(<?= $actu['ID']; ?>, <?= $actu['Eval_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['FirstName']; ?>', '<?= dateConvert($actu['DateAndHour']); ?>')">Voir les résultats</button></td>
+                        <?php } ?>
+                        <?php if($actu['Audit_Number'] !== null) {?>
+                            <td><button class="button-show-audit-result" onclick="showUserResultAudit(<?= $actu['ID']; ?>, <?= $actu['Audit_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['FirstName']; ?>', '<?= $actu['auditeurName']; ?>', '<?= $actu['auditeurFirstName']; ?>', '<?= dateConvert($actu['DateAndHour']); ?>','<?= $actu['Localisation']; ?>'<?php if($actu['Assistant1Name'] && $actu['Assistant1FirstName'] !== NULL) { ?>, '<?= $actu['Assistant1Name']; ?>', '<?= $actu['Assistant1FirstName']; ?>' <?php } if($actu['Assistant2Name'] && $actu['Assistant2FirstName'] !== NULL) { ?>, '<?= $actu['Assistant2Name']; ?>', '<?= $actu['Assistant2FirstName']; ?>' <?php } ?>)">Voir les résultats</button></td>
+                        <?php } ?>
+                    </tr>
+
+                <?php } ?>
 
             <?php } ?>
+            </tbody>
+        </table>
 
-        <?php } ?>
-        </tbody>
-    </table>
+    <?php }
 
-<?php }
+}
 
 if(isset($_POST['autoEvalution'])) {
 
@@ -120,6 +139,7 @@ if(isset($_POST['autoEvalution'])) {
 if(isset($_POST['documents'])) {
 
     $getDocuments = $db->query('SELECT * FROM Documents ORDER BY Documents.Document ASC');
+    $countDocuments = $getDocuments->rowCount();
 
 ?>
 
@@ -132,32 +152,49 @@ if(isset($_POST['documents'])) {
         <input type="file" name="addDocument" id="addDocument">
     </form>
     </div>
-    
-    <table id="tableauDocuments">
-        <thead>
-            <tr>
-                <th>Document</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php while($documents = $getDocuments->fetch()) { ?>
+
+    <?php if($countDocuments !== 0) { ?>
+        
+        <table id="tableauDocuments">
+            <thead>
                 <tr>
-                    <td id="<?= $documents['ID']; ?>" data-label="Document"><?= $documents['Document']; ?></td>
-                    
-                    <td data-label="Actions">
-                        <div class="buttonsModificationQuestionnaire">
-                            <button><a target="_blank" href="documents/<?= $documents['Link']; ?>"><i class="fas fa-eye"></i> Voir</a></button>
-                            <button class="redButton" onclick="deleteDocument(this.value, <?= $documents['ID']; ?>, '<?= $documents['Link']; ?>')" value="delete"><i class="fas fa-trash-alt"></i> Supprimer</button>
-                        </div>
-                    </td>
+                    <th>Document</th>
+                    <th>Actions</th>
                 </tr>
+            </thead>
+            <tbody>
+            <?php while($documents = $getDocuments->fetch()) { ?>
+                    <tr>
+                        <td id="<?= $documents['ID']; ?>" data-label="Document"><?= $documents['Document']; ?></td>
+                        
+                        <td data-label="Actions">
+                            <div class="buttonsModificationQuestionnaire">
+                                <button><a target="_blank" href="documents/<?= $documents['Link']; ?>"><i class="fas fa-eye"></i> Voir</a></button>
+                                <button class="redButton" onclick="deleteDocument(this.value, <?= $documents['ID']; ?>, '<?= $documents['Link']; ?>')" value="delete"><i class="fas fa-trash-alt"></i> Supprimer</button>
+                            </div>
+                        </td>
+                    </tr>
 
-            <?php } ?>
-        </tbody>
-    </table>
+                <?php } ?>
+            </tbody>
+        </table>
 
-<?php }
+    <?php } else { ?>
+
+        <table id="tableauDocuments">
+            <thead>
+                <tr>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                <td data-label="Message">Aucun documents disponible</td>
+            </tbody>
+        </table>
+
+    <?php }
+
+}
 
 if(isset($_POST['audit'])) {
 

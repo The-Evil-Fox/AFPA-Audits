@@ -144,7 +144,7 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
 
 }
 
-function showUserResultAudit(userID, audit, userName, userFirstName, date, centre) {
+function showUserResultAudit(userID, audit, userName, userFirstName, auditeurName, auditeurFirstName, date, centre, assistant1Name, assistant1FirstName, assistant2Name, assistant2FirstName) {
 
     userData = { 
         userID,
@@ -159,7 +159,64 @@ function showUserResultAudit(userID, audit, userName, userFirstName, date, centr
         dataType: 'JSON',
         success: function(dataGraphique) {
 
-            content.innerHTML = "<div id='graphique-resultats'></div><div id='dateGraphique'>Effectué au centre de " + centre + " le "+date+".</div><div id='tableauContainer'></div>";
+            if(typeof(assistant1Name) && typeof(assistant1FirstName) == "undefined") {
+
+                content.innerHTML = `
+                    <div id='graphique-resultats'></div>
+                    <div id='dateGraphique'>
+                        Effectué au centre de ` + centre + ` le ` + date + ` par ` + auditeurName + " " + auditeurFirstName + `.
+                    </div>
+                    <div id='tableauContainer'></div>`
+                ;
+            
+            } else {
+
+                if(typeof(assistant1Name) && typeof(assistant1FirstName) !== "undefined" && typeof(assistant2Name) && typeof(assistant2FirstName) == "undefined") {
+
+                    content.innerHTML = `
+                    <div id='graphique-resultats'></div>
+                    <div id='dateGraphique'>
+                        Effectué au centre de ` + centre + ` le ` + date + ` <br>par ` + auditeurName + " " + auditeurFirstName + `.
+                    </div>
+                    <table id='tableauAssistants'>
+                        <thead>
+                            <tr>
+                                <th>Assistant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td data-label='Assitant'>` + assistant1Name + " " + assistant1FirstName + `</td>
+                        </tr>
+                    </table>
+                    <div id='tableauContainer'></div>`
+                    ;
+
+                } else if(typeof(assistant1Name) && typeof(assistant1FirstName) && typeof(assistant2Name) && typeof(assistant2FirstName) !== "undefined") {
+
+                    content.innerHTML = `
+                    <div id='graphique-resultats'></div>
+                    <div id='dateGraphique'>
+                        Effectué au centre de ` + centre + ` le ` + date + ` par ` + auditeurName + " " + auditeurFirstName + `.
+                    </div>
+                    <table id='tableauAssistants'>
+                        <thead>
+                            <tr>
+                                <th>Assistants</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td data-label='Assitant n°1'>` + assistant1Name + " " + assistant1FirstName + `</td>
+                            <td data-label='Assitant n°2'>` + assistant2Name + " " + assistant2FirstName + `</td>
+                        </tr>
+                    </table>
+                    <div id='tableauContainer'></div>`
+                    ;
+
+                }
+
+            }
 
             createChart("graphique-resultats", "Résultats de l'audit de " + userName + " " + userFirstName, dataGraphique);
 
@@ -833,22 +890,30 @@ function showStats() {
 
     $(document).ready(function() {
 
+        if(contentWindow.className == "content backgroundImage") {
+
+            contentWindow.className = "content";
+
+        }
+
         showLoading(contentWindow);
 
-        let getStats = true;
+        let countAudits = true;
 
         dataSend = {
 
-            getStats
-            
-        }
+            countAudits
+
+        };
+
+        noDataForStats = false;
 
         $.ajax({
 
             type: 'POST',
             url: 'contentGenerators/globalStats.php',
             data: dataSend,
-            dataType: 'JSON',
+            dataType: 'text',
             success: function(data) {
 
                 if(data == "Acces refusé ! Veuillez vous connectez !") {
@@ -858,62 +923,116 @@ function showStats() {
                     
                 }
 
-                if($('#mobileNavDropdown').attr('class').indexOf('active') > -1) {
+                if(data !== "") {
 
-                    $('#mobileNavDropdown').removeClass('active');
-
-                }
-
-                contentWindow.className = "content";
-
-                contentWindow.style.opacity = 0;
-
-                setTimeout(function() {
-
-                    contentWindow.innerHTML = "<div id='graphique-resultats'></div><div id='tableauContainer'></div>";
-
-                    createChart("graphique-resultats", "Statistiques globales des audits", data);
-
+                    contentWindow.style.opacity = 0;
+                    contentWindow.innerHTML = data;
                     contentWindow.style.opacity = 1;
+                    noDataForStats = true;
 
-                }, 500);
-
-                function hideMessages() {
-
-                    var x = document.getElementsByClassName("canvasjs-chart-credit");
-                    var i;
-                    for (i = 0; i < x.length; i++) {
-                    x[i].style.display = "none";
-                    }
-                    
                 }
-            
-                setInterval(() => {
-
-                    hideMessages();
-
-                }, 15);
 
             },
-            error: function(xhr, textStatus, error){
 
-                alert(xhr.status + " " + xhr.statusText);
+            // error: function(xhr, textStatus, error){
 
-            }
+            //     alert(xhr.status + " " + xhr.statusText);
+
+            // }
 
         });
 
-        let getTab = true;
-
-        dataSend = {
-
-            getTab
-
-        }
-
         setTimeout(() => {
 
-            showTab();
+            if(noDataForStats == true) {
+
+                return;
+
+            } else {
+
+                let getStats = true;
+
+                dataSend = {
+
+                    getStats
+                    
+                }
+
+                $.ajax({
+
+                    type: 'POST',
+                    url: 'contentGenerators/globalStats.php',
+                    data: dataSend,
+                    dataType: 'JSON',
+                    success: function(data) {
+
+                        if(data == "Acces refusé ! Veuillez vous connectez !") {
+
+                            window.location.replace('index.php');
+                            return;
+                            
+                        }
+
+                        if($('#mobileNavDropdown').attr('class').indexOf('active') > -1) {
+
+                            $('#mobileNavDropdown').removeClass('active');
+
+                        }
+
+                        contentWindow.className = "content";
+
+                        contentWindow.style.opacity = 0;
+
+                        setTimeout(function() {
+
+                            contentWindow.innerHTML = "<div id='graphique-resultats'></div><div id='tableauContainer'></div>";
+
+                            createChart("graphique-resultats", "Statistiques globales des audits", data);
+
+                            contentWindow.style.opacity = 1;
+
+                        }, 500);
+
+                        function hideMessages() {
+
+                            var x = document.getElementsByClassName("canvasjs-chart-credit");
+                            var i;
+                            for (i = 0; i < x.length; i++) {
+                            x[i].style.display = "none";
+                            }
+                            
+                        }
+                    
+                        setInterval(() => {
+
+                            hideMessages();
+
+                        }, 15);
+
+                    },
+                    // error: function(xhr, textStatus, error){
+
+                    //     alert(xhr.status + " " + xhr.statusText);
+
+                    // }
+
+                });
+
+                let getTab = true;
+
+                dataSend = {
+
+                    getTab
+
+                }
+
+                setTimeout(() => {
+
+                    showTab();
+
+                }, 750);
+
+            }
 
         }, 750);
 

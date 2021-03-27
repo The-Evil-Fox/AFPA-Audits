@@ -11,7 +11,34 @@ if(!isset($_SESSION['ID'])) {
 
 }
 
+if(isset($_POST['countAudits'])) {
+
+    $selectAudits = $db->query('SELECT * FROM Audits WHERE Completed = 1');
+    $countAudits = $selectAudits->rowCount();
+
+    if($countAudits == 0) { ?>
+
+        <div id='errorMessage'>
+            Statistiques globales impossibles à afficher car aucun audit n'a été complété pour le moment !
+        </div>
+    
+    <?php }
+
+    return;
+
+}
+
 if(isset($_POST['getStats'])) {
+
+    $selectAudits = $db->query('SELECT * FROM Audits WHERE Completed = 1');
+    $countAudits = $selectAudits->rowCount();
+
+    if($countAudits == 0) {
+
+        echo "Aucun audits complété présent dans la base de données pour réaliser des statistiques !";
+        return;
+    
+    }
 
     $countCompliances = $db->query("SELECT COUNT(*) AS 'conformités' FROM ConstatsAudits ca INNER JOIN Audits a 
     ON ca.Audit_Number = a.Audit_Number AND ca.User_ID = a.User_ID WHERE a.Completed = 1 

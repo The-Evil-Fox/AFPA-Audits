@@ -51,7 +51,7 @@ if(isset($_POST['getAudits']) && isset($_POST['user']) && !empty($_POST['user'])
             (SELECT u.FirstName AS 'Assistant1FirstName' FROM Users u WHERE a.Assistant2 = u.ID) AS 'Assistant2FirstName'
         FROM Audits a 
         LEFT JOIN Users u ON a.User_ID = u.ID
-        LEFT JOIN CentresAFPA ca ON a.Centre = ca.ID
+        LEFT JOIN Facilities ca ON a.Facility = ca.ID
         WHERE User_ID = :user AND a.Completed = true ORDER BY DateAndHour DESC LIMIT 10"
     );
     $getAudits->bindParam(':user', $_POST['user'], PDO::PARAM_INT);

@@ -160,7 +160,11 @@ $('#form-login').submit(function(e) {
         
         error: function(xhr, textStatus, error){
 
-            alert(xhr.status + " " + xhr.statusText);
+            document.body.innerHTML = `
+                <div class='errorContainer'>
+                    <img src='assets/error.png'>`
+                    + xhr.status + " " + xhr.statusText +
+                `</div>`;
             
         }
         

@@ -14,7 +14,7 @@ if(!isset($_SESSION['ID'])) {
 if(isset($_POST['actualites'])) {
 
     $reqActus = $db->query(
-        "SELECT u.ID, u.Name, u.FirstName, a.Actualite, a.Eval_Number, a.Audit_Number, a.DateAndHour, ca.Localisation,
+        "SELECT u.ID, u.Name, u.FirstName, a.Actualite, a.Eval_Number, a.Audit_Number, a.DateAndHour, f.Localisation,
             (SELECT u.Name FROM Users u WHERE a.Auditor = u.ID) AS 'auditeurName',
             (SELECT u.FirstName FROM Users u WHERE a.Auditor = u.ID) AS 'auditeurFirstName',
             (SELECT u.Name FROM Users u WHERE a.Assistant1 = u.ID) AS 'Assistant1Name',
@@ -23,7 +23,7 @@ if(isset($_POST['actualites'])) {
             (SELECT u.FirstName AS 'Assistant1FirstName' FROM Users u WHERE a.Assistant2 = u.ID) AS 'Assistant2FirstName'
         FROM Actualites a 
         LEFT JOIN Users u ON a.User = u.ID 
-        LEFT JOIN CentresAFPA ca ON a.Centre = ca.ID ORDER BY DateAndHour DESC"
+        LEFT JOIN Facilities f ON a.Facility = f.ID ORDER BY DateAndHour DESC"
     );
     $countActus = $reqActus->rowCount();
 
@@ -198,7 +198,7 @@ if(isset($_POST['documents'])) {
 
 if(isset($_POST['audit'])) {
 
-    $getQuestions = $db->query('SELECT qa.ID, qa.Thematique, qa.Preuves, qa.Active, cqa.Name FROM QuestionsAudit qa LEFT JOIN 
+    $getQuestions = $db->query('SELECT qa.ID, qa.Question, qa.Evidence, qa.Active, cqa.Name FROM QuestionsAudit qa LEFT JOIN 
     CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID ORDER BY cqa.ID ASC');
     $getCategories = $db->query('SELECT * FROM CategoriesQuestionsAudit ORDER BY ID ASC');
 
@@ -238,8 +238,8 @@ if(isset($_POST['audit'])) {
             <?php while($question = $getQuestions->fetch()) { ?>
                 <tr>
                     <td data-label="Statut" id="questionStatus<?= $question['ID']; ?>"><?php if($question['Active'] == true) { ?>Active<?php } else { ?>Inactive<?php } ?></td>
-                    <td data-label="Question" class="questionnaire-border-white" id="question-label-<?= $question['ID']; ?>"><?= $question['Thematique']; ?></td>
-                    <td data-label="Preuves" class="questionnaire-border-white"><?php if($question['Preuves'] !== NULL) { echo $question['Preuves']; } else { echo "/"; } ?></td>
+                    <td data-label="Question" class="questionnaire-border-white" id="question-label-<?= $question['ID']; ?>"><?= $question['Question']; ?></td>
+                    <td data-label="Preuves" class="questionnaire-border-white"><?php if($question['Evidence'] !== NULL) { echo $question['Evidence']; } else { echo "/"; } ?></td>
                     <td data-label="Categorie" class="questionnaire-border-white"><?= $question['Name']; ?></td>
                     <td data-label="Actions">
                         <div class="buttonsModificationQuestionnaire">

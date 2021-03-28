@@ -40,7 +40,7 @@ function showAdministration(category) {
             
             error: function(xhr, textStatus, error){
 
-                alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(contentWindow, xhr);
                 
             }
 
@@ -77,7 +77,7 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
                 
             }
 
-            content.innerHTML = "<div id='graphique-resultats'></div><div id='dateGraphique'>Effectué le "+date+".</div><div id='tableauContainer'></div>";
+            content.innerHTML = "<div id='graphique-resultats'></div><div id='dateGraphique'>Effectuée le "+date+".</div><div id='tableauContainer'></div>";
 
             createChart("graphique-resultats", "Résultats de l'autoévaluation de " + userName + " " + userFirstName, datagraphique);
 
@@ -98,6 +98,12 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
                 
             }, 15);
         
+        },
+
+        error: function(xhr, textStatus, error){
+
+            MyFunctions.showError(contentWindow, xhr);
+            
         }
 
     });
@@ -136,7 +142,7 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
 
         error: function(xhr, textStatus, error){
 
-            alert(xhr.status + " " + xhr.statusText);
+            MyFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -166,8 +172,7 @@ function showUserResultAudit(userID, audit, userName, userFirstName, auditeurNam
                     <div id='dateGraphique'>
                         Effectué au centre de ` + centre + ` le ` + date + ` par ` + auditeurName + " " + auditeurFirstName + `.
                     </div>
-                    <div id='tableauContainer'></div>`
-                ;
+                    <div id='tableauContainer'></div>`;
             
             } else {
 
@@ -189,8 +194,7 @@ function showUserResultAudit(userID, audit, userName, userFirstName, auditeurNam
                             <td data-label='Assitant'>` + assistant1Name + " " + assistant1FirstName + `</td>
                         </tr>
                     </table>
-                    <div id='tableauContainer'></div>`
-                    ;
+                    <div id='tableauContainer'></div>`;
 
                 } else if(typeof(assistant1Name) && typeof(assistant1FirstName) && typeof(assistant2Name) && typeof(assistant2FirstName) !== "undefined") {
 
@@ -211,8 +215,7 @@ function showUserResultAudit(userID, audit, userName, userFirstName, auditeurNam
                             <td data-label='Assitant n°2'>` + assistant2Name + " " + assistant2FirstName + `</td>
                         </tr>
                     </table>
-                    <div id='tableauContainer'></div>`
-                    ;
+                    <div id='tableauContainer'></div>`;
 
                 }
 
@@ -237,6 +240,12 @@ function showUserResultAudit(userID, audit, userName, userFirstName, auditeurNam
                 
             }, 15);
         
+        },
+
+        error: function(xhr, textStatus, error){
+
+            MyFunctions.showError(contentWindow, xhr);
+            
         }
 
     });
@@ -268,7 +277,7 @@ function showUserResultAudit(userID, audit, userName, userFirstName, auditeurNam
 
         error: function(xhr, textStatus, error){
 
-            alert(xhr.status + " " + xhr.statusText);
+            MyFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -325,7 +334,7 @@ function addQuestionQuestionnaire(questionnaire) {
 
     if(questionnaire == "audit") {
 
-        preuvesQuestion = document.getElementById('preuvesQuestion').value;
+        evidenceQuestion = document.getElementById('preuvesQuestion').value;
 
     }
 
@@ -361,7 +370,7 @@ function addQuestionQuestionnaire(questionnaire) {
         dataSend = {
             newQuestion,
             categorieQuestion,
-            preuvesQuestion
+            evidenceQuestion
         };
 
     }
@@ -382,7 +391,7 @@ function addQuestionQuestionnaire(questionnaire) {
 
             error: function(xhr, textStatus, error) {
 
-                alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(contentWindow, xhr);
 
             }
 
@@ -406,15 +415,13 @@ function addQuestionQuestionnaire(questionnaire) {
     
             error: function(xhr, textStatus, error) {
     
-                alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(contentWindow, xhr);
                 
             }
     
         });
 
     } else if(questionnaire == "audit") {
-
-        console.log(dataSend);
 
         $.ajax({
 
@@ -430,7 +437,7 @@ function addQuestionQuestionnaire(questionnaire) {
 
             error: function(xhr, textStatus, error) {
 
-                alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(contentWindow, xhr);
 
             }
 
@@ -454,7 +461,7 @@ function addQuestionQuestionnaire(questionnaire) {
     
             error: function(xhr, textStatus, error) {
     
-                alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(contentWindow, xhr);
                 
             }
     
@@ -509,7 +516,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
                 
                         error: function(xhr, textStatus, error) {
                 
-                            alert(xhr.status + " " + xhr.statusText);
+                            MyFunctions.showError(contentWindow, xhr);
                             
                         }
                 
@@ -532,9 +539,10 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
                 }
 
             },
+
             error: function(xhr, textStatus, error){
 
-                alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(contentWindow, xhr);
 
             }
 
@@ -570,8 +578,8 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
                 
                         error: function(xhr, textStatus, error) {
                 
-                            alert(xhr.status + " " + xhr.statusText);
-                            
+                            MyFunctions.showError(contentWindow, xhr);
+
                         }
                 
                     });
@@ -599,7 +607,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
             },
             error: function(xhr, textStatus, error){
 
-                alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(contentWindow, xhr);
 
             }
 
@@ -685,7 +693,7 @@ function updateQuestionQuestionnaire(questionnaire, questionID) {
 
                 error: function(xhr, textStatus, error) {
 
-                    alert(xhr.status + " " + xhr.statusText);
+                    MyFunctions.showError(contentWindow, xhr);
 
                 }
 
@@ -712,7 +720,7 @@ function updateQuestionQuestionnaire(questionnaire, questionID) {
 
                 error: function(xhr, textStatus, error) {
 
-                    alert(xhr.status + " " + xhr.statusText);
+                    MyFunctions.showError(contentWindow, xhr);
 
                 }
 
@@ -780,7 +788,7 @@ function addDocument() {
 
             error: function(xhr, textStatus, error){
 
-                alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(contentWindow, xhr);
                 
             }
     
@@ -812,7 +820,7 @@ function deleteDocument(action, id, link) {
 
         error: function(xhr, textStatus, error){
 
-            alert(xhr.status + " " + xhr.statusText);
+            MyFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -838,7 +846,7 @@ function refreshDocuments() {
 
         error: function(xhr, textStatus, error){
 
-            alert(xhr.status + " " + xhr.statusText);
+            MyFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -878,7 +886,7 @@ function showTab() {
         
         error: function(xhr, textStatus, error){
 
-            alert(xhr.status + " " + xhr.statusText);
+            MyFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -934,11 +942,11 @@ function showStats() {
 
             },
 
-            // error: function(xhr, textStatus, error){
+            error: function(xhr, textStatus, error){
 
-            //     alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(contentWindow, xhr);
 
-            // }
+            }
 
         });
 
@@ -1010,11 +1018,12 @@ function showStats() {
                         }, 15);
 
                     },
-                    // error: function(xhr, textStatus, error){
 
-                    //     alert(xhr.status + " " + xhr.statusText);
+                    error: function(xhr, textStatus, error){
 
-                    // }
+                        MyFunctions.showError(contentWindow, xhr);
+
+                    }
 
                 });
 
@@ -1116,7 +1125,7 @@ function getAllResultsUser(user) {
     
             error: function(xhr, textStatus, error){
     
-                alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(evalsContainer, xhr);
                 
             }
     
@@ -1150,7 +1159,7 @@ function getAllResultsUser(user) {
     
             error: function(xhr, textStatus, error){
     
-                alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(auditsContainer, xhr);
                 
             }
     

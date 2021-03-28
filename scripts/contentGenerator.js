@@ -115,9 +115,9 @@ function showContent(category) {
 
             },
 
-            error: function(xhr, textStatus, error){
+            error: function(xhr, textStatus, error) {
 
-                alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(contentWindow, xhr);
                 
             }
 

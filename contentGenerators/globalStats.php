@@ -40,33 +40,33 @@ if(isset($_POST['getStats'])) {
     
     }
 
-    $countCompliances = $db->query("SELECT COUNT(*) AS 'conformités' FROM ConstatsAudits ca INNER JOIN Audits a 
-    ON ca.Audit_Number = a.Audit_Number AND ca.User_ID = a.User_ID WHERE a.Completed = 1 
-    AND ca.Constat = 'Conforme'");
+    $countCompliances = $db->query("SELECT COUNT(*) AS 'conformités' FROM AuditsReports ar INNER JOIN Audits a 
+    ON ar.Audit_Number = a.Audit_Number AND ar.User_ID = a.User_ID WHERE a.Completed = 1 
+    AND ar.Report = 'Conforme'");
 
     $resultCount1 = $countCompliances->fetch();
 
     $compliances = (int) $resultCount1['conformités'];
 
-    $countNC = $db->query("SELECT COUNT(*) AS 'NC' FROM ConstatsAudits ca INNER JOIN Audits a 
-    ON ca.Audit_Number = a.Audit_Number AND ca.User_ID = a.User_ID WHERE a.Completed = 1 
-    AND ca.Constat = 'NC'");
+    $countNC = $db->query("SELECT COUNT(*) AS 'NC' FROM AuditsReports ar INNER JOIN Audits a 
+    ON ar.Audit_Number = a.Audit_Number AND ar.User_ID = a.User_ID WHERE a.Completed = 1 
+    AND ar.Report = 'NC'");
 
     $resultCount2 = $countNC->fetch();
 
     $NC = (int) $resultCount2['NC'];
 
-    $countNA = $db->query("SELECT COUNT(*) AS 'NA' FROM ConstatsAudits ca INNER JOIN Audits a 
-    ON ca.Audit_Number = a.Audit_Number AND ca.User_ID = a.User_ID WHERE a.Completed = 1 
-    AND ca.Constat = 'NA'");
+    $countNA = $db->query("SELECT COUNT(*) AS 'NA' FROM AuditsReports ar INNER JOIN Audits a 
+    ON ar.Audit_Number = a.Audit_Number AND ar.User_ID = a.User_ID WHERE a.Completed = 1 
+    AND ar.Report = 'NA'");
 
     $resultCount3 = $countNA->fetch();
 
     $NA = (int) $resultCount3['NA'];
 
-    $countNDA = $db->query("SELECT COUNT(*) AS 'NDA' FROM ConstatsAudits ca INNER JOIN Audits a 
-    ON ca.Audit_Number = a.Audit_Number AND ca.User_ID = a.User_ID WHERE a.Completed = 1 
-    AND ca.Constat = 'NDA'");
+    $countNDA = $db->query("SELECT COUNT(*) AS 'NDA' FROM AuditsReports ar INNER JOIN Audits a 
+    ON ar.Audit_Number = a.Audit_Number AND ar.User_ID = a.User_ID WHERE a.Completed = 1 
+    AND ar.Report = 'NDA'");
 
     $resultCount4 = $countNDA->fetch();
 
@@ -145,10 +145,10 @@ if(isset($_POST['getTab'])) {
     if(!isset($_POST['orderBy'])) {
 
         $getQuestionsAndCount = $db->query(
-            "SELECT qa.Thematique, cqa.Name, 
-                (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NC') AS 'RecurrenceNC',
-                (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NA') AS 'RecurrenceNA',
-                (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NDA') AS 'RecurrenceNDA'
+            "SELECT qa.Question, cqa.Name, 
+                (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NC') AS 'RecurrenceNC',
+                (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NA') AS 'RecurrenceNA',
+                (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NDA') AS 'RecurrenceNDA'
             FROM QuestionsAudit qa
             LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID
             ORDER BY qa.ID, qa.Category ASC"
@@ -159,10 +159,10 @@ if(isset($_POST['getTab'])) {
         if($_POST['orderBy'] == "NCASC") {
 
         $getQuestionsAndCount = $db->query(
-            "SELECT qa.Thematique, cqa.Name, 
-                (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NC') AS 'RecurrenceNC',
-                (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NA') AS 'RecurrenceNA',
-                (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NDA') AS 'RecurrenceNDA'
+            "SELECT qa.Question, cqa.Name, 
+                (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NC') AS 'RecurrenceNC',
+                (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NA') AS 'RecurrenceNA',
+                (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NDA') AS 'RecurrenceNDA'
             FROM QuestionsAudit qa
             LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID
             ORDER BY RecurrenceNC ASC"
@@ -171,10 +171,10 @@ if(isset($_POST['getTab'])) {
         } elseif($_POST['orderBy'] == "NCDESC") {
 
             $getQuestionsAndCount = $db->query(
-                "SELECT qa.Thematique, cqa.Name, 
-                    (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NC') AS 'RecurrenceNC',
-                    (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NA') AS 'RecurrenceNA',
-                    (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NDA') AS 'RecurrenceNDA'
+                "SELECT qa.Question, cqa.Name, 
+                    (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NC') AS 'RecurrenceNC',
+                    (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NA') AS 'RecurrenceNA',
+                    (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NDA') AS 'RecurrenceNDA'
                 FROM QuestionsAudit qa
                 LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID
                 ORDER BY RecurrenceNC DESC"
@@ -183,10 +183,10 @@ if(isset($_POST['getTab'])) {
         } elseif($_POST['orderBy'] == "NAASC") {
 
             $getQuestionsAndCount = $db->query(
-                "SELECT qa.Thematique, cqa.Name, 
-                    (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NC') AS 'RecurrenceNC',
-                    (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NA') AS 'RecurrenceNA',
-                    (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NDA') AS 'RecurrenceNDA'
+                "SELECT qa.Question, cqa.Name, 
+                    (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NC') AS 'RecurrenceNC',
+                    (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NA') AS 'RecurrenceNA',
+                    (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NDA') AS 'RecurrenceNDA'
                 FROM QuestionsAudit qa
                 LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID
                 ORDER BY RecurrenceNA ASC"
@@ -195,10 +195,10 @@ if(isset($_POST['getTab'])) {
         } elseif($_POST['orderBy'] == "NADESC") {
 
             $getQuestionsAndCount = $db->query(
-                "SELECT qa.Thematique, cqa.Name, 
-                    (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NC') AS 'RecurrenceNC',
-                    (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NA') AS 'RecurrenceNA',
-                    (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NDA') AS 'RecurrenceNDA'
+                "SELECT qa.Question, cqa.Name, 
+                    (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NC') AS 'RecurrenceNC',
+                    (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NA') AS 'RecurrenceNA',
+                    (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NDA') AS 'RecurrenceNDA'
                 FROM QuestionsAudit qa
                 LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID
                 ORDER BY RecurrenceNA DESC"
@@ -207,10 +207,10 @@ if(isset($_POST['getTab'])) {
         } elseif($_POST['orderBy'] == "NDAASC") {
 
             $getQuestionsAndCount = $db->query(
-                "SELECT qa.Thematique, cqa.Name, 
-                    (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NC') AS 'RecurrenceNC',
-                    (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NA') AS 'RecurrenceNA',
-                    (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NDA') AS 'RecurrenceNDA'
+                "SELECT qa.Question, cqa.Name, 
+                    (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NC') AS 'RecurrenceNC',
+                    (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NA') AS 'RecurrenceNA',
+                    (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NDA') AS 'RecurrenceNDA'
                 FROM QuestionsAudit qa
                 LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID
                 ORDER BY RecurrenceNDA ASC"
@@ -219,10 +219,10 @@ if(isset($_POST['getTab'])) {
         } elseif($_POST['orderBy'] == "NDADESC") {
 
             $getQuestionsAndCount = $db->query(
-                "SELECT qa.Thematique, cqa.Name, 
-                    (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NC') AS 'RecurrenceNC',
-                    (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NA') AS 'RecurrenceNA',
-                    (SELECT COUNT(ID) FROM ConstatsAudits ca WHERE ca.Thematique = qa.ID AND ca.Constat = 'NDA') AS 'RecurrenceNDA'
+                "SELECT qa.Question, cqa.Name, 
+                    (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NC') AS 'RecurrenceNC',
+                    (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NA') AS 'RecurrenceNA',
+                    (SELECT COUNT(ID) FROM AuditsReports ar WHERE ar.Question = qa.ID AND ar.Report = 'NDA') AS 'RecurrenceNDA'
                 FROM QuestionsAudit qa
                 LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID
                 ORDER BY RecurrenceNDA DESC"
@@ -260,7 +260,7 @@ if(isset($_POST['getTab'])) {
         <tbody>
             <?php while($questionsAndCount = $getQuestionsAndCount->fetch()) { ?>
                 <tr>
-                    <td data-label="Thematique"><?= str_replace('?', '', $questionsAndCount['Thematique']); ?></td>
+                    <td data-label="Thematique"><?= str_replace('?', '', $questionsAndCount['Question']); ?></td>
                     <td class="number" data-label="Non conforme"><?= $questionsAndCount['RecurrenceNC']; ?></td>
                     <td class="number" data-label="Non applicable"><?= $questionsAndCount['RecurrenceNA']; ?></td>
                     <td class="number" data-label="Non disponible"><?= $questionsAndCount['RecurrenceNDA']; ?></td>

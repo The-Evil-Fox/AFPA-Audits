@@ -11,7 +11,7 @@ if(!isset($_SESSION['ID'])) {
 
 if(isset($_POST['getCenters'])) {
 
-    $getCenters = $db->query('SELECT ID, Localisation FROM CentresAFPA'); ?>
+    $getCenters = $db->query('SELECT ID, Localisation FROM Facilities'); ?>
     
     <select id="auditedCenter">
 
@@ -99,12 +99,12 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
     $result = $countQuestions->fetch();
     $questionsNumber = (int) $result['nb_questions'];
 
-    $selectQuestions = $db->prepare('SELECT a.Centre, a.Auditor, a.Assistant1, a.Assistant2, qa.ID, qa.Thematique, qa.Preuves, ca.Constat, ca.Observation, cqa.Name 
+    $selectQuestions = $db->prepare('SELECT a.Facility, a.Auditor, a.Assistant1, a.Assistant2, qa.ID, qa.Question, qa.Evidence, ar.Report, ar.Observation, cqa.Name 
     FROM QuestionsAudit qa 
     LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID 
-    LEFT JOIN ConstatsAudits ca ON ca.Thematique = qa.ID  
-                                        AND ca.User_ID = :user
-                                        AND ca.Audit_Number = :auditNumber
+    LEFT JOIN AuditsReports ar ON ar.Question = qa.ID  
+                                        AND ar.User_ID = :user
+                                        AND ar.Audit_Number = :auditNumber
     LEFT JOIN Audits a ON a.User_ID = :user
                        AND a.Audit_Number = :auditNumber
     WHERE qa.Active = true 
@@ -150,32 +150,32 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
                 <div class="category-question">
                     <?= $questions['Name']; ?>
                 </div>
-                <span class="question-label"><?= $questions['Thematique']; ?></span>
-                <?php if($questions['Preuves'] !== NULL) { ?>
+                <span class="question-label"><?= $questions['Question']; ?></span>
+                <?php if($questions['Evidence'] !== NULL) { ?>
                     <div class="preuves-container">
-                        <span class="preuves-label">Preuve(s) attendue(s):</span><span><?= $questions['Preuves']; ?></span>
+                        <span class="preuves-label">Preuve(s) attendue(s):</span><span><?= $questions['Evidence']; ?></span>
                     </div>
                 <?php } ?>
                 <div class="inputGroup">
                     <div id="radioDiv">
                         <div class="radiobox">
-                            <input type="radio" id="<?= $questions['ID']; ?>Conforme" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateConstat(<?= $auditInProgress['User_ID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Conforme" <?php if($questions['Constat'] == "Conforme") {?> checked <?php } ?>>
+                            <input type="radio" id="<?= $questions['ID']; ?>Conforme" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateReport(<?= $auditInProgress['User_ID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Conforme" <?php if($questions['Report'] == "Conforme") {?> checked <?php } ?>>
                             <label for="<?= $questions['ID']; ?>Conforme">Conforme</label>
                         </div>
                         <div class="radiobox">
-                            <input type="radio" id="<?= $questions['ID']; ?>NC" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, true); updateConstat(<?= $auditInProgress['User_ID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="NC" <?php if($questions['Constat'] == "NC") {?> checked <?php } ?>>
+                            <input type="radio" id="<?= $questions['ID']; ?>NC" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, true); updateReport(<?= $auditInProgress['User_ID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="NC" <?php if($questions['Report'] == "NC") {?> checked <?php } ?>>
                             <label for="<?= $questions['ID']; ?>NC">NC</label>
                         </div>
                         <div class="radiobox">
-                            <input type="radio" id="<?= $questions['ID']; ?>NA" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateConstat(<?= $auditInProgress['User_ID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="NA" <?php if($questions['Constat'] == "NA") {?> checked <?php } ?>>
+                            <input type="radio" id="<?= $questions['ID']; ?>NA" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateReport(<?= $auditInProgress['User_ID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="NA" <?php if($questions['Report'] == "NA") {?> checked <?php } ?>>
                             <label for="<?= $questions['ID']; ?>NA">NA</label>
                         </div>
                         <div class="radiobox">
-                            <input type="radio" id="<?= $questions['ID']; ?>NDA" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateConstat(<?= $auditInProgress['User_ID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="NDA" <?php if($questions['Constat'] == "NDA") {?> checked <?php } ?>>
+                            <input type="radio" id="<?= $questions['ID']; ?>NDA" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateReport(<?= $auditInProgress['User_ID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="NDA" <?php if($questions['Report'] == "NDA") {?> checked <?php } ?>>
                             <label for="<?= $questions['ID']; ?>NDA">NDA</label>
                         </div>
                     </div>
-                    <textarea <?php if($questions['Constat'] == "NC" || $questions['Constat'] == "NA"|| $questions['Constat'] == "NDA" ) {?> class="visible" <?php } ?> name="textAreas" id="<?= $compteur; ?>" placeholder="Pourquoi avez vous répondu négativement ?" cols="60" rows="5" onchange="updateObservation(<?= $auditInProgress['User_ID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>)"><?php if($questions['Observation'] !== null) { echo $questions['Observation']; } ?></textarea>
+                    <textarea <?php if($questions['Report'] == "NC" || $questions['Report'] == "NA"|| $questions['Report'] == "NDA" ) {?> class="visible" <?php } ?> name="textAreas" id="<?= $compteur; ?>" placeholder="Pourquoi avez vous répondu négativement ?" cols="60" rows="5" onchange="updateObservation(<?= $auditInProgress['User_ID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>)"><?php if($questions['Observation'] !== null) { echo $questions['Observation']; } ?></textarea>
                     <?php if($compteur == $questionsNumber) { ?>
                         <div id="message"></div>
                     <?php } ?>
@@ -187,7 +187,7 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
                             <button type="button" class="button-next" onclick="nextQuestion(<?= $compteur; ?>)">Suivant <i class="fas fa-long-arrow-alt-right"></i></button>
                         <?php } ?>
                         <?php if($compteur == $questionsNumber) { ?>
-                            <button type="button" class="button-send greenButton" id="questionnaire-button-send" onclick="sendAudit(<?= $auditNumber; ?>, <?= $auditInProgress['User_ID']; ?>, <?= $questions['Centre']; ?>, <?= $questions['Auditor']; ?><?php if($questions['Assistant1'] != null) {?><?= ', ' . $questions['Assistant1']; ?><?php } ?><?php if($questions['Assistant2'] != null) {?><?= ', ' . $questions['Assistant2']; ?><?php } ?>)">Finaliser l'audit</button>
+                            <button type="button" class="button-send greenButton" id="questionnaire-button-send" onclick="sendAudit(<?= $auditNumber; ?>, <?= $auditInProgress['User_ID']; ?>, <?= $questions['Facility']; ?>, <?= $questions['Auditor']; ?><?php if($questions['Assistant1'] != null) {?><?= ', ' . $questions['Assistant1']; ?><?php } ?><?php if($questions['Assistant2'] != null) {?><?= ', ' . $questions['Assistant2']; ?><?php } ?>)">Finaliser l'audit</button>
                             <input type="hidden" id="questionsNumber" value="<?= $compteur; ?>">
                         <?php } ?>
                     </div>
@@ -225,7 +225,7 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
     $auditAssistant1 = htmlspecialchars($_POST['assistantAudit1']);
     $auditAssistant2 = htmlspecialchars($_POST['assistantAudit2']);
 
-    $insertNewAudit = $db->prepare('INSERT INTO Audits(Audit_Number, User_iD, Completed, Auditor, Assistant1, Assistant2, Centre) VALUES(:auditNumber, :user, :completed, :auditor, :assistant1, :assistant2, :centre)');
+    $insertNewAudit = $db->prepare('INSERT INTO Audits(Audit_Number, User_iD, Completed, Auditor, Assistant1, Assistant2, Facility) VALUES(:auditNumber, :user, :completed, :auditor, :assistant1, :assistant2, :facility)');
     $insertNewAudit->bindParam(':auditNumber', $auditNumber, PDO::PARAM_INT);
     $insertNewAudit->bindParam(':user', $_POST['auditedUserID'], PDO::PARAM_INT);
     $insertNewAudit->bindParam(':completed', $completed, PDO::PARAM_BOOL);
@@ -251,30 +251,30 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
 
     }
 
-    $insertNewAudit->bindParam(':centre', $_POST['auditedCenter'], PDO::PARAM_INT);
+    $insertNewAudit->bindParam(':facility', $_POST['auditedCenter'], PDO::PARAM_INT);
     $insertNewAudit->execute();
 
-    $countThematiques = $db->query('SELECT COUNT(*) AS nb_thematiques FROM QuestionsAudit WHERE Active = true');
-    $result = $countThematiques->fetch();
-    $ThematiquesNumber = (int) $result['nb_thematiques'];
+    $countQuestions = $db->query('SELECT COUNT(*) AS nb_questions FROM QuestionsAudit WHERE Active = true');
+    $result = $countQuestions->fetch();
+    $questionsNumber = (int) $result['nb_questions'];
 
-    $selectThematiques = $db->query('SELECT qa.Thematique, qa.ID, qa.Preuves, cqa.Name FROM QuestionsAudit qa LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID WHERE qa.Active = true ORDER BY cqa.ID ASC');
+    $selectQuestions = $db->query('SELECT qa.Question, qa.ID, qa.Evidence, cqa.Name FROM QuestionsAudit qa LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID WHERE qa.Active = true ORDER BY cqa.ID ASC');
 
-    $selectThematiquesID = $db->query('SELECT QuestionsAudit.ID FROM QuestionsAudit WHERE QuestionsAudit.Active = true ORDER BY QuestionsAudit.ID ASC');
-    $thematiquesID = array();
+    $selectQuestionsID = $db->query('SELECT QuestionsAudit.ID FROM QuestionsAudit WHERE QuestionsAudit.Active = true ORDER BY QuestionsAudit.ID ASC');
+    $questionsID = array();
     
-    while($thematiqueID = $selectThematiquesID->fetch()) {
+    while($questionID = $selectQuestionsID->fetch()) {
 
-        array_push($thematiquesID, $thematiqueID['ID']);
+        array_push($questionsID, $questionID['ID']);
 
     }
 
-    $insertResultats = $db->prepare('INSERT INTO ConstatsAudits(Audit_Number, Thematique, User_ID, Auditor) VALUES(:auditNumber, :thematique, :user, :auditor)');
+    $insertResultats = $db->prepare('INSERT INTO AuditsReports(Audit_Number, Question, User_ID, Auditor) VALUES(:auditNumber, :question, :user, :auditor)');
     
-    foreach($thematiquesID as $value) {
+    foreach($questionsID as $value) {
 
         $insertResultats->bindParam(':auditNumber', $auditNumber, PDO::PARAM_INT);
-        $insertResultats->bindParam(':thematique', $value, PDO::PARAM_INT);
+        $insertResultats->bindParam(':question', $value, PDO::PARAM_INT);
         $insertResultats->bindParam(':user', $_POST['auditedUserID'], PDO::PARAM_INT);
         $insertResultats->bindParam(':auditor', $_SESSION['ID'], PDO::PARAM_INT);
         $insertResultats->execute();
@@ -310,51 +310,51 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
                 Durée moyenne: 1 heure minimum.
             </div>
         </div>
-        <?php while($questions = $selectThematiques->fetch()) { ?>
+        <?php while($questions = $selectQuestions->fetch()) { ?>
             <div class="form-part" id="question<?= $compteur; ?>">
                 <div class="question-number">
-                    <?php if($compteur == $ThematiquesNumber) { echo "Question finale"; } else { echo "Question n°$compteur"; } ?><img src="assets/tooltip.png" alt="infobulle" title="cliquez ici pour afficher l'aide" onclick="showTip()">
+                    <?php if($compteur == $questionsNumber) { echo "Question finale"; } else { echo "Question n°$compteur"; } ?><img src="assets/tooltip.png" alt="infobulle" title="cliquez ici pour afficher l'aide" onclick="showTip()">
                 </div>
                 <div class="category-question">
                     <?= $questions['Name']; ?>
                 </div>
-                <span class="question-label"><?= $questions['Thematique']; ?></span>
-                <?php if($questions['Preuves'] !== NULL) { ?>
+                <span class="question-label"><?= $questions['Question']; ?></span>
+                <?php if($questions['Evidence'] !== NULL) { ?>
                     <div class="preuves-container">
-                        <span class="preuves-label">Preuve(s) attendue(s):</span><span><?= $questions['Preuves']; ?></span>
+                        <span class="preuves-label">Preuve(s) attendue(s):</span><span><?= $questions['Evidence']; ?></span>
                     </div>
                 <?php } ?>
                 <div class="inputGroup">
                     <div id="radioDiv">
                         <div class="radiobox">
-                            <input type="radio" id="<?= $questions['ID']; ?>Conforme" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateConstat(<?= $_POST['auditedUserID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Conforme">
+                            <input type="radio" id="<?= $questions['ID']; ?>Conforme" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateReport(<?= $_POST['auditedUserID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Conforme">
                             <label for="<?= $questions['ID']; ?>Conforme">Conforme</label>
                         </div>
                         <div class="radiobox">
-                            <input type="radio" id="<?= $questions['ID']; ?>NC" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, true); updateConstat(<?= $_POST['auditedUserID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="NC">
+                            <input type="radio" id="<?= $questions['ID']; ?>NC" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, true); updateReport(<?= $_POST['auditedUserID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="NC">
                             <label for="<?= $questions['ID']; ?>NC">NC</label>
                         </div>
                         <div class="radiobox">
-                            <input type="radio" id="<?= $questions['ID']; ?>NA" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateConstat(<?= $_POST['auditedUserID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="NA">
+                            <input type="radio" id="<?= $questions['ID']; ?>NA" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateReport(<?= $_POST['auditedUserID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="NA">
                             <label for="<?= $questions['ID']; ?>NA">NA</label>
                         </div>
                         <div class="radiobox">
-                            <input type="radio" id="<?= $questions['ID']; ?>NDA" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateConstat(<?= $_POST['auditedUserID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="NDA">
+                            <input type="radio" id="<?= $questions['ID']; ?>NDA" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateReport(<?= $_POST['auditedUserID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="NDA">
                             <label for="<?= $questions['ID']; ?>NDA">NDA</label>
                         </div>
                     </div>
                     <textarea name="textAreas" id="<?= $compteur; ?>" placeholder="Pourquoi avez vous répondu négativement ?" cols="60" rows="5" onchange="updateObservation(<?= $_POST['auditedUserID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>)"></textarea>
-                    <?php if($compteur == $ThematiquesNumber) { ?>
+                    <?php if($compteur == $questionsNumber) { ?>
                         <div id="message"></div>
                     <?php } ?>
                     <div class="form-buttons">
                         <?php if($compteur > 1) { ?>
                             <button type="button" class="button-previous" onclick="previousQuestion(<?= $compteur; ?>)"><i class="fas fa-long-arrow-alt-left"></i> Précédent</button>
                         <?php } ?>
-                        <?php if($compteur < $ThematiquesNumber) { ?>
+                        <?php if($compteur < $questionsNumber) { ?>
                             <button type="button" class="button-next" onclick="nextQuestion(<?= $compteur; ?>)">Suivant <i class="fas fa-long-arrow-alt-right"></i></button>
                         <?php } ?>
-                        <?php if($compteur == $ThematiquesNumber) { ?>
+                        <?php if($compteur == $questionsNumber) { ?>
                             <button type="button" class="button-send greenButton" id="questionnaire-button-send" onclick="sendAudit(<?= $auditNumber; ?>, <?= $_POST['auditedUserID']; ?>, <?= $_POST['auditedCenter']; ?>, <?= $_SESSION['ID'] ?> <?php if($auditAssistant1 !== 'false') {?> <?= ', ' . $auditAssistant1; ?> <?php } ?> <?php if($auditAssistant2 !== 'false') {?> <?= ', ' . $auditAssistant2; ?> <?php } ?>)">Finaliser l'audit</button>
                             <input type="hidden" id="questionsNumber" value="<?= $compteur; ?>">
                         <?php } ?>

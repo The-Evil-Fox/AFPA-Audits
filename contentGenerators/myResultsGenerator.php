@@ -102,7 +102,7 @@ if(isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
             <tbody>
 			<?php while($nonCompliances = $getNonCompliances->fetch()) { ?>
                     <tr>
-                        <td data-label="Non conformité"><?= str_replace('?', '', $nonCompliances['Question']); ?></td>
+                        <td class="autoeval-nonconforme" data-label="Non conformité"><?= str_replace('?', '', $nonCompliances['Question']); ?></td>
                     </tr>
                 <?php } ?>
             </tbody>

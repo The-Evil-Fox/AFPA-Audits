@@ -222,6 +222,98 @@ label #sidebar_btn:hover {
     height: 100vh;
 }
 
+.errorContainer {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    color: white;
+    margin-top: 5vh;
+    background-color: #5D616C;
+    padding: 5vh 0;
+    border-radius: 25px;
+    border: 2px solid black;
+}
+
+.errorContainer img {
+    width: 10vw;
+    margin: 0 auto 5vh auto;
+}
+
+#bugButtonContainer {
+    position: fixed;
+    top: 94%;
+    right: 1%;
+}
+
+#bugButton {
+    font-size: 1.5vh;
+    padding: 1vh;
+}
+
+#bugButton:hover {
+    box-shadow: 0px 0px 9px 2px #EF342B;
+    -moz-box-shadow: 0px 0px 9px 2px #EF342B;
+    -webkit-box-shadow: 0px 0px 9px 2px #EF342B;
+}
+
+#bugButtonContainer:hover #bugButton::after {
+    content: " Signaler un bug";
+}
+
+#bugReportContainer {
+    position: fixed;
+    width: 100%;
+    background: rgba(0,0,0,0.9);
+    height: 100%;
+    z-index: 50000;
+    top: 70px;
+}
+
+#bugReportFormContainer {
+    margin: 5vh auto 0 auto;
+    text-align: center;
+    background-color: white;
+    color: black;
+    position: relative;
+    width: 75%;
+    padding: 2vh 3vw;
+    height: 70%;
+    overflow: auto;
+}
+
+#bugReportFormContainer textarea {
+    resize: none;
+    width: 70%;
+    border: 1px solid black;
+}
+
+#bugReportFormContainer .radioboxContainer {
+    margin: 0 auto 3vh auto;
+}
+
+#bugReportFormContainer .radioboxContainer .radiobox {
+    margin: 1vh 0;
+}
+
+#bugReportFormContainer #errorCodeInput {
+    display: none;
+}
+
+#bugReportFormContainer .buttonsContainer {
+    margin: 3vh auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#bugReportFormContainer button {
+    margin: 0 2vw;
+}
+
+#bugReportFormContainer #bugReportNotification {
+    display: none;
+}
+
 #check:checked ~ .content {
     margin-left: 60px;
 }
@@ -705,6 +797,8 @@ button:hover, #graphique-resultats button:hover {
 
 .autoeval-param-ajoutquestion-buttonsContainer, .audit-param-ajoutquestion-buttonsContainer {
     margin: 5vh auto;
+    display: flex;
+    flex-direction: row;
 }
 
 .autoeval-param-ajoutquestion-buttonsContainer button, .audit-param-ajoutquestion-buttonsContainer button {
@@ -831,6 +925,11 @@ table#tableauNonConformites thead {
     border-bottom: 3px solid #F16137;
 }
 
+
+table#tableauNonConformites td {
+    border-right: 1px solid black;
+}
+
 table#tableauNonApplicables {
     border: 2px solid #308B7C;
 }
@@ -851,6 +950,10 @@ table#tableauNonDisponiblesActuellement thead {
 
 table#tableauNonConformites td, table#tableauNonApplicables td, table#tableauNonDisponiblesActuellement td {
     text-align: left;
+}
+
+table#tableauNonConformites td.autoeval-nonconforme {
+    text-align: center;
 }
 
 table#tableauGlobalStats td .number {

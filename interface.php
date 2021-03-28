@@ -25,6 +25,9 @@ require_once('config/roles.php');
   <div class="content backgroundImage" id="content">
     
   </div>
+  <div id="bugButtonContainer">
+    <button id="bugButton" onclick="bugReportForm()"><i class='fas fa-bug'></i></button>
+  </div>
   <!-- Content window end -->
   <script src="scripts/interface.js"></script>
   <script src="scripts/showResults.js"></script>

@@ -129,7 +129,7 @@ function checkAuditInProgress(user) {
             
                     error: function(xhr, textStatus, error) {
             
-                        alert(xhr.status + " " + xhr.statusText);
+                        MyFunctions.showError(contentWindow, xhr);
                         
                     }
             
@@ -163,7 +163,7 @@ function checkAuditInProgress(user) {
             
                     error: function(xhr, textStatus, error) {
             
-                        alert(xhr.status + " " + xhr.statusText);
+                        MyFunctions.showError(contentWindow, xhr);
                         
                     }
             
@@ -175,7 +175,7 @@ function checkAuditInProgress(user) {
 
         error: function(xhr, textStatus, error) {
 
-            alert(xhr.status + " " + xhr.statusText);
+            MyFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -218,7 +218,7 @@ function showSecondAssistantSelect(assistant1) {
             
                     error: function(xhr, textStatus, error) {
             
-                        alert(xhr.status + " " + xhr.statusText);
+                        MyFunctions.showError(contentWindow, xhr);
                         
                     }
             
@@ -343,7 +343,7 @@ function startAudit(buttonvalue) {
 
         error: function(xhr, textStatus, error) {
 
-            alert(xhr.status + " " + xhr.statusText);
+            MyFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -351,25 +351,25 @@ function startAudit(buttonvalue) {
 
 }
 
-function updateConstat(userID, audit, thematique, constat, textAreaID) {
+function updateReport(userID, audit, question, report, textAreaID) {
 
     let textArea = document.getElementById(textAreaID);
 
-    method = "updateConstat";
+    method = "updateReport";
 
-    newConstat = {
+    newReport = {
         method,
         userID,
         audit,
-        thematique,
-        constat
+        question,
+        report
     }
     
     $.ajax({
 
         type: 'POST',
         url: 'traitements/traitementAudit.php',
-        data: newConstat,
+        data: newReport,
         dataType: 'text',
         success: function(data) {
             
@@ -380,7 +380,7 @@ function updateConstat(userID, audit, thematique, constat, textAreaID) {
                 
             }
 
-            if(constat == "Conforme") {
+            if(report == "Conforme") {
 
                 if(textArea.value !== "") {
 
@@ -395,7 +395,7 @@ function updateConstat(userID, audit, thematique, constat, textAreaID) {
 
             }
 
-            if(constat == "NC") {
+            if(report == "NC") {
 
                 $('#'+textAreaID).focus();
 
@@ -405,7 +405,7 @@ function updateConstat(userID, audit, thematique, constat, textAreaID) {
 
         error: function(xhr, textStatus, error) {
 
-            alert(xhr.status + " " + xhr.statusText);
+            MyFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -413,7 +413,7 @@ function updateConstat(userID, audit, thematique, constat, textAreaID) {
 
 }
 
-function updateObservation(userID, audit, thematique, observation, textAreaID) {
+function updateObservation(userID, audit, question, observation, textAreaID) {
 
     if(observation.length <= 3) {
 
@@ -431,7 +431,7 @@ function updateObservation(userID, audit, thematique, observation, textAreaID) {
         method,
         userID,
         audit,
-        thematique,
+        question,
         observation
     }
     
@@ -456,7 +456,7 @@ function updateObservation(userID, audit, thematique, observation, textAreaID) {
 
         error: function(xhr, textStatus, error) {
 
-            alert(xhr.status + " " + xhr.statusText);
+            MyFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -578,7 +578,7 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
 
         error: function(xhr, textStatus, error) {
 
-            alert(xhr.status + " " + xhr.statusText);
+            MyFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -622,7 +622,7 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
         
         error: function(xhr, textStatus, error) {
 
-            alert(xhr.status + " " + xhr.statusText);
+            MyFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -659,7 +659,7 @@ function startEval() {
 
         error: function(xhr, textStatus, error) {
 
-            alert(xhr.status + " " + xhr.statusText);
+            MyFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -796,7 +796,7 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
 
         error: function(xhr, textStatus, error) {
 
-            alert(xhr.status + " " + xhr.statusText);
+            MyFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -823,7 +823,7 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
     
             error: function(xhr, textStatus, error) {
     
-                alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(contentWindow, xhr);
                 
             }
     
@@ -862,7 +862,7 @@ function addReason(evalNumber, question, reason, textareaID) {
 
         error: function(xhr, textStatus, error) {
 
-            alert(xhr.status + " " + xhr.statusText);
+            MyFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -960,7 +960,7 @@ function sendEval(eval) {
             
             error: function(xhr, textStatus, error) {
 
-                alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(contentWindow, xhr);
                 
             }
 
@@ -999,7 +999,7 @@ function sendEval(eval) {
             
             error: function(xhr, textStatus, error) {
 
-                alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(contentWindow, xhr);
                 
             }
 

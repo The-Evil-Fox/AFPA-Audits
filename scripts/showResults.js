@@ -23,7 +23,7 @@ function showChart(autoeval_number, date) {
                     
                 }
 
-                contentWindow.innerHTML = "<div id='graphique-resultats'></div><div id='dateGraphique'>Le "+date+".</div><div id='tableauContainer'></div>";
+                contentWindow.innerHTML = "<div id='graphique-resultats'></div><div id='dateGraphique'>Effectuée le "+date+".</div><div id='tableauContainer'></div>";
 
                 createChart("graphique-resultats", "Résultats de mon autoévaluation", dataGraphique);
 
@@ -46,7 +46,7 @@ function showChart(autoeval_number, date) {
             },
             error: function(xhr, textStatus, error){
 
-                alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(contentWindow, xhr);
                 
             }
 
@@ -85,7 +85,7 @@ function showChart(autoeval_number, date) {
             
             error: function(xhr, textStatus, error){
 
-                alert(xhr.status + " " + xhr.statusText);
+                MyFunctions.showError(contentWindow, xhr);
                 
             }
 

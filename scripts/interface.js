@@ -130,7 +130,7 @@ function sendBugReport() {
   if(bug == "") {
 
     bugReportNotification.innerHTML = "Veuillez insérer le bug rencontré !";
-    bugReportNotification.style.color = "rgb(255, 120, 27)";
+    bugReportNotification.style.color = "#EE5046";
 
     if(bugReportNotification.style.display == "block") {
 
@@ -154,7 +154,7 @@ function sendBugReport() {
   if(!$("input[name='errorCode']").is(':checked')) {
 
     bugReportNotification.innerHTML = "Veuillez cocher si oui ou non vous avez reçu une code d'erreur !";
-    bugReportNotification.style.color = "rgb(255, 120, 27)";
+    bugReportNotification.style.color = "#EE5046";
     
     if(bugReportNotification.style.display == "block") {
 
@@ -182,7 +182,7 @@ function sendBugReport() {
       if(errorCode.length < 5) {
 
         bugReportNotification.innerHTML = "Veuillez insérer le code ou le message d'erreur reçu !";
-        bugReportNotification.style.color = "rgb(255, 120, 27)";
+        bugReportNotification.style.color = "#EE5046";
 
         if(bugReportNotification.style.display == "block") {
 
@@ -241,7 +241,7 @@ function sendBugReport() {
           if(data == "Votre rapport de bug a bien été reçu !") {
 
             document.getElementById('bugDescription').value = "";
-            bugReportNotification.style.color = "green";
+            bugReportNotification.style.color = "#A7DB55";
             $("input[name='errorCode']").removeAttr("checked");
 
             if(document.getElementById('errorCodeInput').value !== "") {

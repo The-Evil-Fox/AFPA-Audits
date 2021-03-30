@@ -61,7 +61,10 @@ function showContent(category) {
 
             contentWindow.style.opacity = 0;
             contentWindow.className = "content backgroundImage";
-            contentWindow.innerHTML = "";
+            contentWindow.innerHTML = `
+            <div id="titleContainer">
+                <h3>Outil qualité digitalisé</h3>
+            </div>`;
             contentWindow.style.opacity = 1;
             return false;
 

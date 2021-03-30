@@ -13,7 +13,7 @@ require_once('config/roles.php');
   <link rel="stylesheet" href="stylesheets/login.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
   <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
-  <title>AFPA: Formation professionnelle</title>
+  <title>Afpa: Formation professionnelle</title>
 </head>
 <body>
   <div class="login-page">

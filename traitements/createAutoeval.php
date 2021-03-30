@@ -66,7 +66,7 @@ if(isset($_POST['createNewEval'])) {
         <form method="POST" id="questionnaire">
             <div class="autoevaluation-logos-container">
                 <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
-                <img class="logo-afpa" src="assets/logoAFPAWhite.png" alt="logo afpa blanc">
+                <img class="logo-afpa" src="assets/logoAFPABlack.png" alt="logo afpa blanc">
             </div>
             <div class="helper-container-questions" id="helper">
                 <img src="assets/close_button.png" title="Cliquez ici pour fermer l'aide" onclick="showTip()">

@@ -55,10 +55,10 @@ if(isset($_POST['actualites'])) {
                         <td data-label="Actualité"><?= $actu['Actualite']; ?></td>
                         <td data-label="Date">le <?= dateConvert($actu['DateAndHour']); ?></td>
                         <?php if($actu['Eval_Number'] !== null) { ?>
-                            <td><button class="button-show-autoeval-result" onclick="showUserResultEval(<?= $actu['ID']; ?>, <?= $actu['Eval_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['FirstName']; ?>', '<?= dateConvert($actu['DateAndHour']); ?>')">Voir les résultats</button></td>
+                            <td><button class="button-show-autoeval-result" onclick="showUserResultEval(<?= $actu['ID']; ?>, <?= $actu['Eval_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['FirstName']; ?>', '<?= dateConvert($actu['DateAndHour']); ?>')"><i class="fas fa-eye"></i> Voir les résultats</button></td>
                         <?php } ?>
                         <?php if($actu['Audit_Number'] !== null) {?>
-                            <td><button class="button-show-audit-result" onclick="showUserResultAudit(<?= $actu['ID']; ?>, <?= $actu['Audit_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['FirstName']; ?>', '<?= $actu['auditeurName']; ?>', '<?= $actu['auditeurFirstName']; ?>', '<?= dateConvert($actu['DateAndHour']); ?>','<?= $actu['Localisation']; ?>'<?php if($actu['Assistant1Name'] && $actu['Assistant1FirstName'] !== NULL) { ?>, '<?= $actu['Assistant1Name']; ?>', '<?= $actu['Assistant1FirstName']; ?>' <?php } if($actu['Assistant2Name'] && $actu['Assistant2FirstName'] !== NULL) { ?>, '<?= $actu['Assistant2Name']; ?>', '<?= $actu['Assistant2FirstName']; ?>' <?php } ?>)">Voir les résultats</button></td>
+                            <td><button class="button-show-audit-result" onclick="showUserResultAudit(<?= $actu['ID']; ?>, <?= $actu['Audit_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['FirstName']; ?>', '<?= $actu['auditeurName']; ?>', '<?= $actu['auditeurFirstName']; ?>', '<?= dateConvert($actu['DateAndHour']); ?>','<?= $actu['Localisation']; ?>'<?php if($actu['Assistant1Name'] && $actu['Assistant1FirstName'] !== NULL) { ?>, '<?= $actu['Assistant1Name']; ?>', '<?= $actu['Assistant1FirstName']; ?>' <?php } if($actu['Assistant2Name'] && $actu['Assistant2FirstName'] !== NULL) { ?>, '<?= $actu['Assistant2Name']; ?>', '<?= $actu['Assistant2FirstName']; ?>' <?php } ?>)"><i class="fas fa-eye"></i> Voir les résultats</button></td>
                         <?php } ?>
                     </tr>
 
@@ -93,6 +93,7 @@ if(isset($_POST['autoEvalution'])) {
                     <option value="<?= $categories['Category']; ?>"><?= $categories['Name']; ?></option>
                 <?php } ?>
             </select>
+            <div id="message"></div>
             <div class="autoeval-param-ajoutquestion-buttonsContainer">
                 <button class="greenButton" onclick="addQuestionQuestionnaire('autoevaluation')"><i class="fas fa-check"></i></button>
                 <button class="redButton" onclick="showAdminForm('autoeval')"><i class="fas fa-times"></i></button>
@@ -217,6 +218,7 @@ if(isset($_POST['audit'])) {
                     <option value="<?=  $categories['ID']; ?>"><?= $categories['Name']; ?></option>
                 <?php } ?>
             </select>
+            <div id="message"></div>
             <div class="audit-param-ajoutquestion-buttonsContainer">
                 <button class="greenButton" onclick="addQuestionQuestionnaire('audit')"><i class="fas fa-check"></i></button>
                 <button class="redButton" onclick="showAdminForm('audit')"><i class="fas fa-times"></i></button>
@@ -243,11 +245,12 @@ if(isset($_POST['audit'])) {
                     <td data-label="Categorie" class="questionnaire-border-white"><?= $question['Name']; ?></td>
                     <td data-label="Actions">
                         <div class="buttonsModificationQuestionnaire">
-                            <button <?php if($question['Active'] == true) { ?> id="disable<?= $question['ID']; ?>" <?php } else { ?> id="enable<?= $question['ID']; ?>"<?php } ?>
+                            <button <?php if($question['Active'] == true) { ?> class="redButton"<?php } else { ?> class="greenButton"<?php } ?>
+                            <?php if($question['Active'] == true) { ?> id="disable<?= $question['ID']; ?>" <?php } else { ?> id="enable<?= $question['ID']; ?>"<?php } ?>
                              onclick="updateStatusRemoveQuestionQuestionnaire('audit', this, <?= $question['ID']; ?>)"
                               <?php if($question['Active'] == true) { ?> value="disable" <?php } else { ?> value="enable" <?php } ?>>
                               <?php if($question['Active'] == true) { ?> <i class="fas fa-toggle-on"></i> Désactiver<?php } else { ?><i class="fas fa-toggle-off"></i> Activer<?php } ?>
-                            <button onclick="updateQuestionQuestionnaire('audit', <?= $question['ID']; ?>)" value="edit">Modifier</button>
+                            <button onclick="updateQuestionQuestionnaire('audit', <?= $question['ID']; ?>)" value="edit"><i class="far fa-edit"></i> Modifier</button>
                             <button class="redButton" onclick="updateStatusRemoveQuestionQuestionnaire('audit', this, <?= $question['ID']; ?>)" value="delete"><i class="fas fa-trash-alt"></i> Supprimer</button>
                         </div>
                     </td>

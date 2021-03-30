@@ -108,7 +108,7 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
     LEFT JOIN Audits a ON a.User_ID = :user
                        AND a.Audit_Number = :auditNumber
     WHERE qa.Active = true 
-    ORDER BY cqa.ID;');
+    ORDER BY qa.ID, cqa.ID');
     $selectQuestions->bindParam(':user', $_POST['auditedUserID'], PDO::PARAM_INT);
     $selectQuestions->bindParam(':auditNumber', $auditNumber, PDO::PARAM_INT);
     $selectQuestions->execute();
@@ -118,7 +118,7 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
     <form method="POST" id="questionnaire">
         <div class="autoevaluation-logos-container">
             <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
-            <img class="logo-afpa" src="assets/logoAFPAWhite.png" alt="logo afpa blanc">
+            <img class="logo-afpa" src="assets/logoAFPABlack.png" alt="logo afpa blanc">
         </div>
         <div class="helper-container-questions" id="helper">
             <img src="assets/close_button.png" title="Cliquez ici pour fermer l'aide" onclick="showTip()">
@@ -258,9 +258,9 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
     $result = $countQuestions->fetch();
     $questionsNumber = (int) $result['nb_questions'];
 
-    $selectQuestions = $db->query('SELECT qa.Question, qa.ID, qa.Evidence, cqa.Name FROM QuestionsAudit qa LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID WHERE qa.Active = true ORDER BY cqa.ID ASC');
+    $selectQuestions = $db->query('SELECT qa.Question, qa.ID, qa.Evidence, cqa.Name FROM QuestionsAudit qa LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID WHERE qa.Active = true ORDER BY qa.ID, cqa.ID');
 
-    $selectQuestionsID = $db->query('SELECT QuestionsAudit.ID FROM QuestionsAudit WHERE QuestionsAudit.Active = true ORDER BY QuestionsAudit.ID ASC');
+    $selectQuestionsID = $db->query('SELECT qa.ID FROM QuestionsAudit qa WHERE qa.Active = true ORDER BY qa.ID');
     $questionsID = array();
     
     while($questionID = $selectQuestionsID->fetch()) {
@@ -286,7 +286,7 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
     <form method="POST" id="questionnaire">
         <div class="autoevaluation-logos-container">
             <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
-            <img class="logo-afpa" src="assets/logoAFPAWhite.png" alt="logo afpa blanc">
+            <img class="logo-afpa" src="assets/logoAFPABlack.png" alt="logo afpa blanc">
         </div>
         <div class="helper-container-questions" id="helper">
             <img src="assets/close_button.png" title="Cliquez ici pour fermer l'aide" onclick="showTip()">

@@ -10,7 +10,7 @@
         </a></h3>
     </div>
     <div class="right_area">
-        <a href="logout.php" class="logout_btn"><i class="fas fa-power-off"></i> Déconnexion</a>
+        <a href="logout.php" class="logout_btn redButton"><i class="fas fa-power-off"></i></a>
     </div>
 </header>
 <!--header area end-->

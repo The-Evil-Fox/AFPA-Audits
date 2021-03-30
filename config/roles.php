@@ -1,8 +1,16 @@
 <?php
 
+$__SUPERADMIN    = 0b00001110;
 $__ADMIN         = 0b00000100;
-$__AUDITEUR     = 0b00000010;
+$__AUDITEUR      = 0b00000010;
 $__FORMATEUR     = 0b00000001;
+
+function isSuperAdmin($role) {
+
+    global $__SUPERADMIN;
+    return $role & $__SUPERADMIN;
+
+}
 
 function isAdmin($role) {
 

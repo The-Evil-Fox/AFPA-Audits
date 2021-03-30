@@ -15,8 +15,10 @@ function showAdministration(category) {
             success: function(data) {
 
                 if(category == "exitAdministration") {
+
                     document.getElementById('sidebar').innerHTML = data;
                     return;
+
                 }
 
                 contentWindow.className = "content";
@@ -329,8 +331,9 @@ function showAdminForm(questionnaire) {
 
 function addQuestionQuestionnaire(questionnaire) {
 
-    newQuestion = document.getElementById('newQuestion').value;
-    categorieQuestion = document.getElementById('categorie').value;
+    let newQuestion = document.getElementById('newQuestion').value;
+    let categorieQuestion = document.getElementById('categorie').value;
+    let messageWindow = document.getElementById('message');
 
     if(questionnaire == "audit") {
 
@@ -340,15 +343,29 @@ function addQuestionQuestionnaire(questionnaire) {
 
     if(newQuestion == "") {
 
-        alert('Veuillez insérer votre question !');
-        return;
+        messageWindow.innerHTML = "Veuillez insérer votre question !";
+        messageWindow.style.display = "flex";
+        setTimeout(() => {
+
+            messageWindow.style.display = "none";
+            messageWindow.innerHTML = "";
+
+        }, 2500);
+        return false;
 
     }
 
     if(categorieQuestion == "") {
 
-        alert('Veuillez sélectionner la catégorie de la question');
-        return;
+        messageWindow.innerHTML = "Veuillez sélectionner la catégorie de la question !";
+        messageWindow.style.display = "flex";
+        setTimeout(() => {
+
+            messageWindow.style.display = "none";
+            messageWindow.innerHTML = "";
+
+        }, 2500);
+        return false;
 
     }
 
@@ -932,6 +949,12 @@ function showStats() {
                 }
 
                 if(data !== "") {
+
+                    if($('#mobileNavDropdown').attr('class').indexOf('active') > -1) {
+
+                        $('#mobileNavDropdown').removeClass('active');
+    
+                    }
 
                     contentWindow.style.opacity = 0;
                     contentWindow.innerHTML = data;

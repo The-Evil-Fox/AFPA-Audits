@@ -89,7 +89,7 @@ function checkAuditInProgress(user) {
             if(data == "Un audit est déjà en cours !") {
 
                 spanMessage.innerHTML = data;
-                spanMessage.style.color = "#FF781B";
+                spanMessage.style.color = "#EE5046";
                 spanMessage.style.display = "block";
                 startAuditButton.innerHTML = "Reprendre l'audit";
                 startAuditButton.style.display = "block";
@@ -267,7 +267,7 @@ function startAudit(buttonvalue) {
         if(auditedCenter == "") {
 
             spanMessage.innerHTML = "Veuillez sélectionner le centre audité !";
-            spanMessage.style.color = "#FF781B";
+            spanMessage.style.color = "#EE5046";
             spanMessage.style.display = "block";
             setTimeout(() => {
 
@@ -284,7 +284,7 @@ function startAudit(buttonvalue) {
         if(assistantAudit1 !== "" && assistantAudit2 !== "" && assistantAudit1 == assistantAudit2) {
 
             spanMessage.innerHTML = "Vous ne vous pas selectionner deux fois le même assistant !";
-            spanMessage.style.color = "#FF781B";
+            spanMessage.style.color = "#EE5046";
             spanMessage.style.display = "block";
             setTimeout(() => {
 
@@ -479,7 +479,6 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
         if (!$("input[name='"+number+"']:checked").val()) {
             messageWindow.innerHTML = "Veuillez cochez une réponse pour la question numéro " + number + " !";
             messageWindow.style.display = "flex";
-            messageWindow.style.color = "#FF781B";
             buttonSend.style.display = "none";
             setTimeout(() => {
 
@@ -495,7 +494,6 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
 
             messageWindow.innerHTML = "Veuillez insérer la raison de votre réponse négative à la question numéro " + number + " !";
             messageWindow.style.display = "flex";
-            messageWindow.style.color = "#FF781B";
             buttonSend.style.display = "none";
             setTimeout(() => {
 
@@ -887,7 +885,6 @@ function sendEval(eval) {
             if (!$("input[name='"+number+"']:checked").val()) {
                 messageWindow.innerHTML = "Veuillez cochez une réponse pour la question numéro " + number + " !";
                 messageWindow.style.display = "flex";
-                messageWindow.style.color = "#FF781B";
                 buttonSend.style.display = "none";
                 setTimeout(() => {
 
@@ -903,7 +900,6 @@ function sendEval(eval) {
 
                 messageWindow.innerHTML = "Veuillez insérer la raison de votre réponse négative à la question numéro " + number + " !";
                 messageWindow.style.display = "flex";
-                messageWindow.style.color = "#FF781B";
                 buttonSend.style.display = "none";
                 setTimeout(() => {
 

@@ -17,7 +17,7 @@ if(isset($_POST['auditer'])) {
     <div id="startContainer">
         <div class="audit-logos-container">
             <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
-            <img class="logo-afpa" src="assets/logoAFPAWhite.png" alt="logo afpa blanc">
+            <img class="logo-afpa" src="assets/logoAFPABlack.png" alt="logo afpa blanc">
         </div>
         <div class="form-title">
             <h3>Audit formateur</h3>
@@ -89,7 +89,7 @@ if(isset($_POST['monespace'])) {
                 <?php while($eval = $checkEval->fetch()) { ?>
                     <tr>
                         <td data-label="Date">Autoévaluation du <?php echo dateConvert($eval['DateAndHour']); ?></td>
-                        <td data-label="Action"><button class="button-show-autoeval-result" type="button" onclick="showChart('<?= $eval['Evaluation_Number']; ?>','<?php echo dateConvert($eval['DateAndHour']); ?>')">Voir mes résultats</button></td>
+                        <td data-label="Action"><button class="button-show-autoeval-result" type="button" onclick="showChart('<?= $eval['Evaluation_Number']; ?>','<?php echo dateConvert($eval['DateAndHour']); ?>')"><i class="fas fa-eye"></i> Voir mes résultats</button></td>
                     </tr>
                 <?php } ?>
             </tbody>
@@ -148,7 +148,7 @@ if(isset($_POST['monespace'])) {
         <form method="POST" id="questionnaire">
             <div class="autoevaluation-logos-container">
                 <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
-                <img class="logo-afpa" src="assets/logoAFPAWhite.png" alt="logo afpa blanc">
+                <img class="logo-afpa" src="assets/logoAFPABlack.png" alt="logo afpa blanc">
             </div>
             <div class="helper-container-questions" id="helper">
                 <img src="assets/close_button.png" title="Cliquez ici pour fermer l'aide" onclick="showTip()">
@@ -218,7 +218,7 @@ if(isset($_POST['monespace'])) {
         <div id="startContainer">
             <div class="autoevaluation-logos-container">
                 <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
-                <img class="logo-afpa" src="assets/logoAFPAWhite.png" alt="logo afpa blanc">
+                <img class="logo-afpa" src="assets/logoAFPABlack.png" alt="logo afpa blanc">
             </div>
             <div class="form-title">
                 <h3>Auto-évaluation</h3>

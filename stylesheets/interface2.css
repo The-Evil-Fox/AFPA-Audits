@@ -215,9 +215,7 @@ label #sidebar_btn:hover {
 
 .backgroundImage {
     background-image: url('../assets/home.jpg');
-    /* background-size: cover; */
-    background-size: 100% 100%;
-    background-position: center center;
+    background-size: cover;
     background-repeat: no-repeat;
     height: calc(100vh - 100px);
 }
@@ -977,6 +975,14 @@ table#tableauAssistants {
 }
 
 /* Responsive CSS */
+
+@media screen and (orientation: portrait) {
+
+    .backgroundImage {
+        background-image: url('../assets/homeResponsive.jpg');
+    }
+
+}
 
 @media screen and (max-width: 780px) {
 

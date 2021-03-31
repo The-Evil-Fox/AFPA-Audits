@@ -50,17 +50,6 @@ if(isset($_POST['createNewEval'])) {
 
     }
 
-    $insertResultats = $db->prepare('INSERT INTO ResultatsAutoevaluations(Evaluation_Number, Question, User_ID) VALUES(:evalNumber, :question, :user)');
-    
-    foreach($questionID as $value) {
-
-        $insertResultats->bindParam(':evalNumber', $evaluationNumber, PDO::PARAM_INT);
-        $insertResultats->bindParam(':question', $value, PDO::PARAM_INT);
-        $insertResultats->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-        $insertResultats->execute();
-
-    }
-
     $compteur = 1; ?>
 
         <form method="POST" id="questionnaire">

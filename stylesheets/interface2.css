@@ -508,6 +508,10 @@ button {
     transition: background 0.5s;
 }
 
+button:focus {
+    border: 1px solid black !important;
+}
+
 button:hover {
     background: rgb(33,150,243);
     color: white;
@@ -637,7 +641,7 @@ table .redButton {
     margin: 2% auto;
 }
 
-.helper-content .help-shortcuts {
+.helper-content .help-shortcuts, .helper-content .help-acronyms {
     margin-bottom: 2vh;
 }
 
@@ -647,12 +651,17 @@ table .redButton {
     text-align: left;
 }
 
-.helper-content .shortcuts span {
+.helper-content .shortcuts span, .helper-content .acronyms span {
     margin: 0.5vh 0;
 }
 
 .helper-content .shortcuts i {
     margin-right: 1vw;
+}
+
+.helper-content .acronyms {
+    display: flex;
+    flex-direction: column;
 }
 
 .actu-date {

@@ -38,7 +38,7 @@ if(isset($_POST['method']) && !empty($_POST['method'])) {
                 } else {
 
                     $insertConstat = $db->prepare('INSERT INTO AuditsReports(Audit_Number, Question, Report, User_ID, Auditor) VALUES(:auditNumber, :question, :observation, :user, :auditor)');
-                    $insertConstat->bindParam(':report', $_POST['report'], PDO::PARAM_STR);
+                    $insertConstat->bindParam(':observation', $_POST['report'], PDO::PARAM_STR);
                     $insertConstat->bindParam(':user', $_POST['userID'], PDO::PARAM_INT);
                     $insertConstat->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
                     $insertConstat->bindParam(':question', $_POST['question'], PDO::PARAM_INT);

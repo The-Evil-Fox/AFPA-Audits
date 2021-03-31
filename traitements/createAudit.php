@@ -108,7 +108,7 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
     LEFT JOIN Audits a ON a.User_ID = :user
                        AND a.Audit_Number = :auditNumber
     WHERE qa.Active = true 
-    ORDER BY qa.ID, cqa.ID');
+    ORDER BY cqa.ID, qa.ID');
     $selectQuestions->bindParam(':user', $_POST['auditedUserID'], PDO::PARAM_INT);
     $selectQuestions->bindParam(':auditNumber', $auditNumber, PDO::PARAM_INT);
     $selectQuestions->execute();
@@ -136,6 +136,14 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
                 <div class="shortcuts">
                     <span><i class="far fa-caret-square-left"></i>Question précédente</span>
                     <span><i class="far fa-caret-square-right"></i>Question suivante</span>
+                </div>
+            </div>
+            <div class="helper-content">
+                <div class="help-acronyms">Signification des sigles:</div>
+                <div class="acronyms">
+                    <span>NC: non conforme</span>
+                    <span>NA: non applicable</span>
+                    <span>NDA: non disponible actuellement</span>
                 </div>
             </div>
             <div class="helper-content">
@@ -175,7 +183,7 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
                             <label for="<?= $questions['ID']; ?>NDA">NDA</label>
                         </div>
                     </div>
-                    <textarea <?php if($questions['Report'] == "NC" || $questions['Report'] == "NA"|| $questions['Report'] == "NDA" ) {?> class="visible" <?php } ?> name="textAreas" id="<?= $compteur; ?>" placeholder="Pourquoi avez vous répondu négativement ?" cols="60" rows="5" onchange="updateObservation(<?= $auditInProgress['User_ID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>)"><?php if($questions['Observation'] !== null) { echo $questions['Observation']; } ?></textarea>
+                    <textarea <?php if($questions['Report'] == "NC") {?> class="visible" <?php } ?> name="textAreas" id="<?= $compteur; ?>" placeholder="Pourquoi avez vous répondu négativement ?" cols="60" rows="5" onchange="updateObservation(<?= $auditInProgress['User_ID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>)"><?php if($questions['Observation'] !== null) { echo $questions['Observation']; } ?></textarea>
                     <?php if($compteur == $questionsNumber) { ?>
                         <div id="message"></div>
                     <?php } ?>
@@ -258,7 +266,7 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
     $result = $countQuestions->fetch();
     $questionsNumber = (int) $result['nb_questions'];
 
-    $selectQuestions = $db->query('SELECT qa.Question, qa.ID, qa.Evidence, cqa.Name FROM QuestionsAudit qa LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID WHERE qa.Active = true ORDER BY qa.ID, cqa.ID');
+    $selectQuestions = $db->query('SELECT qa.Question, qa.ID, qa.Evidence, cqa.Name FROM QuestionsAudit qa LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID WHERE qa.Active = true ORDER BY cqa.ID, qa.ID');
 
     $selectQuestionsID = $db->query('SELECT qa.ID FROM QuestionsAudit qa WHERE qa.Active = true ORDER BY qa.ID');
     $questionsID = array();
@@ -266,18 +274,6 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
     while($questionID = $selectQuestionsID->fetch()) {
 
         array_push($questionsID, $questionID['ID']);
-
-    }
-
-    $insertResultats = $db->prepare('INSERT INTO AuditsReports(Audit_Number, Question, User_ID, Auditor) VALUES(:auditNumber, :question, :user, :auditor)');
-    
-    foreach($questionsID as $value) {
-
-        $insertResultats->bindParam(':auditNumber', $auditNumber, PDO::PARAM_INT);
-        $insertResultats->bindParam(':question', $value, PDO::PARAM_INT);
-        $insertResultats->bindParam(':user', $_POST['auditedUserID'], PDO::PARAM_INT);
-        $insertResultats->bindParam(':auditor', $_SESSION['ID'], PDO::PARAM_INT);
-        $insertResultats->execute();
 
     }
 
@@ -304,6 +300,14 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
                 <div class="shortcuts">
                     <span><i class="far fa-caret-square-left"></i>Question précédente</span>
                     <span><i class="far fa-caret-square-right"></i>Question suivante</span>
+                </div>
+            </div>
+            <div class="helper-content">
+                <div class="help-acronyms">Signification des sigles:</div>
+                <div class="acronyms">
+                    <span>NC: non conforme</span>
+                    <span>NA: non applicable</span>
+                    <span>NDA: non disponible actuellement</span>
                 </div>
             </div>
             <div class="helper-content">

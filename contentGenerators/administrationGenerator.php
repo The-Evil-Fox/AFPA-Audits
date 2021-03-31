@@ -200,7 +200,7 @@ if(isset($_POST['documents'])) {
 if(isset($_POST['audit'])) {
 
     $getQuestions = $db->query('SELECT qa.ID, qa.Question, qa.Evidence, qa.Active, cqa.Name FROM QuestionsAudit qa LEFT JOIN 
-    CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID ORDER BY cqa.ID ASC');
+    CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID ORDER BY cqa.ID, qa.ID ASC');
     $getCategories = $db->query('SELECT * FROM CategoriesQuestionsAudit ORDER BY ID ASC');
 
 ?>

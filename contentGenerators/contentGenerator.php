@@ -40,6 +40,14 @@ if(isset($_POST['auditer'])) {
                 </div>
             </div>
             <div class="helper-content">
+                <div class="help-acronyms">Signification des sigles:</div>
+                <div class="acronyms">
+                    <span>NC: non conforme</span>
+                    <span>NA: non applicable</span>
+                    <span>NDA: non disponible actuellement</span>
+                </div>
+            </div>
+            <div class="helper-content">
                 Durée moyenne: 1 heure minimum.
             </div>
         </div>

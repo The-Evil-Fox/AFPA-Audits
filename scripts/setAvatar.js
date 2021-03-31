@@ -31,7 +31,7 @@ function setAvatar() {
             
             success: function(data) {
 
-                MyFunctions.checkAuthentifiedUser(data);
+                myFunctions.checkAuthentifiedUser(data);
                 
                 if(data.includes("Erreur:")) {
                     
@@ -50,7 +50,7 @@ function setAvatar() {
 
             error: function(xhr, textStatus, error){
 
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
                 
             }
     

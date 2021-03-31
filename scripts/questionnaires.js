@@ -79,7 +79,7 @@ function checkAuditInProgress(user) {
         dataType: 'text',
         success: function(data) {
 
-            MyFunctions.checkAuthentifiedUser(data);
+            myFunctions.checkAuthentifiedUser(data);
             
             if(data == "Un audit est déjà en cours !") {
 
@@ -110,7 +110,7 @@ function checkAuditInProgress(user) {
                     dataType: 'text',
                     success: function(data) {
             
-                        MyFunctions.checkAuthentifiedUser(data);
+                        myFunctions.checkAuthentifiedUser(data);
                         
                         auditedCenterContainer.style.display = "block";
                         auditedCenterContainer.innerHTML = data;
@@ -119,7 +119,7 @@ function checkAuditInProgress(user) {
             
                     error: function(xhr, textStatus, error) {
             
-                        MyFunctions.showError(contentWindow, xhr);
+                        myFunctions.showError(contentWindow, xhr);
                         
                     }
             
@@ -139,7 +139,7 @@ function checkAuditInProgress(user) {
                     dataType: 'text',
                     success: function(data) {
             
-                        MyFunctions.checkAuthentifiedUser(data);
+                        myFunctions.checkAuthentifiedUser(data);
                         
                         assistantsContainer.style.display = "block";
                         assistantsContainer.innerHTML = data;
@@ -148,7 +148,7 @@ function checkAuditInProgress(user) {
             
                     error: function(xhr, textStatus, error) {
             
-                        MyFunctions.showError(contentWindow, xhr);
+                        myFunctions.showError(contentWindow, xhr);
                         
                     }
             
@@ -160,7 +160,7 @@ function checkAuditInProgress(user) {
 
         error: function(xhr, textStatus, error) {
 
-            MyFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -189,7 +189,7 @@ function showSecondAssistantSelect(assistant1) {
                     dataType: 'text',
                     success: function(data) {
             
-                        MyFunctions.checkAuthentifiedUser(data);
+                        myFunctions.checkAuthentifiedUser(data);
                         
                         document.getElementById('assistant2Container').className = "selectAssistant";
                         document.getElementById('assistant2Container').innerHTML = data;
@@ -198,7 +198,7 @@ function showSecondAssistantSelect(assistant1) {
             
                     error: function(xhr, textStatus, error) {
             
-                        MyFunctions.showError(contentWindow, xhr);
+                        myFunctions.showError(contentWindow, xhr);
                         
                     }
             
@@ -310,7 +310,7 @@ function startAudit(buttonvalue) {
         dataType: 'text',
         success: function(data) {
 
-            MyFunctions.checkAuthentifiedUser(data);
+            myFunctions.checkAuthentifiedUser(data);
             
             contentWindow.innerHTML = data;
 
@@ -318,7 +318,7 @@ function startAudit(buttonvalue) {
 
         error: function(xhr, textStatus, error) {
 
-            MyFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -348,7 +348,7 @@ function updateReport(userID, audit, question, report, textAreaID) {
         dataType: 'text',
         success: function(data) {
             
-            MyFunctions.checkAuthentifiedUser(data);
+            myFunctions.checkAuthentifiedUser(data);
 
             if(report == "Conforme") {
 
@@ -375,7 +375,7 @@ function updateReport(userID, audit, question, report, textAreaID) {
 
         error: function(xhr, textStatus, error) {
 
-            MyFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -413,7 +413,7 @@ function updateObservation(userID, audit, question, observation, textAreaID) {
         dataType: 'text',
         success: function(data) {
             
-            MyFunctions.checkAuthentifiedUser(data);
+            myFunctions.checkAuthentifiedUser(data);
 
             $('#'+textAreaID).focus();
 
@@ -421,7 +421,7 @@ function updateObservation(userID, audit, question, observation, textAreaID) {
 
         error: function(xhr, textStatus, error) {
 
-            MyFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -516,7 +516,7 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
         dataType: 'JSON',
         success: function(dataGraphique) {
 
-            MyFunctions.checkAuthentifiedUser(dataGraphique);
+            myFunctions.checkAuthentifiedUser(dataGraphique);
             
             content.innerHTML = "<div id='graphique-resultats'></div><div id='tableauContainer'></div>";
 
@@ -543,7 +543,7 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
 
         error: function(xhr, textStatus, error) {
 
-            MyFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -565,7 +565,7 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
         dataType: 'text',
         success: function(dataTableau) {
 
-            MyFunctions.checkAuthentifiedUser(dataTableau);
+            myFunctions.checkAuthentifiedUser(dataTableau);
 
             if(dataTableau !== "") {
 
@@ -582,7 +582,7 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
         
         error: function(xhr, textStatus, error) {
 
-            MyFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -606,7 +606,7 @@ function startEval() {
         dataType: 'text',
         success: function(data) {
             
-            MyFunctions.checkAuthentifiedUser(data);
+            myFunctions.checkAuthentifiedUser(data);
 
             contentWindow.innerHTML = data;
 
@@ -614,7 +614,7 @@ function startEval() {
 
         error: function(xhr, textStatus, error) {
 
-            MyFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -723,7 +723,7 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
         dataType: 'text',
         success: function(data) {
 
-            MyFunctions.checkAuthentifiedUser(data);
+            myFunctions.checkAuthentifiedUser(data);
 
             if(textArea.value !== "") {
 
@@ -746,7 +746,7 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
 
         error: function(xhr, textStatus, error) {
 
-            MyFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -762,13 +762,13 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
             dataType: 'text',
             success: function(data) {
                 
-                MyFunctions.checkAuthentifiedUser(data);
+                myFunctions.checkAuthentifiedUser(data);
 
             },
     
             error: function(xhr, textStatus, error) {
     
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
                 
             }
     
@@ -803,13 +803,13 @@ function addReason(evalNumber, question, reason, textareaID) {
         dataType: 'text',
         success: function(data) {
 
-            MyFunctions.checkAuthentifiedUser(data);
+            myFunctions.checkAuthentifiedUser(data);
         
         },
 
         error: function(xhr, textStatus, error) {
 
-            MyFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -873,7 +873,7 @@ function sendEval(eval) {
             dataType: 'JSON',
             success: function(data) {
                 
-                MyFunctions.checkAuthentifiedUser(data);
+                myFunctions.checkAuthentifiedUser(data);
 
                 content.innerHTML = "<div id='graphique-resultats'></div><div id='tableauContainer'></div>";
 
@@ -900,7 +900,7 @@ function sendEval(eval) {
             
             error: function(xhr, textStatus, error) {
 
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
                 
             }
 
@@ -917,7 +917,7 @@ function sendEval(eval) {
             dataType: 'text',
             success: function(dataTableau) {
 
-                MyFunctions.checkAuthentifiedUser(dataTableau);
+                myFunctions.checkAuthentifiedUser(dataTableau);
 
                 if(dataTableau !== "") {
 
@@ -934,7 +934,7 @@ function sendEval(eval) {
             
             error: function(xhr, textStatus, error) {
 
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
                 
             }
 

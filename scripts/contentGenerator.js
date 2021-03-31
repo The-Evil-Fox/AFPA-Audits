@@ -78,7 +78,7 @@ function showContent(category) {
             dataType: 'text',
             success: function(data) {
 
-                MyFunctions.checkAuthentifiedUser(data);
+                myFunctions.checkAuthentifiedUser(data);
 
                 if(category == "administration") {
 
@@ -115,7 +115,7 @@ function showContent(category) {
 
             error: function(xhr, textStatus, error) {
 
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
                 
             }
 

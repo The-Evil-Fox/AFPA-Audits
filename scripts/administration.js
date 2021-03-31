@@ -14,7 +14,7 @@ function showAdministration(category) {
             dataType: 'text',
             success: function(data) {
 
-                MyFunctions.checkAuthentifiedUser(data);
+                myFunctions.checkAuthentifiedUser(data);
 
                 if(category == "exitAdministration") {
 
@@ -44,7 +44,7 @@ function showAdministration(category) {
             
             error: function(xhr, textStatus, error){
 
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
                 
             }
 
@@ -74,7 +74,7 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
         dataType: 'JSON',
         success: function(dataGraphique) {
 
-            MyFunctions.checkAuthentifiedUser(dataGraphique);
+            myFunctions.checkAuthentifiedUser(dataGraphique);
 
             content.innerHTML = "<div id='graphique-resultats'></div><div id='dateGraphique'>Effectuée le "+date+".</div><div id='tableauContainer'></div>";
 
@@ -101,7 +101,7 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
 
         error: function(xhr, textStatus, error){
 
-            MyFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -119,7 +119,7 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
         dataType: 'text',
         success: function(dataTableau) {
 
-            MyFunctions.checkAuthentifiedUser(dataTableau);
+            myFunctions.checkAuthentifiedUser(dataTableau);
 
             if(dataTableau !== "") {
 
@@ -136,7 +136,7 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
 
         error: function(xhr, textStatus, error){
 
-            MyFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -159,7 +159,7 @@ function showUserResultAudit(userID, audit, userName, userFirstName, auditeurNam
         dataType: 'JSON',
         success: function(dataGraphique) {
 
-            MyFunctions.checkAuthentifiedUser(dataGraphique);
+            myFunctions.checkAuthentifiedUser(dataGraphique);
 
             if(typeof(assistant1Name) && typeof(assistant1FirstName) == "undefined") {
 
@@ -240,7 +240,7 @@ function showUserResultAudit(userID, audit, userName, userFirstName, auditeurNam
 
         error: function(xhr, textStatus, error){
 
-            MyFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -258,7 +258,7 @@ function showUserResultAudit(userID, audit, userName, userFirstName, auditeurNam
         dataType: 'text',
         success: function(dataTableau) {
 
-            MyFunctions.checkAuthentifiedUser(dataTableau);
+            myFunctions.checkAuthentifiedUser(dataTableau);
 
             if(dataTableau !== "") {
 
@@ -275,7 +275,7 @@ function showUserResultAudit(userID, audit, userName, userFirstName, auditeurNam
 
         error: function(xhr, textStatus, error){
 
-            MyFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -398,13 +398,13 @@ function addQuestionQuestionnaire(questionnaire) {
             dataType: 'text',
             success: function(data) {
 
-                MyFunctions.checkAuthentifiedUser(data);
+                myFunctions.checkAuthentifiedUser(data);
 
             },
 
             error: function(xhr, textStatus, error) {
 
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
 
             }
 
@@ -418,7 +418,7 @@ function addQuestionQuestionnaire(questionnaire) {
             dataType: 'text',
             success: function(data) {
 
-                MyFunctions.checkAuthentifiedUser(data);
+                myFunctions.checkAuthentifiedUser(data);
     
                 setTimeout(() => {
     
@@ -430,7 +430,7 @@ function addQuestionQuestionnaire(questionnaire) {
     
             error: function(xhr, textStatus, error) {
     
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
                 
             }
     
@@ -446,13 +446,13 @@ function addQuestionQuestionnaire(questionnaire) {
             dataType: 'text',
             success: function(data) {
 
-                MyFunctions.checkAuthentifiedUser(data);
+                myFunctions.checkAuthentifiedUser(data);
 
             },
 
             error: function(xhr, textStatus, error) {
 
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
 
             }
 
@@ -466,7 +466,7 @@ function addQuestionQuestionnaire(questionnaire) {
             dataType: 'text',
             success: function(data) {
 
-                MyFunctions.checkAuthentifiedUser(data);
+                myFunctions.checkAuthentifiedUser(data);
     
                 setTimeout(() => {
     
@@ -478,7 +478,7 @@ function addQuestionQuestionnaire(questionnaire) {
     
             error: function(xhr, textStatus, error) {
     
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
                 
             }
     
@@ -513,7 +513,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
             dataType: 'text',
             success: function(data) {
 
-                MyFunctions.checkAuthentifiedUser(data);
+                myFunctions.checkAuthentifiedUser(data);
 
                 if(operation == "delete") {
 
@@ -525,7 +525,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
                         dataType: 'text',
                         success: function(data) {
 
-                            MyFunctions.checkAuthentifiedUser(data);
+                            myFunctions.checkAuthentifiedUser(data);
                 
                             setTimeout(() => {
                 
@@ -537,7 +537,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
                 
                         error: function(xhr, textStatus, error) {
                 
-                            MyFunctions.showError(contentWindow, xhr);
+                            myFunctions.showError(contentWindow, xhr);
                             
                         }
                 
@@ -563,7 +563,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
 
             error: function(xhr, textStatus, error){
 
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
 
             }
 
@@ -579,7 +579,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
             dataType: 'text',
             success: function(data) {
 
-                MyFunctions.checkAuthentifiedUser(data);
+                myFunctions.checkAuthentifiedUser(data);
 
                 if(operation == "delete") {
 
@@ -591,7 +591,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
                         dataType: 'text',
                         success: function(data) {
 
-                            MyFunctions.checkAuthentifiedUser(data);
+                            myFunctions.checkAuthentifiedUser(data);
                 
                             setTimeout(() => {
                 
@@ -603,7 +603,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
                 
                         error: function(xhr, textStatus, error) {
                 
-                            MyFunctions.showError(contentWindow, xhr);
+                            myFunctions.showError(contentWindow, xhr);
 
                         }
                 
@@ -632,7 +632,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
             },
             error: function(xhr, textStatus, error){
 
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
 
             }
 
@@ -707,7 +707,7 @@ function updateQuestionQuestionnaire(questionnaire, questionID) {
                 dataType: 'text',
                 success: function(data) {
 
-                    MyFunctions.checkAuthentifiedUser(data);
+                    myFunctions.checkAuthentifiedUser(data);
 
                     if(data == "La question a bien été éditée !") {
                     
@@ -720,7 +720,7 @@ function updateQuestionQuestionnaire(questionnaire, questionID) {
 
                 error: function(xhr, textStatus, error) {
 
-                    MyFunctions.showError(contentWindow, xhr);
+                    myFunctions.showError(contentWindow, xhr);
 
                 }
 
@@ -736,7 +736,7 @@ function updateQuestionQuestionnaire(questionnaire, questionID) {
                 dataType: 'text',
                 success: function(data) {
 
-                    MyFunctions.checkAuthentifiedUser(data);
+                    myFunctions.checkAuthentifiedUser(data);
 
                     if(data == "La question a bien été éditée !") {
                     
@@ -749,7 +749,7 @@ function updateQuestionQuestionnaire(questionnaire, questionID) {
 
                 error: function(xhr, textStatus, error) {
 
-                    MyFunctions.showError(contentWindow, xhr);
+                    myFunctions.showError(contentWindow, xhr);
 
                 }
 
@@ -824,7 +824,7 @@ function updateEvidenceQuestionnaire(questionID) {
             dataType: 'text',
             success: function(data) {
 
-                MyFunctions.checkAuthentifiedUser(data);
+                myFunctions.checkAuthentifiedUser(data);
 
                 if(data == "La preuve à fournir a bien été éditée !") {
                 
@@ -837,7 +837,7 @@ function updateEvidenceQuestionnaire(questionID) {
 
             error: function(xhr, textStatus, error) {
 
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
 
             }
 
@@ -881,7 +881,7 @@ function addDocument() {
             
             success: function(data) {
 
-                MyFunctions.checkAuthentifiedUser(data);
+                myFunctions.checkAuthentifiedUser(data);
 
                 if(data.includes("Erreur:")) {
                     
@@ -899,7 +899,7 @@ function addDocument() {
 
             error: function(xhr, textStatus, error){
 
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
                 
             }
     
@@ -925,7 +925,7 @@ function deleteDocument(action, id, link) {
         dataType: 'text',
         success: function(data) {
 
-            MyFunctions.checkAuthentifiedUser(data);
+            myFunctions.checkAuthentifiedUser(data);
 
             refreshDocuments();
 
@@ -933,7 +933,7 @@ function deleteDocument(action, id, link) {
 
         error: function(xhr, textStatus, error){
 
-            MyFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -953,7 +953,7 @@ function refreshDocuments() {
         dataType: 'text',
         success: function(data) {
 
-            MyFunctions.checkAuthentifiedUser(data);
+            myFunctions.checkAuthentifiedUser(data);
 
             contentWindow.innerHTML = data;
 
@@ -961,7 +961,7 @@ function refreshDocuments() {
 
         error: function(xhr, textStatus, error){
 
-            MyFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -983,7 +983,7 @@ function showTab() {
         dataType: 'text',
         success: function(data) {
 
-            MyFunctions.checkAuthentifiedUser(data);
+            myFunctions.checkAuthentifiedUser(data);
 
             if(data !== "") {
 
@@ -996,7 +996,7 @@ function showTab() {
         
         error: function(xhr, textStatus, error){
 
-            MyFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(contentWindow, xhr);
             
         }
 
@@ -1034,7 +1034,7 @@ function showStats() {
             dataType: 'text',
             success: function(data) {
 
-                MyFunctions.checkAuthentifiedUser(data);
+                myFunctions.checkAuthentifiedUser(data);
 
                 if(data !== "") {
 
@@ -1055,7 +1055,7 @@ function showStats() {
 
             error: function(xhr, textStatus, error){
 
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
 
             }
 
@@ -1085,7 +1085,7 @@ function showStats() {
                     dataType: 'JSON',
                     success: function(data) {
 
-                        MyFunctions.checkAuthentifiedUser(data);
+                        myFunctions.checkAuthentifiedUser(data);
 
                         if($('#mobileNavDropdown').attr('class').indexOf('active') > -1) {
 
@@ -1127,7 +1127,7 @@ function showStats() {
 
                     error: function(xhr, textStatus, error){
 
-                        MyFunctions.showError(contentWindow, xhr);
+                        myFunctions.showError(contentWindow, xhr);
 
                     }
 
@@ -1218,7 +1218,7 @@ function getAllResultsUser(user) {
             dataType: 'text',
             success: function(data) {
 
-                MyFunctions.checkAuthentifiedUser(data);
+                myFunctions.checkAuthentifiedUser(data);
 
                 evalsContainer.style.opacity = 0;
 
@@ -1233,7 +1233,7 @@ function getAllResultsUser(user) {
     
             error: function(xhr, textStatus, error){
     
-                MyFunctions.showError(evalsContainer, xhr);
+                myFunctions.showError(evalsContainer, xhr);
                 
             }
     
@@ -1254,7 +1254,7 @@ function getAllResultsUser(user) {
             dataType: 'text',
             success: function(data) {
 
-                MyFunctions.checkAuthentifiedUser(data);
+                myFunctions.checkAuthentifiedUser(data);
 
                 auditsContainer.style.opacity = 0;
 
@@ -1269,7 +1269,7 @@ function getAllResultsUser(user) {
     
             error: function(xhr, textStatus, error){
     
-                MyFunctions.showError(auditsContainer, xhr);
+                myFunctions.showError(auditsContainer, xhr);
                 
             }
     

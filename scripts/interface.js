@@ -1,4 +1,4 @@
-MyFunctions = {
+myFunctions = {
 
   showError: function(container, xhr) {
     
@@ -50,7 +50,7 @@ function getNavbar(category) {
           dataType: 'text',
           success: function(data) {
 
-              MyFunctions.checkAuthentifiedUser(data);
+              myFunctions.checkAuthentifiedUser(data);
 
               sidebarLinks.innerHTML = data;
               mobileNavDropdown.innerHTML = data;
@@ -59,7 +59,7 @@ function getNavbar(category) {
 
           error: function(xhr, textStatus, error){
 
-            MyFunctions.showError(xhr);
+            myFunctions.showError(xhr);
               
           }
 
@@ -234,7 +234,7 @@ function sendBugReport() {
       dataType: 'text',
       success: function(data) {
           
-          MyFunctions.checkAuthentifiedUser(data);
+          myFunctions.checkAuthentifiedUser(data);
 
           bugReportNotification.style.display = "block";
           bugReportNotification.innerHTML = data;
@@ -259,7 +259,7 @@ function sendBugReport() {
 
         bugReportNotification.style.display = "block";
 
-        MyFunctions.showError(bugReportNotification, xhr);
+        myFunctions.showError(bugReportNotification, xhr);
           
       }
 

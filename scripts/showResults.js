@@ -16,7 +16,7 @@ function showChart(autoeval_number, date) {
             dataType: 'JSON',
             success: function(dataGraphique) {
 
-                MyFunctions.checkAuthentifiedUser(dataGraphique);
+                myFunctions.checkAuthentifiedUser(dataGraphique);
 
                 contentWindow.innerHTML = "<div id='graphique-resultats'></div><div id='dateGraphique'>Effectuée le "+date+".</div><div id='tableauContainer'></div>";
 
@@ -41,7 +41,7 @@ function showChart(autoeval_number, date) {
             },
             error: function(xhr, textStatus, error){
 
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
                 
             }
 
@@ -58,7 +58,7 @@ function showChart(autoeval_number, date) {
             dataType: 'text',
             success: function(dataTableau) {
 
-                MyFunctions.checkAuthentifiedUser(dataTableau);
+                myFunctions.checkAuthentifiedUser(dataTableau);
 
                 if(dataTableau !== "") {
 
@@ -75,7 +75,7 @@ function showChart(autoeval_number, date) {
             
             error: function(xhr, textStatus, error){
 
-                MyFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(contentWindow, xhr);
                 
             }
 

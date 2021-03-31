@@ -890,6 +890,10 @@ table#tableauQuestionnaire .questionnaire-border-white {
     margin: 1vh auto;
 }
 
+.buttonsModificationQuestionnaire button i {
+    margin-bottom: 1.5vh;
+}
+
 table#tableauResultatsAutoevalUtilisateur, table#tableauResultatsAuditsUtilisateur{
     text-align: center;
 }
@@ -1144,6 +1148,10 @@ table#tableauAssistants {
 
     table#tableauQuestionnaire td:last-child {
         border-bottom: 2px solid black;
+    }
+
+    .buttonsModificationQuestionnaire button i {
+        margin-bottom: unset !important;
     }
 
     table#tableauGlobalStats .questionnaire-border-white {

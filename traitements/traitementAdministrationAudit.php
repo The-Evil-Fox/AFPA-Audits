@@ -49,7 +49,7 @@ if(isset($_POST['operation']) && !empty($_POST['operation'])) {
 
             $message = "La question a bien été activée !";
 
-        } else if($_POST['operation'] == "edit" && isset($_POST['updatedQuestion']) && !empty($_POST['updatedQuestion'])) {
+        } else if($_POST['operation'] == "editQuestion" && isset($_POST['updatedQuestion']) && !empty($_POST['updatedQuestion'])) {
 
             $editQuestion = $db->prepare('UPDATE QuestionsAudit SET Question = :question WHERE ID = :questionID');
             $editQuestion->bindParam(':question', $_POST['updatedQuestion'], PDO::PARAM_STR);
@@ -57,6 +57,15 @@ if(isset($_POST['operation']) && !empty($_POST['operation'])) {
             $editQuestion->execute();
 
             $message = "La question a bien été éditée !";
+
+        } else if($_POST['operation'] == "editEvidence" && isset($_POST['updatedEvidence']) && !empty($_POST['updatedEvidence'])) {
+
+            $editQuestion = $db->prepare('UPDATE QuestionsAudit SET Evidence = :evidence WHERE ID = :questionID');
+            $editQuestion->bindParam(':evidence', $_POST['updatedEvidence'], PDO::PARAM_STR);
+            $editQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
+            $editQuestion->execute();
+
+            $message = "La preuve à fournir a bien été éditée !";
 
         }
 

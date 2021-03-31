@@ -72,9 +72,9 @@ if(isset($_POST['actualites'])) {
 
 }
 
-if(isset($_POST['autoEvalution'])) {
+if(isset($_POST['autoevaluation'])) {
 
-    $getQuestions = $db->query('SELECT qa.ID, qa.Question, qa.Category, qa.Active, cqa.Name FROM QuestionsAutoevaluation qa LEFT JOIN CategoriesQuestionsAutoevaluation cqa ON qa.Category = cqa.Category ORDER BY cqa.Category ASC');
+    $getQuestions = $db->query('SELECT qa.ID, qa.Question, qa.Category, qa.Active, cqa.Name FROM QuestionsAutoevaluation qa LEFT JOIN CategoriesQuestionsAutoevaluation cqa ON qa.Category = cqa.Category ORDER BY cqa.Category, qa.ID ASC');
     $getCategories = $db->query('SELECT * FROM CategoriesQuestionsAutoevaluation ORDER BY Category ASC');
 
 ?>
@@ -241,7 +241,7 @@ if(isset($_POST['audit'])) {
                 <tr>
                     <td data-label="Statut" id="questionStatus<?= $question['ID']; ?>"><?php if($question['Active'] == true) { ?>Active<?php } else { ?>Inactive<?php } ?></td>
                     <td data-label="Question" class="questionnaire-border-white" id="question-label-<?= $question['ID']; ?>"><?= $question['Question']; ?></td>
-                    <td data-label="Preuves" class="questionnaire-border-white"><?php if($question['Evidence'] !== NULL) { echo $question['Evidence']; } else { echo "/"; } ?></td>
+                    <td data-label="Preuves" class="questionnaire-border-white" id="question-evidence-<?= $question['ID']; ?>"><?php if($question['Evidence'] !== NULL) { echo $question['Evidence']; } else { echo "/"; } ?></td>
                     <td data-label="Categorie" class="questionnaire-border-white"><?= $question['Name']; ?></td>
                     <td data-label="Actions">
                         <div class="buttonsModificationQuestionnaire">
@@ -250,7 +250,8 @@ if(isset($_POST['audit'])) {
                              onclick="updateStatusRemoveQuestionQuestionnaire('audit', this, <?= $question['ID']; ?>)"
                               <?php if($question['Active'] == true) { ?> value="disable" <?php } else { ?> value="enable" <?php } ?>>
                               <?php if($question['Active'] == true) { ?> <i class="fas fa-toggle-on"></i> Désactiver<?php } else { ?><i class="fas fa-toggle-off"></i> Activer<?php } ?>
-                            <button onclick="updateQuestionQuestionnaire('audit', <?= $question['ID']; ?>)" value="edit"><i class="far fa-edit"></i> Modifier</button>
+                            <button onclick="updateQuestionQuestionnaire('audit', <?= $question['ID']; ?>)" value="edit"><i class="far fa-edit"></i> Modifier question</button>
+                            <button onclick="updateEvidenceQuestionnaire(<?= $question['ID']; ?>)" value="edit"><i class="far fa-edit"></i> Modifier preuve</button>
                             <button class="redButton" onclick="updateStatusRemoveQuestionQuestionnaire('audit', this, <?= $question['ID']; ?>)" value="delete"><i class="fas fa-trash-alt"></i> Supprimer</button>
                         </div>
                     </td>

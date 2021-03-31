@@ -681,7 +681,7 @@ function updateQuestionQuestionnaire(questionnaire, questionID) {
 
     function sendUpdatedQuestion(updatedQuestion) {
 
-        operation = "edit";
+        operation = "editQuestion";
 
         dataSend = {
             operation,
@@ -744,6 +744,90 @@ function updateQuestionQuestionnaire(questionnaire, questionID) {
             });
 
         }
+
+    }
+
+}
+
+function updateEvidenceQuestionnaire(questionID) {
+
+    let evidence = document.getElementById('question-evidence-'+questionID);
+
+    evidenceText = evidence.innerHTML;
+
+    evidence.innerHTML = "<input class='questionnaires-input-edit' type='text' id='input"+questionID+"' value='"+evidenceText+"'><span class='edit-notification'>Appuyez sur ECHAP ou cliquez en dehors du champ pour annuler.</span>";
+
+    evidenceInput = document.getElementById('input'+questionID);
+
+    evidenceInput.focus();
+
+    function cancelModification() {
+
+        evidence.innerHTML = evidenceText;
+        return false;
+
+    }
+
+    enterDetect = (e) => {
+
+        keyPressed = e.which || e.keyCode;
+        
+        if(keyPressed === 13) {
+            
+            sendUpdatedEvidence(evidenceInput.value);
+
+        }
+
+        if(keyPressed === 27) {
+
+            cancelModification();
+
+        }
+    
+    }
+
+    $('#input'+questionID).on('focusout', function() {
+
+        cancelModification();
+
+    });
+
+    evidence.addEventListener('keydown', enterDetect);
+
+    function sendUpdatedEvidence(updatedEvidence) {
+
+        operation = "editEvidence";
+
+        dataSend = {
+            operation,
+            questionID,
+            updatedEvidence
+        };
+
+        $.ajax({
+
+            type: 'POST',
+            url: 'traitements/traitementAdministrationAudit.php',
+            data: dataSend,
+            dataType: 'text',
+            success: function(data) {
+
+                if(data == "La preuve à fournir a bien été éditée !") {
+                
+                    evidence.innerHTML = updatedEvidence;
+                    return;
+                
+                }
+
+            },
+
+            error: function(xhr, textStatus, error) {
+
+                MyFunctions.showError(contentWindow, xhr);
+
+            }
+
+        });
 
     }
 

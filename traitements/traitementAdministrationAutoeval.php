@@ -53,7 +53,7 @@ if(isset($_POST['operation']) && !empty($_POST['operation'])) {
 
             $message = "La question a bien été activée !";
 
-        } else if($_POST['operation'] == "edit" && isset($_POST['updatedQuestion']) && !empty($_POST['updatedQuestion'])) {
+        } else if($_POST['operation'] == "editQuestion" && isset($_POST['updatedQuestion']) && !empty($_POST['updatedQuestion'])) {
 
             $editQuestion = $db->prepare('UPDATE QuestionsAutoevaluation SET Question = :question WHERE ID = :questionID');
             $editQuestion->bindParam(':question', $_POST['updatedQuestion'], PDO::PARAM_STR);

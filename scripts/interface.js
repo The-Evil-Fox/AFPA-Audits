@@ -14,6 +14,17 @@ MyFunctions = {
           + xhr.status + ` ` + xhr.statusText + 
       `</div>`;
 
+  },
+
+  checkAuthentifiedUser: function(dataGet) {
+
+    if(dataGet == "Acces refusé ! Veuillez vous connectez !") {
+
+      window.location.replace('index.php');
+      return;
+      
+    }
+
   }
 
 }
@@ -39,12 +50,7 @@ function getNavbar(category) {
           dataType: 'text',
           success: function(data) {
 
-              if(data == "Acces refusé ! Veuillez vous connectez !") {
-
-                  window.location.replace('index.php');
-                  return;
-                  
-              }
+              MyFunctions.checkAuthentifiedUser(data);
 
               sidebarLinks.innerHTML = data;
               mobileNavDropdown.innerHTML = data;
@@ -228,12 +234,7 @@ function sendBugReport() {
       dataType: 'text',
       success: function(data) {
           
-          if(data == "Acces refusé ! Veuillez vous connectez !") {
-
-              window.location.replace('index.php');
-              return;
-              
-          }
+          MyFunctions.checkAuthentifiedUser(data);
 
           bugReportNotification.style.display = "block";
           bugReportNotification.innerHTML = data;

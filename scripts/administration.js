@@ -14,6 +14,8 @@ function showAdministration(category) {
             dataType: 'text',
             success: function(data) {
 
+                MyFunctions.checkAuthentifiedUser(data);
+
                 if(category == "exitAdministration") {
 
                     document.getElementById('sidebar').innerHTML = data;
@@ -70,18 +72,13 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
         url: 'contentGenerators/userResultEval.php',
         data: userData,
         dataType: 'JSON',
-        success: function(datagraphique) {
+        success: function(dataGraphique) {
 
-            if(datagraphique == "Acces refusé ! Veuillez vous connectez !") {
-
-                window.location.replace('index.php');
-                return;
-                
-            }
+            MyFunctions.checkAuthentifiedUser(dataGraphique);
 
             content.innerHTML = "<div id='graphique-resultats'></div><div id='dateGraphique'>Effectuée le "+date+".</div><div id='tableauContainer'></div>";
 
-            createChart("graphique-resultats", "Résultats de l'autoévaluation de " + userName + " " + userFirstName, datagraphique);
+            createChart("graphique-resultats", "Résultats de l'autoévaluation de " + userName + " " + userFirstName, dataGraphique);
 
 
             function hideMessages() {
@@ -122,12 +119,7 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
         dataType: 'text',
         success: function(dataTableau) {
 
-            if(dataTableau == "Acces refusé ! Veuillez vous connectez !") {
-
-                window.location.replace('index.php');
-                return;
-                
-            }
+            MyFunctions.checkAuthentifiedUser(dataTableau);
 
             if(dataTableau !== "") {
 
@@ -166,6 +158,8 @@ function showUserResultAudit(userID, audit, userName, userFirstName, auditeurNam
         data: userData,
         dataType: 'JSON',
         success: function(dataGraphique) {
+
+            MyFunctions.checkAuthentifiedUser(dataGraphique);
 
             if(typeof(assistant1Name) && typeof(assistant1FirstName) == "undefined") {
 
@@ -263,6 +257,8 @@ function showUserResultAudit(userID, audit, userName, userFirstName, auditeurNam
         },
         dataType: 'text',
         success: function(dataTableau) {
+
+            MyFunctions.checkAuthentifiedUser(dataTableau);
 
             if(dataTableau !== "") {
 
@@ -402,7 +398,7 @@ function addQuestionQuestionnaire(questionnaire) {
             dataType: 'text',
             success: function(data) {
 
-                alert("La question a bien été ajoutée !");
+                MyFunctions.checkAuthentifiedUser(data);
 
             },
 
@@ -418,15 +414,17 @@ function addQuestionQuestionnaire(questionnaire) {
 
             type: 'POST',
             url: 'contentGenerators/administrationGenerator.php',
-            data: "autoEvalution",
+            data: "autoevaluation",
             dataType: 'text',
             success: function(data) {
+
+                MyFunctions.checkAuthentifiedUser(data);
     
                 setTimeout(() => {
     
                     contentWindow.innerHTML = data;
     
-                }, 500);
+                }, 750);
     
             },
     
@@ -448,7 +446,7 @@ function addQuestionQuestionnaire(questionnaire) {
             dataType: 'text',
             success: function(data) {
 
-                alert("La question a bien été ajoutée !");
+                MyFunctions.checkAuthentifiedUser(data);
 
             },
 
@@ -467,12 +465,14 @@ function addQuestionQuestionnaire(questionnaire) {
             data: "audit",
             dataType: 'text',
             success: function(data) {
+
+                MyFunctions.checkAuthentifiedUser(data);
     
                 setTimeout(() => {
     
                     contentWindow.innerHTML = data;
     
-                }, 500);
+                }, 750);
     
             },
     
@@ -513,15 +513,19 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
             dataType: 'text',
             success: function(data) {
 
+                MyFunctions.checkAuthentifiedUser(data);
+
                 if(operation == "delete") {
 
                     $.ajax({
 
                         type: 'POST',
                         url: 'contentGenerators/administrationGenerator.php',
-                        data: "autoEvalution",
+                        data: "autoevaluation",
                         dataType: 'text',
                         success: function(data) {
+
+                            MyFunctions.checkAuthentifiedUser(data);
                 
                             setTimeout(() => {
                 
@@ -575,6 +579,8 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
             dataType: 'text',
             success: function(data) {
 
+                MyFunctions.checkAuthentifiedUser(data);
+
                 if(operation == "delete") {
 
                     $.ajax({
@@ -584,6 +590,8 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
                         data: "audit",
                         dataType: 'text',
                         success: function(data) {
+
+                            MyFunctions.checkAuthentifiedUser(data);
                 
                             setTimeout(() => {
                 
@@ -699,6 +707,8 @@ function updateQuestionQuestionnaire(questionnaire, questionID) {
                 dataType: 'text',
                 success: function(data) {
 
+                    MyFunctions.checkAuthentifiedUser(data);
+
                     if(data == "La question a bien été éditée !") {
                     
                         question.innerHTML = updatedQuestion;
@@ -725,6 +735,8 @@ function updateQuestionQuestionnaire(questionnaire, questionID) {
                 data: dataSend,
                 dataType: 'text',
                 success: function(data) {
+
+                    MyFunctions.checkAuthentifiedUser(data);
 
                     if(data == "La question a bien été éditée !") {
                     
@@ -812,6 +824,8 @@ function updateEvidenceQuestionnaire(questionID) {
             dataType: 'text',
             success: function(data) {
 
+                MyFunctions.checkAuthentifiedUser(data);
+
                 if(data == "La preuve à fournir a bien été éditée !") {
                 
                     evidence.innerHTML = updatedEvidence;
@@ -867,11 +881,7 @@ function addDocument() {
             
             success: function(data) {
 
-                if(data == "Acces refusé ! Veuillez vous connectez !") {
-
-                    alert('something strange is happening :)');
-                    
-                }
+                MyFunctions.checkAuthentifiedUser(data);
 
                 if(data.includes("Erreur:")) {
                     
@@ -915,6 +925,8 @@ function deleteDocument(action, id, link) {
         dataType: 'text',
         success: function(data) {
 
+            MyFunctions.checkAuthentifiedUser(data);
+
             refreshDocuments();
 
         },
@@ -940,6 +952,8 @@ function refreshDocuments() {
         data: "documents",
         dataType: 'text',
         success: function(data) {
+
+            MyFunctions.checkAuthentifiedUser(data);
 
             contentWindow.innerHTML = data;
 
@@ -969,12 +983,7 @@ function showTab() {
         dataType: 'text',
         success: function(data) {
 
-            if(data == "Acces refusé ! Veuillez vous connectez !") {
-
-                window.location.replace('index.php');
-                return;
-                
-            }
+            MyFunctions.checkAuthentifiedUser(data);
 
             if(data !== "") {
 
@@ -1025,12 +1034,7 @@ function showStats() {
             dataType: 'text',
             success: function(data) {
 
-                if(data == "Acces refusé ! Veuillez vous connectez !") {
-
-                    window.location.replace('index.php');
-                    return;
-                    
-                }
+                MyFunctions.checkAuthentifiedUser(data);
 
                 if(data !== "") {
 
@@ -1081,12 +1085,7 @@ function showStats() {
                     dataType: 'JSON',
                     success: function(data) {
 
-                        if(data == "Acces refusé ! Veuillez vous connectez !") {
-
-                            window.location.replace('index.php');
-                            return;
-                            
-                        }
+                        MyFunctions.checkAuthentifiedUser(data);
 
                         if($('#mobileNavDropdown').attr('class').indexOf('active') > -1) {
 
@@ -1219,6 +1218,8 @@ function getAllResultsUser(user) {
             dataType: 'text',
             success: function(data) {
 
+                MyFunctions.checkAuthentifiedUser(data);
+
                 evalsContainer.style.opacity = 0;
 
                 setTimeout(function() {
@@ -1252,6 +1253,8 @@ function getAllResultsUser(user) {
             data: dataSend,
             dataType: 'text',
             success: function(data) {
+
+                MyFunctions.checkAuthentifiedUser(data);
 
                 auditsContainer.style.opacity = 0;
 

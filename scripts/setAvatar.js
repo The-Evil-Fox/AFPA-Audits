@@ -31,12 +31,7 @@ function setAvatar() {
             
             success: function(data) {
 
-                if(data == "Acces refusé ! Veuillez vous connectez !") {
-
-                    window.location.replace('index.php');
-                    return;
-                    
-                }
+                MyFunctions.checkAuthentifiedUser(data);
                 
                 if(data.includes("Erreur:")) {
                     

@@ -79,12 +79,7 @@ function checkAuditInProgress(user) {
         dataType: 'text',
         success: function(data) {
 
-            if(data == "Acces refusé ! Veuillez vous connectez !") {
-
-                window.location.replace('index.php');
-                return;
-                
-            }
+            MyFunctions.checkAuthentifiedUser(data);
             
             if(data == "Un audit est déjà en cours !") {
 
@@ -115,12 +110,7 @@ function checkAuditInProgress(user) {
                     dataType: 'text',
                     success: function(data) {
             
-                        if(data == "Acces refusé ! Veuillez vous connectez !") {
-            
-                            window.location.replace('index.php');
-                            return;
-                            
-                        }
+                        MyFunctions.checkAuthentifiedUser(data);
                         
                         auditedCenterContainer.style.display = "block";
                         auditedCenterContainer.innerHTML = data;
@@ -149,12 +139,7 @@ function checkAuditInProgress(user) {
                     dataType: 'text',
                     success: function(data) {
             
-                        if(data == "Acces refusé ! Veuillez vous connectez !") {
-            
-                            window.location.replace('index.php');
-                            return;
-                            
-                        }
+                        MyFunctions.checkAuthentifiedUser(data);
                         
                         assistantsContainer.style.display = "block";
                         assistantsContainer.innerHTML = data;
@@ -204,12 +189,7 @@ function showSecondAssistantSelect(assistant1) {
                     dataType: 'text',
                     success: function(data) {
             
-                        if(data == "Acces refusé ! Veuillez vous connectez !") {
-            
-                            window.location.replace('index.php');
-                            return;
-                            
-                        }
+                        MyFunctions.checkAuthentifiedUser(data);
                         
                         document.getElementById('assistant2Container').className = "selectAssistant";
                         document.getElementById('assistant2Container').innerHTML = data;
@@ -330,12 +310,7 @@ function startAudit(buttonvalue) {
         dataType: 'text',
         success: function(data) {
 
-            if(data == "Acces refusé ! Veuillez vous connectez !") {
-
-                window.location.replace('index.php');
-                return;
-                
-            }
+            MyFunctions.checkAuthentifiedUser(data);
             
             contentWindow.innerHTML = data;
 
@@ -373,12 +348,7 @@ function updateReport(userID, audit, question, report, textAreaID) {
         dataType: 'text',
         success: function(data) {
             
-            if(data == "Acces refusé ! Veuillez vous connectez !") {
-
-                window.location.replace('index.php');
-                return;
-                
-            }
+            MyFunctions.checkAuthentifiedUser(data);
 
             if(report == "Conforme") {
 
@@ -443,12 +413,7 @@ function updateObservation(userID, audit, question, observation, textAreaID) {
         dataType: 'text',
         success: function(data) {
             
-            if(data == "Acces refusé ! Veuillez vous connectez !") {
-
-                window.location.replace('index.php');
-                return;
-                
-            }
+            MyFunctions.checkAuthentifiedUser(data);
 
             $('#'+textAreaID).focus();
 
@@ -550,6 +515,8 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
         data: finaliseAudit,
         dataType: 'JSON',
         success: function(dataGraphique) {
+
+            MyFunctions.checkAuthentifiedUser(dataGraphique);
             
             content.innerHTML = "<div id='graphique-resultats'></div><div id='tableauContainer'></div>";
 
@@ -598,12 +565,7 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
         dataType: 'text',
         success: function(dataTableau) {
 
-            if(dataTableau == "Acces refusé ! Veuillez vous connectez !") {
-
-                window.location.replace('index.php');
-                return;
-                
-            }
+            MyFunctions.checkAuthentifiedUser(dataTableau);
 
             if(dataTableau !== "") {
 
@@ -644,12 +606,7 @@ function startEval() {
         dataType: 'text',
         success: function(data) {
             
-            if(data == "Acces refusé ! Veuillez vous connectez !") {
-
-                window.location.replace('index.php');
-                return;
-                
-            }
+            MyFunctions.checkAuthentifiedUser(data);
 
             contentWindow.innerHTML = data;
 
@@ -766,12 +723,7 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
         dataType: 'text',
         success: function(data) {
 
-            if(data == "Acces refusé ! Veuillez vous connectez !") {
-
-                window.location.replace('index.php');
-                return;
-                
-            }
+            MyFunctions.checkAuthentifiedUser(data);
 
             if(textArea.value !== "") {
 
@@ -810,12 +762,7 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
             dataType: 'text',
             success: function(data) {
                 
-                if(data == "Acces refusé ! Veuillez vous connectez !") {
-
-                    window.location.replace('index.php');
-                    return;
-                    
-                }
+                MyFunctions.checkAuthentifiedUser(data);
 
             },
     
@@ -855,6 +802,8 @@ function addReason(evalNumber, question, reason, textareaID) {
         data: myReason,
         dataType: 'text',
         success: function(data) {
+
+            MyFunctions.checkAuthentifiedUser(data);
         
         },
 
@@ -924,12 +873,7 @@ function sendEval(eval) {
             dataType: 'JSON',
             success: function(data) {
                 
-                if(data == "Acces refusé ! Veuillez vous connectez !") {
-
-                    window.location.replace('index.php');
-                    return;
-                    
-                }
+                MyFunctions.checkAuthentifiedUser(data);
 
                 content.innerHTML = "<div id='graphique-resultats'></div><div id='tableauContainer'></div>";
 
@@ -973,12 +917,7 @@ function sendEval(eval) {
             dataType: 'text',
             success: function(dataTableau) {
 
-                if(dataTableau == "Acces refusé ! Veuillez vous connectez !") {
-
-                    window.location.replace('index.php');
-                    return;
-                    
-                }
+                MyFunctions.checkAuthentifiedUser(dataTableau);
 
                 if(dataTableau !== "") {
 

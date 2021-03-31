@@ -16,12 +16,7 @@ function showChart(autoeval_number, date) {
             dataType: 'JSON',
             success: function(dataGraphique) {
 
-                if(dataGraphique == "Acces refusé ! Veuillez vous connectez !") {
-
-                    window.location.replace('index.php');
-                    return;
-                    
-                }
+                MyFunctions.checkAuthentifiedUser(dataGraphique);
 
                 contentWindow.innerHTML = "<div id='graphique-resultats'></div><div id='dateGraphique'>Effectuée le "+date+".</div><div id='tableauContainer'></div>";
 
@@ -63,12 +58,7 @@ function showChart(autoeval_number, date) {
             dataType: 'text',
             success: function(dataTableau) {
 
-                if(dataTableau == "Acces refusé ! Veuillez vous connectez !") {
-
-                    window.location.replace('index.php');
-                    return;
-                    
-                }
+                MyFunctions.checkAuthentifiedUser(dataTableau);
 
                 if(dataTableau !== "") {
 

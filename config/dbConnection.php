@@ -1,6 +1,11 @@
 <?php
 
+// Session init
+
 session_start();
+
+
+// Try connecting to the database or return the error code
 
 try {
 

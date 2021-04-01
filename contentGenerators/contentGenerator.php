@@ -3,12 +3,16 @@
 require_once('../config/dbConnection.php');
 require_once('../config/dateConvert.php');
 
+// Return a non-authorised access message to ajax, which will head the user to the index(login) page if that happens.
+
 if(!isset($_SESSION['ID'])) {
 
     echo "Acces refusé ! Veuillez vous connectez !";
     return;
 
 }
+
+// Audit start container generator
 
 if(isset($_POST['auditer'])) {
 
@@ -67,15 +71,23 @@ if(isset($_POST['auditer'])) {
 
 <?php }
 
+// User result space generator
+
 if(isset($_POST['monespace'])) { 
 
-    $checkEval = $db->prepare('SELECT Evaluation_Number, DateAndHour FROM Autoevaluations WHERE User_ID = :user AND Completed = true ORDER BY DateAndHour DESC');
+    // Get the results of the last 15 autoevaluations the user completed 
+
+    $checkEval = $db->prepare('SELECT Evaluation_Number, DateAndHour FROM Autoevaluations WHERE User_ID = :user AND Completed = true ORDER BY DateAndHour DESC LIMIT 15');
     $checkEval->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
     $checkEval->execute();
 
-    $countEvals = $checkEval->rowCount(); ?>
+    // Count the number of results
+    
+    $countEvals = $checkEval->rowCount();
 
-    <?php if($countEvals == 0) { ?>
+    // If the number of results is equal to 0 shows a error message
+
+    if($countEvals == 0) { ?>
 
         <div id="errorMessage">
             Aucun résultat à afficher pour le moment !
@@ -105,11 +117,15 @@ if(isset($_POST['monespace'])) {
 
      <?php } ?>
 
-<?php } ?>
+<?php }
 
-<?php if(isset($_POST['autoevaluation'])) { ?>
+// Autoeval generator
+
+if(isset($_POST['autoevaluation'])) { ?>
 
     <?php
+
+    // check if a autoevaluation is actually in progress
 
     $selectEvalInProgress = $db->prepare('SELECT Evaluation_Number FROM Autoevaluations WHERE User_ID = :user AND Completed = false');
     $selectEvalInProgress->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
@@ -117,9 +133,13 @@ if(isset($_POST['monespace'])) {
 
     $countResult = $selectEvalInProgress->rowCount();
 
+    // if not set the eval number to 1
+
     if($countResult == 0) {
 
         $evaluationNumber = 1;
+    
+    // Get the eval number of the evaluation in progress
 
     } else {
 
@@ -128,6 +148,10 @@ if(isset($_POST['monespace'])) {
 
     }
 
+    /*   
+       If a autoevaluation is in progress, retrieve the answer already submitted from the database
+       as well as the active questions associated
+    */
     if($countResult == 1) {
 
         $countQuestions = $db->query('SELECT COUNT(*) AS nb_questions FROM QuestionsAutoevaluation WHERE Active = true');
@@ -220,8 +244,12 @@ if(isset($_POST['monespace'])) {
             <?php } ?>
         </form>
 
+    
+    <?php 
 
-    <?php } else { ?>
+    // Shows the start autoeval container
+
+    } else { ?>
     
         <div id="startContainer">
             <div class="autoevaluation-logos-container">

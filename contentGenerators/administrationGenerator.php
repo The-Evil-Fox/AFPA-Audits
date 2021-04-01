@@ -4,6 +4,8 @@ require_once('../config/dbConnection.php');
 require_once('../config/roles.php');
 require_once('../config/dateConvert.php');
 
+// Return a non-authorised access message to ajax, which will head the user to the index(login) page if that happens.
+
 if(!isset($_SESSION['ID'])) {
 
     echo "Acces refusé ! Veuillez vous connectez !";
@@ -11,7 +13,11 @@ if(!isset($_SESSION['ID'])) {
 
 }
 
+// News generation
+
 if(isset($_POST['actualites'])) {
+
+    // Get the last 15 autoevaluations and/or audits completed in the actualites table
 
     $reqActus = $db->query(
         "SELECT u.ID, u.Name, u.FirstName, a.Actualite, a.Eval_Number, a.Audit_Number, a.DateAndHour, f.Localisation,
@@ -23,9 +29,11 @@ if(isset($_POST['actualites'])) {
             (SELECT u.FirstName AS 'Assistant1FirstName' FROM Users u WHERE a.Assistant2 = u.ID) AS 'Assistant2FirstName'
         FROM Actualites a 
         LEFT JOIN Users u ON a.User = u.ID 
-        LEFT JOIN Facilities f ON a.Facility = f.ID ORDER BY DateAndHour DESC"
+        LEFT JOIN Facilities f ON a.Facility = f.ID ORDER BY DateAndHour DESC LIMIT 15"
     );
     $countActus = $reqActus->rowCount();
+
+    // if no records are found -> a error message is displayed instead
 
     if($countActus == 0) { ?>
 
@@ -72,9 +80,16 @@ if(isset($_POST['actualites'])) {
 
 }
 
+// Autoevaluation editor generator
+
 if(isset($_POST['autoevaluation'])) {
 
+    // Get all the autoevaluation questions and their categories
+
     $getQuestions = $db->query('SELECT qa.ID, qa.Question, qa.Category, qa.Active, cqa.Name FROM QuestionsAutoevaluation qa LEFT JOIN CategoriesQuestionsAutoevaluation cqa ON qa.Category = cqa.Category ORDER BY cqa.Category, qa.ID ASC');
+
+    // Get all the categories for the question add toolbar
+
     $getCategories = $db->query('SELECT * FROM CategoriesQuestionsAutoevaluation ORDER BY Category ASC');
 
 ?>
@@ -83,6 +98,7 @@ if(isset($_POST['autoevaluation'])) {
     <div id="titleContainer">
         <h3>Modification de l'autoévaluation</h3>
     </div>
+    <!-- Question add toolbar -->
     <div class="userInputBar">
         <button id="autoevalAddQuestionButton" onclick="showAdminForm('autoeval')"><i class="fas fa-plus"></i> Ajouter une question</button>
         <div class="autoeval-param-ajoutquestion" id="autoevalFormContainer">
@@ -137,9 +153,16 @@ if(isset($_POST['autoevaluation'])) {
 
 }
 
+// Documents generator
+
 if(isset($_POST['documents'])) {
 
+    // Get all the documents
+
     $getDocuments = $db->query('SELECT * FROM Documents ORDER BY Documents.Document ASC');
+
+    // Count the number of results
+
     $countDocuments = $getDocuments->rowCount();
 
 ?>
@@ -154,6 +177,7 @@ if(isset($_POST['documents'])) {
     </form>
     </div>
 
+    <!-- If the number of results is different from 0 shows the document in a table -->
     <?php if($countDocuments !== 0) { ?>
         
         <table id="tableauDocuments">
@@ -180,6 +204,7 @@ if(isset($_POST['documents'])) {
             </tbody>
         </table>
 
+    <!-- shows a error message in a table -->
     <?php } else { ?>
 
         <table id="tableauDocuments">
@@ -199,8 +224,13 @@ if(isset($_POST['documents'])) {
 
 if(isset($_POST['audit'])) {
 
+    // Get all the audit questions and their categories
+
     $getQuestions = $db->query('SELECT qa.ID, qa.Question, qa.Evidence, qa.Active, cqa.Name FROM QuestionsAudit qa LEFT JOIN 
     CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID ORDER BY cqa.ID, qa.ID ASC');
+
+    // Get all the categories for the question add toolbar
+    
     $getCategories = $db->query('SELECT * FROM CategoriesQuestionsAudit ORDER BY ID ASC');
 
 ?>
@@ -263,6 +293,11 @@ if(isset($_POST['audit'])) {
 <?php }
 
 if(isset($_POST['utilisateurs'])) {
+
+    /*
+       Select the id, name and first of all the users who have the role 1 (formateur) in the database
+       to display them in the user select toolbar    
+   */
 
     $getUsers = $db->query('SELECT ID, Name, FirstName FROM Users WHERE Role = 1');
 

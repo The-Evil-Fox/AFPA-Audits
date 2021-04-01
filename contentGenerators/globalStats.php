@@ -4,6 +4,8 @@ require_once('../config/dbConnection.php');
 require_once('../config/roles.php');
 require_once('../config/dateConvert.php');
 
+// Return a non-authorised access message to ajax, which will head the user to the index(login) page if that happens.
+
 if(!isset($_SESSION['ID'])) {
 
     echo "Acces refusé ! Veuillez vous connectez !";
@@ -11,10 +13,15 @@ if(!isset($_SESSION['ID'])) {
 
 }
 
+
+// Counting the total number of finalised audits
+
 if(isset($_POST['countAudits'])) {
 
     $selectAudits = $db->query('SELECT * FROM Audits WHERE Completed = 1');
     $countAudits = $selectAudits->rowCount();
+
+    // If the count is equal to 0 shows a error message
 
     if($countAudits == 0) { ?>
 

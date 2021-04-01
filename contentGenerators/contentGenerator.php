@@ -3,7 +3,7 @@
 require_once('../config/dbConnection.php');
 require_once('../config/dateConvert.php');
 
-// Return a non-authorised access message to ajax, which will head the user to the index(login) page if that happens.
+// Returns a non-authorised access message to ajax, which will head the user to the index(login) page if that happens.
 
 if(!isset($_SESSION['ID'])) {
 
@@ -14,20 +14,23 @@ if(!isset($_SESSION['ID'])) {
 
 // Audit start container generator
 
-// Test
-
 if(isset($_POST['auditer'])) {
+
+    // Gets the list of all the teachers
 
     $getFormateurs = $db->query('SELECT ID, Name, FirstName FROM Users WHERE Role = 1'); ?>
 
     <div id="startContainer">
+        <!-- Form logos -->
         <div class="audit-logos-container">
             <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
             <img class="logo-afpa" src="assets/logoAFPABlack.png" alt="logo afpa blanc">
         </div>
+        <!-- Title of the content actually displayed -->
         <div class="form-title">
             <h3>Audit formateur</h3>
         </div>
+        <!-- Audit helper content -->
         <div class="helper-container-start-screen">
             <div class="helper-content">
                 Toutes les questions doivent être répondues.
@@ -57,9 +60,10 @@ if(isset($_POST['auditer'])) {
                 Durée moyenne: 1 heure minimum.
             </div>
         </div>
+        <!-- Form teacher to audit selector -->
         <div class="audit-selectuser-buttonstart-container">
             <select id="auditedUser" onchange="checkAuditInProgress(this.value)">
-                <option value="">Veuillez selectionner l'utilisateur que vous voulez auditer</option>
+                <option value="">Veuillez sélectionner l'utilisateur que vous voulez auditer</option>
                 <?php while($allFormateurs = $getFormateurs->fetch()) {?>
                     <option value="<?= $allFormateurs['ID']; ?>"><?= $allFormateurs['Name'] . " " . $allFormateurs['FirstName']; ?></option>
                 <?php } ?>

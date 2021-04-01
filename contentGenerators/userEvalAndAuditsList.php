@@ -3,15 +3,28 @@
 require_once('../config/dbConnection.php');
 require_once('../config/dateConvert.php');
 
+// Gets the list of all the autoevaluations of the selected user
+
 if(isset($_POST['getEvals']) && isset($_POST['user']) && !empty($_POST['user'])) {
 
-    $getEvals = $db->prepare('SELECT u.ID, u.Name, u.FirstName, a.Evaluation_Number, a.DateAndHour FROM Autoevaluations a LEFT JOIN Users u ON a.User_ID = u.ID WHERE User_ID = :user AND a.Completed = true ORDER BY DateAndHour DESC LIMIT 10');
+    $getEvals = $db->prepare(
+        'SELECT u.ID, u.Name, u.FirstName, a.Evaluation_Number, a.DateAndHour 
+        FROM Autoevaluations a LEFT JOIN Users u ON a.User_ID = u.ID WHERE User_ID = :user 
+        AND a.Completed = true ORDER BY DateAndHour DESC LIMIT 10'
+    );
     $getEvals->bindParam(':user', $_POST['user'], PDO::PARAM_INT);
     $getEvals->execute();
 
-    $countEvals = $getEvals->rowCount(); ?>
+    // Count the number of autoevaluations completed
 
-    <?php if($countEvals !== 0) { ?>
+    $countEvals = $getEvals->rowCount();
+
+    /*
+       If the count is different from 0 shows a table containing the infos of the 
+       evaluation with a button to see the result for each
+    */
+
+    if($countEvals !== 0) { ?>
 
         <h3>Liste des autoévaluations</h3>
         <table id="tableauResultatsAutoevalUtilisateur">
@@ -31,13 +44,19 @@ if(isset($_POST['getEvals']) && isset($_POST['user']) && !empty($_POST['user']))
             </tbody>
         </table>
 
-    <?php } else { ?>
+    <?php 
+
+    // Else shows a error message
+
+    } else { ?>
 
         <div id="errorMessage">Cet utilisateur ne s'est pas encore autoévalué !</div>
     
     <?php }
 
 }
+
+// Gets the list of all the audits of the selected user with the infos about the assistants and localisation
 
 if(isset($_POST['getAudits']) && isset($_POST['user']) && !empty($_POST['user'])) { 
 
@@ -57,9 +76,18 @@ if(isset($_POST['getAudits']) && isset($_POST['user']) && !empty($_POST['user'])
     $getAudits->bindParam(':user', $_POST['user'], PDO::PARAM_INT);
     $getAudits->execute();
 
-    $countAudits = $getAudits->rowCount(); ?>
+    // Count the number of completed audits
 
-    <?php if($countAudits !== 0) { ?>
+    $countAudits = $getAudits->rowCount();
+
+    /*
+       If the count is different from 0 shows a table containing the date and hour of the 
+       audits with a button to see the result for each. The localisation and assistants are passed as
+       parameters to javascript and will be displayed when the chart will be generated if the user decides
+       to show the result of the audit
+    */
+
+    if($countAudits !== 0) { ?>
 
         <h3>Liste des audits</h3>
         <table id="tableauResultatsAuditsUtilisateur">
@@ -79,12 +107,14 @@ if(isset($_POST['getAudits']) && isset($_POST['user']) && !empty($_POST['user'])
             </tbody>
         </table>
 
-    <?php } else { ?>
+    <?php
+
+    // Else shows a error message
+
+    } else { ?>
 
         <div id="errorMessage">Cet utilisateur n'a pas encore été audité !</div>
     
     <?php }
 
-}
-
-?>
+} ?>

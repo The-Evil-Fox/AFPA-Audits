@@ -2,6 +2,8 @@
 
 require_once('../config/dbConnection.php');
 
+// Returns a non-authorised access message to ajax, which will head the user to the index(login) page if that happens.
+
 if(!isset($_SESSION['ID'])) {
 
     echo "Acces refusé ! Veuillez vous connectez !";
@@ -9,7 +11,11 @@ if(!isset($_SESSION['ID'])) {
 
 }
 
+// Gets the data of the selected audit in the userEvalAndAuditsList page (administration -> resultats utilisateurs)
+
 if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit']) && !empty($_POST['audit']) && !isset($_POST['getNonCompliances'])) {
+
+    // Count the number of compliances for each completed audits and stock the result as a int in $compliances
 
     $countCompliances = $db->prepare('SELECT count(*) as nb_compliance FROM AuditsReports WHERE Audit_Number = :auditNumber AND Report = "Conforme" AND User_ID = :user');
     $countCompliances->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
@@ -20,6 +26,8 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
 
     $compliances = (int) $resultCount1['nb_compliance'];
 
+    // Count the number of non compliances for each completed audits and stock the result as a int in $nonCompliances
+
     $countNonCompliances = $db->prepare('SELECT count(*) as nb_noncompliance FROM AuditsReports WHERE Audit_Number = :auditNumber AND Report = "NC" AND User_ID = :user');
     $countNonCompliances->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
     $countNonCompliances->bindParam(':user', $_POST['userID'], PDO::PARAM_INT);
@@ -28,6 +36,8 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
     $resultCount2 = $countNonCompliances->fetch();
 
     $nonCompliances = (int) $resultCount2['nb_noncompliance'];
+
+    // Count the number of not applicables for each completed audits and stock the result as a int in $notApplicables
 
     $countNotApplicable = $db->prepare('SELECT count(*) as nb_notapplicable FROM AuditsReports WHERE Audit_Number = :auditNumber AND Report = "NA" AND User_ID = :user');
     $countNotApplicable->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
@@ -38,6 +48,8 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
 
     $notApplicables = (int) $resultCount3['nb_notapplicable'];
 
+    // Count the number of not currently available for each completed audits and stock the result as a int in $NDA
+
     $countNDA = $db->prepare('SELECT count(*) as nb_na FROM AuditsReports WHERE Audit_Number = :auditNumber AND Report = "NDA" AND User_ID = :user');
     $countNDA->bindParam(':auditNumber', $_POST['audit'], PDO::PARAM_INT);
     $countNDA->bindParam(':user', $_POST['userID'], PDO::PARAM_INT);
@@ -46,6 +58,11 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
     $resultCount4 = $countNDA->fetch();
 
     $NDA = (int) $resultCount4['nb_na'];
+
+    /* 
+       Checks each result defined above and if it's not equal to 0: 
+       Create an array containing the data to display on the chart with the styling parameters
+    */
 
     if($compliances !== 0) {
 
@@ -79,54 +96,51 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
 
     }
 
+    // Creates a empty array wich will contain the data to send as a response
+
     $dataPoints = array(
 
     );
 
-    if(isset($compliancesTab)) {
-    
-        if(is_array($compliancesTab)) {
+    /*
+       Checks if each of our expected results exists and if they are stored in a array.
+       If they do, push the array into the $datapoints array that will be sent back as a response
+    */
 
-            array_push($dataPoints, $compliancesTab);
+    if(isset($compliancesTab) && is_array($compliancesTab)) {
 
-        }
-
-    }
-
-    if(isset($nonCompliancesTab)) {
-
-        if(is_array($nonCompliancesTab)) {
-
-            array_push($dataPoints, $nonCompliancesTab);
-
-        }
+        array_push($dataPoints, $compliancesTab);
 
     }
 
-    if(isset($notApplicablesTab)) {
-    
-        if(is_array($notApplicablesTab)) {
+    if(isset($nonCompliancesTab) && is_array($nonCompliancesTab)) {
 
-            array_push($dataPoints, $notApplicablesTab);
-
-        }
+        array_push($dataPoints, $nonCompliancesTab);
 
     }
 
-    if(isset($NDATab)) {
-    
-        if(is_array($NDATab)) {
+    if(isset($notApplicablesTab) && is_array($notApplicablesTab)) {
 
-            array_push($dataPoints, $NDATab);
-
-        }
+        array_push($dataPoints, $notApplicablesTab);
 
     }
+
+    if(isset($NDATab) && is_array($NDATab)) {
+
+        array_push($dataPoints, $NDATab);
+
+    }
+
+    // Returns the $datapoints array, encoded in JSON
 
     echo json_encode($dataPoints, JSON_NUMERIC_CHECK);
 
 }
 
+/*
+   Creates and shows 3 table containing all the questions reported as non compliance,
+   not applicable or not currently available for the selected audit
+*/
 if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit']) && !empty($_POST['audit']) && isset($_POST['getNonCompliances'])) {
 
     $countNonCompliances = $db->prepare("SELECT COUNT(ar.Report) as nbr_non_compliances FROM AuditsReports ar JOIN QuestionsAudit qa ON ar.Question = qa.ID WHERE ar.User_ID = :user AND ar.Audit_Number = :auditNumber AND ar.Report = 'NC'");
@@ -183,9 +197,13 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
 
     }
 
-    if($numberNonCompliances !== 0 || $numberNotApplicables !== 0 || $numberNDA !== 0) { ?>
+    // Only create the tables if there is at least 1 non compliance or 1 not applicable or 1 not currently available
 
-        <?php if($numberNonCompliances !== 0) { ?>
+    if($numberNonCompliances !== 0 || $numberNotApplicables !== 0 || $numberNDA !== 0) {
+
+        // Creates and shows the non compliances table if there is at least 1 non compliance
+
+        if($numberNonCompliances !== 0) { ?>
             <table id="tableauNonConformites">
                 <thead>
                     <tr>
@@ -202,8 +220,11 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
                     <?php } ?>
                 </tbody>
             </table>
-        <?php } ?>
-        <?php if($numberNotApplicables !== 0) { ?>
+        <?php }
+
+        // Creates and shows the not applicables table if there is at least 1 not applicable
+
+        if($numberNotApplicables !== 0) { ?>
             <table id="tableauNonApplicables">
                 <thead>
                     <tr>
@@ -218,8 +239,11 @@ if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['audit'])
                     <?php } ?>
                 </tbody>
             </table>
-        <?php } ?>
-        <?php if($numberNDA !== 0) { ?>
+        <?php }
+
+        // Creates and shows the not currently available table if there is at least 1 not currently available
+
+        if($numberNDA !== 0) { ?>
             <table id="tableauNonDisponiblesActuellement">
                 <thead>
                     <tr>

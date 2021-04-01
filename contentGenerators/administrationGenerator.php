@@ -4,7 +4,7 @@ require_once('../config/dbConnection.php');
 require_once('../config/roles.php');
 require_once('../config/dateConvert.php');
 
-// Return a non-authorised access message to ajax, which will head the user to the index(login) page if that happens.
+// Returns a non-authorised access message to ajax, which will head the user to the index(login) page if that happens.
 
 if(!isset($_SESSION['ID'])) {
 

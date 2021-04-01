@@ -3,6 +3,8 @@
 require_once('../config/dbConnection.php');
 require_once('../config/roles.php');
 
+// Returns a non-authorised access message to ajax, which will head the user to the index(login) page if that happens.
+
 if(!isset($_SESSION['ID'])) {
 
     echo "Acces refusé ! Veuillez vous connectez !";
@@ -10,13 +12,19 @@ if(!isset($_SESSION['ID'])) {
 
 }
 
+// detects if the user pressed the button to get the administration navbar
+
 if(isset($_POST['administration'])) {
+
+    // Gets the role of the user
 
     $checkRole = $db->prepare('SELECT Role FROM Users WHERE ID = :user');
     $checkRole->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
     $checkRole->execute();
 
     $countResult = $checkRole->rowCount();
+
+    // If the user doesn't exist in the database he is sent back to the login page
 
     if($countResult != 1) {
 
@@ -27,6 +35,8 @@ if(isset($_POST['administration'])) {
 
     $userRole = $checkRole->fetch();
 
+    // If the user is a teacher he gets a error message as a response
+
     if(isFormateur($userRole['Role'])) { ?>
 
         <div class="card text-center">
@@ -35,7 +45,11 @@ if(isset($_POST['administration'])) {
             </div>
         </div>
 
-    <?php } else { ?>
+    <?php 
+    
+    // Else returns the administration navbar. The basic navbar will then be replaced with this one by ajax 
+
+    } else { ?>
 
         <a onclick="getNavbar('exitAdministration')" href="#exitAdministration"><i class="fas fa-toggle-on"></i><span>Administration</span></a>
         <a onclick="showAdministration('actualites')" href="#actualites"><i class="fas fa-rss-square"></i><span>Fil d'actualité</span></a>
@@ -47,11 +61,16 @@ if(isset($_POST['administration'])) {
     
     <?php } ?>
 
-<?php } ?>
+<?php }
 
-<?php if(isset($_POST['exitAdministration'])) { 
+// Detects if the user pressed the button to exit the administration navbar
 
-    $userAccount = $db->prepare('SELECT * FROM Users WHERE ID = :userid');
+if(isset($_POST['exitAdministration'])) { 
+
+    // Returns the basic navbar. The administration navbar will then be replaced with this one by ajax 
+    // But still needs to select the role of the user to verify what he can and cannot see in the basic navbar
+
+    $userAccount = $db->prepare('SELECT Role FROM Users WHERE ID = :userid');
     $userAccount->bindParam(':userid', $_SESSION['ID'], PDO::PARAM_INT);
     $userAccount->execute();
 

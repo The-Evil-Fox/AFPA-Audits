@@ -13,10 +13,11 @@ require_once('config/roles.php');
   <link rel="stylesheet" href="stylesheets/login.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
   <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
-  <title>Afpa: Formation professionnelle</title>
+  <title>Afpa: outil qualité</title>
 </head>
 <body>
   <div class="login-page">
+    <!-- Login form -->
     <div class="form">
       <form class="login-form" id="form-login">
           <h3><a class="navbar-brand" href="<?= $_SERVER['PHP_SELF']; ?>" title="logo AFPA">
@@ -27,7 +28,7 @@ require_once('config/roles.php');
           <input type="password" placeholder="Mot de passe" id="passwordInput"/>
           <button>Connexion</button>
       </form>
-      <button class="btn-2" onclick="promptEmail()">Mot de passe oublié ?</button>
+      <button class="btn-2">Mot de passe oublié ?</button>
     </div>
   </div>
   <script src="scripts/login.js"></script>

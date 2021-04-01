@@ -1,10 +1,15 @@
+// Shows the result of the autoeval the user clicked on
+
 function showChart(autoeval_number, date) {
     
     $(document).ready(function() {
         
         let evalNumber = autoeval_number;
 
-        showLoading(contentWindow);
+        myFunctions.showLoading(contentWindow);
+
+        // First ajax request to get the chart data
+        // Datatype must be JSON or it will not work
 
         $.ajax({
 
@@ -27,7 +32,9 @@ function showChart(autoeval_number, date) {
                     var x = document.getElementsByClassName("canvasjs-chart-credit");
                     var i;
                     for (i = 0; i < x.length; i++) {
-                    x[i].style.display = "none";
+
+                        x[i].style.display = "none";
+                        
                     }
                     
                 }
@@ -37,6 +44,8 @@ function showChart(autoeval_number, date) {
                     hideMessages();
 
                 }, 15);
+
+                // Second ajax request if the first one was successful, to get the tab containing the non compliances, etc...
 
                 $.ajax({
 

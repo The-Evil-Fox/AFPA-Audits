@@ -30,6 +30,12 @@ function showTip() {
 
 }
 
+/* 
+   Checks if a audit is in progress
+   if true returns a "continue audit" button
+   else returns a form to create a audit
+*/
+
 function checkAuditInProgress(user) {
 
     let spanMessage = document.getElementById('auditSelectMessage');
@@ -175,6 +181,8 @@ function checkAuditInProgress(user) {
 
 }
 
+// Shows a second select while creating a audit if a first assistant is selected
+
 function showSecondAssistantSelect(assistant1) {
 
     if(assistant1 !== "") {
@@ -220,6 +228,8 @@ function showSecondAssistantSelect(assistant1) {
 
 }
 
+// Starts or resume a audit
+
 function startAudit(buttonvalue) {
 
     let spanMessage = document.getElementById('auditSelectMessage');
@@ -227,6 +237,11 @@ function startAudit(buttonvalue) {
 
     selectauditedUser = document.getElementById('auditedUser');
     auditedUserID = selectauditedUser.value;
+
+    /* 
+       The datasend array is different if a user continue a audit
+       Because creating a new one requires differents parameters
+    */
 
     if(buttonvalue == "Continuer") {
 
@@ -250,6 +265,8 @@ function startAudit(buttonvalue) {
             assistantAudit2 = "";
 
         }
+
+        // Shows a error message if no localisation is selected by user while creating a audit
 
         if(auditedCenter == "") {
 
@@ -307,7 +324,9 @@ function startAudit(buttonvalue) {
 
     startContainer.style.opacity = 0;
     startContainer.style.display = "none";
-    showLoading(contentWindow);
+    myFunctions.showLoading(contentWindow);
+
+    // Get the audit (created or resumed) and inject it in the content window
 
     $.ajax({
 
@@ -332,6 +351,8 @@ function startAudit(buttonvalue) {
     });
 
 }
+
+// Update the report on a question in the audit
 
 function updateReport(userID, audit, question, report, textAreaID) {
 
@@ -390,6 +411,8 @@ function updateReport(userID, audit, question, report, textAreaID) {
 
 }
 
+// Insert or update the observation on a question in the audit
+
 function updateObservation(userID, audit, question, observation, textAreaID) {
 
     if(observation.length <= 3) {
@@ -436,6 +459,8 @@ function updateObservation(userID, audit, question, observation, textAreaID) {
 
 }
 
+// Finalise the audit and get the chart witch the tables containing the non compliances, etc...
+
 function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2) {
 
     let content = document.getElementById('content');
@@ -447,6 +472,10 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
 
         let number = i;
         number++;
+
+        /* Checks if all the radio button (Reports) are checked. 
+           If not then a error message appears to the user. The function is also quitted
+        */
 
         if (!$("input[name='"+number+"']:checked").val()) {
             messageWindow.innerHTML = "Veuillez cochez une réponse pour la question numéro " + number + " !";
@@ -461,6 +490,10 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
             }, 2500);
             return false;
          }
+
+        /* Checks if all the textarea (Observations) displayed are filled. 
+           If not then a error message appears to the user. The function is also quitted
+        */
 
         if(allTextAreas[i].style.display == "block" && allTextAreas[i].value == "") {
 
@@ -490,6 +523,8 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
         auditor
     }
 
+    // Insert the first and second assistants in the datasend if they exist
+
     if(typeof(assistant1) !== "undefined" && typeof(assistant2) !== "undefined") {
         
         finaliseAudit = {
@@ -502,6 +537,7 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
             assistant2
         }
 
+    // Insert the first assistant in the datasend if he exist
     } else if(typeof(assistant1) !== "undefined" && typeof(assistant2) == "undefined") {
 
         finaliseAudit = {
@@ -514,6 +550,9 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
         }
 
     }
+
+    // First ajax request to get the chart data
+    // Datatype must be JSON or it will not work
 
     $.ajax({
 
@@ -546,47 +585,49 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
                 
             }, 15);
 
-        },
+            // Second ajax request if the first one was successful, to get the tab containing the non compliances, etc...
 
-        error: function(xhr, textStatus, error) {
+            method = "getNonCompliances";
 
-            myFunctions.showError(contentWindow, xhr);
-            
-        }
-
-    });
-
-    method = "getNonCompliances";
-
-    finaliseAudit = {
-        method,
-        audit,
-        userID
-    }
-
-    $.ajax({
-
-        type: 'POST',
-        url: 'traitements/traitementAudit.php',
-        data: finaliseAudit,
-        dataType: 'text',
-        success: function(dataTableau) {
-
-            myFunctions.checkAuthentifiedUser(dataTableau);
-
-            if(dataTableau !== "") {
-
-                setTimeout(() => {
-
-                    document.getElementById('tableauContainer').style.display = "block";
-                    document.getElementById('tableauContainer').innerHTML = dataTableau;
-
-                }, 750);
-
+            finaliseAudit = {
+                method,
+                audit,
+                userID
             }
+        
+            $.ajax({
+        
+                type: 'POST',
+                url: 'traitements/traitementAudit.php',
+                data: finaliseAudit,
+                dataType: 'text',
+                success: function(dataTableau) {
+        
+                    myFunctions.checkAuthentifiedUser(dataTableau);
+        
+                    if(dataTableau !== "") {
+        
+                        setTimeout(() => {
+        
+                            document.getElementById('tableauContainer').style.display = "block";
+                            document.getElementById('tableauContainer').innerHTML = dataTableau;
+        
+                        }, 1500);
+        
+                    }
+        
+                },
+                
+                error: function(xhr, textStatus, error) {
+        
+                    myFunctions.showError(contentWindow, xhr);
+                    
+                }
+        
+            });
 
         },
-        
+
         error: function(xhr, textStatus, error) {
 
             myFunctions.showError(contentWindow, xhr);
@@ -597,13 +638,17 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
 
 }
 
+// Starts a autoevaluation
+
 function startEval() {
 
     let startContainer = document.getElementById('startContainer');
 
     startContainer.style.opacity = 0;
     startContainer.style.display = "none";
-    showLoading(contentWindow);
+    myFunctions.showLoading(contentWindow);
+
+    // Gets the autoevaluation and inject it in the content window
 
     $.ajax({
 
@@ -629,6 +674,8 @@ function startEval() {
 
 }
 
+// Show the textarea in the autoevaluation if the user pressed the 'non' radio button so he can fill in the reason
+
 function showTextArea(textAreaId, mustBeDisplayed) {
 
     let questionTextArea = document.getElementById(textAreaId);
@@ -651,6 +698,8 @@ function showTextArea(textAreaId, mustBeDisplayed) {
     }
     
 }
+
+// Shows the previous question
 
 function previousQuestion(partNumber) {
 
@@ -678,6 +727,8 @@ function previousQuestion(partNumber) {
 
 }
 
+// Shows the next question
+
 function nextQuestion(partNumber) {
 
     if(document.getElementById('helper').style.display == "flex") {
@@ -704,6 +755,8 @@ function nextQuestion(partNumber) {
 
 }
 
+// Add or update the answer on the autoevaluation 
+
 function updateAnswer(evalNumber, question, answer, textAreaID) {
 
     let textArea = document.getElementById(textAreaID);
@@ -715,6 +768,10 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
         question,
         answer
     };
+
+    /* This datasend will be used with ajax to see if the question was already answered
+       as 'non' and if a reason exists in the database
+    */
 
     checkReason = {
         evalNumber,
@@ -761,6 +818,8 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
 
     if(answer == "Oui") {
 
+        // Check with ajax if the answer had no reason associated to it and delete it if it's true
+
         $.ajax({
 
             type: 'POST',
@@ -785,7 +844,11 @@ function updateAnswer(evalNumber, question, answer, textAreaID) {
 
 }
 
+// Add or update the reason to a non compliance when the user fill in the textarea
+
 function addReason(evalNumber, question, reason, textareaID) {
+
+    // If the reason is lower than 3 letters a error message is displayed in a alert box
 
     if(reason.length <= 3) {
 
@@ -824,6 +887,8 @@ function addReason(evalNumber, question, reason, textareaID) {
 
 }
 
+// Finalise the autoevaluation and get the charts with the table showing the non compliances
+
 function sendEval(eval) {
 
     $(document).ready(function() {
@@ -838,6 +903,10 @@ function sendEval(eval) {
             let number = i;
             number++;
 
+            /* Checks if all the radio button (Reports) are checked. 
+               If not then a error message appears to the user. The function is also quitted
+            */
+
             if (!$("input[name='"+number+"']:checked").val()) {
                 messageWindow.innerHTML = "Veuillez cochez une réponse pour la question numéro " + number + " !";
                 messageWindow.style.display = "flex";
@@ -851,6 +920,9 @@ function sendEval(eval) {
                 }, 2500);
                 return false;
              }
+            /* Checks if all the textarea (Reasons) displayed are filled. 
+               If not then a error message appears to the user. The function is also quitted
+            */
 
             if(allTextAreas[i].style.display == "block" && allTextAreas[i].value == "") {
 
@@ -871,6 +943,9 @@ function sendEval(eval) {
         }
 
         finalisation = {eval};
+
+        // First ajax request to get the chart data
+        // Datatype must be JSON or it will not work
 
         $.ajax({
 
@@ -902,41 +977,43 @@ function sendEval(eval) {
                     hideMessages();
                     
                 }, 15);
+
+                // Second ajax request if the first one was successful, to get the tab containing the non compliances, etc...
+
+                $.ajax({
+
+                    type: 'POST',
+                    url: 'traitements/traitementAutoeval.php',
+                    data: {
+                        'getNonCompliances': true,
+                        'evalNumber' : eval 
+                    }, 
+                    dataType: 'text',
+                    success: function(dataTableau) {
+        
+                        myFunctions.checkAuthentifiedUser(dataTableau);
+        
+                        if(dataTableau !== "") {
+        
+                            setTimeout(() => {
+        
+                                document.getElementById('tableauContainer').style.display = "block";
+                                document.getElementById('tableauContainer').innerHTML = dataTableau;
+        
+                            }, 1500);
+        
+                        }
+        
+                    },
+                    
+                    error: function(xhr, textStatus, error) {
+        
+                        myFunctions.showError(contentWindow, xhr);
+                        
+                    }
+        
+                });
             
-            },
-            
-            error: function(xhr, textStatus, error) {
-
-                myFunctions.showError(contentWindow, xhr);
-                
-            }
-
-        });
-
-        $.ajax({
-
-            type: 'POST',
-            url: 'traitements/traitementAutoeval.php',
-            data: {
-                'getNonCompliances': true,
-                'evalNumber' : eval 
-            }, 
-            dataType: 'text',
-            success: function(dataTableau) {
-
-                myFunctions.checkAuthentifiedUser(dataTableau);
-
-                if(dataTableau !== "") {
-
-                    setTimeout(() => {
-
-                        document.getElementById('tableauContainer').style.display = "block";
-                        document.getElementById('tableauContainer').innerHTML = dataTableau;
-
-                    }, 750);
-
-                }
-
             },
             
             error: function(xhr, textStatus, error) {

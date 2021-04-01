@@ -20,7 +20,6 @@ header {
     width: calc(100% - 0%);
     top: 0;
     height: 30px;
-    border-bottom: 1px solid black;
 }
 
 .left_area h3 {
@@ -29,6 +28,7 @@ header {
     font-size: 22px;
     font-weight: 900;
     text-align: left;
+    margin-left: 70px;
 }
 
 .left_area span {
@@ -37,24 +37,22 @@ header {
 
 .logout_btn {
     padding: 5px;
-    background: #F75118;
     text-decoration: none;
     float: right;
-    margin-top: -30px;
+    margin-top: -40px;
     margin-right: 40px;
-    border-radius: 2px;
     font-size: 2vh;
     font-weight: 600;
-    color: #fff;
+    color: white;
     transition: 0.5s;
     transition-property: background;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
 }
 
-.logout_btn:hover {
-    background: #EF342B;
-    box-shadow: 0px 0px 9px 2px #EF342B;
-    -moz-box-shadow: 0px 0px 9px 2px #EF342B;
-    -webkit-box-shadow: 0px 0px 9px 2px #EF342B;
+.logout_btn:hover::after {
+    content: ' Déconnexion';
 }
 
 .sidebar {
@@ -74,7 +72,6 @@ header {
     transition: 0.5s;
     transition-property: left;
     overflow-y: auto;
-    border-right: 1px solid black;
 }
 
 ::-webkit-scrollbar {
@@ -90,7 +87,6 @@ header {
 ::-webkit-scrollbar-thumb {
   background: #e1e1e1;
   border: 0px none #ffffff;
-  border-radius: 50px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -98,7 +94,7 @@ header {
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background: #3ff3f0;
+    background: rgb(33,150,243);
 }
 
 ::-webkit-scrollbar-track {
@@ -129,6 +125,8 @@ header {
     width: 100px;
     height: 100px;
     border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
     margin-bottom: 10px;
 }
 
@@ -173,7 +171,7 @@ label #sidebar_btn {
     color: grey;
     position: fixed;
     cursor: pointer;
-    left: 300px;
+    left: 23px;
     font-size: 20px;
     margin: 5px 0;
     transition: 0.5s;
@@ -181,7 +179,7 @@ label #sidebar_btn {
 }
 
 label #sidebar_btn:hover {
-    color: #0062b9;
+    color: rgb(33,150,243);
 }
 
 #check:checked ~ .sidebar {
@@ -204,7 +202,7 @@ label #sidebar_btn:hover {
     padding: 20px;
     margin-left: 250px;
     transition: 0.5s;
-    color: black;
+    color: #5a545a;
     font-size: 3vh;
 }
 
@@ -216,22 +214,18 @@ label #sidebar_btn:hover {
 }
 
 .backgroundImage {
-    background-image: url('../assets/homeBackground.jpg');
+    background-image: url('../assets/home.jpg');
     background-size: cover;
     background-repeat: no-repeat;
-    height: 100vh;
+    height: calc(100vh - 100px);
 }
 
 .errorContainer {
     display: flex;
     flex-direction: column;
     text-align: center;
-    color: white;
+    color: #5a545a;
     margin-top: 5vh;
-    background-color: #5D616C;
-    padding: 5vh 0;
-    border-radius: 25px;
-    border: 2px solid black;
 }
 
 .errorContainer img {
@@ -242,18 +236,17 @@ label #sidebar_btn:hover {
 #bugButtonContainer {
     position: fixed;
     top: 94%;
-    right: 1%;
+    right: 1.5%;
 }
 
 #bugButton {
-    font-size: 1.5vh;
+    font-size: 2vh;
     padding: 1vh;
 }
 
 #bugButton:hover {
-    box-shadow: 0px 0px 9px 2px #EF342B;
-    -moz-box-shadow: 0px 0px 9px 2px #EF342B;
-    -webkit-box-shadow: 0px 0px 9px 2px #EF342B;
+    background: white;
+    color: #5a545a;
 }
 
 #bugButtonContainer:hover #bugButton::after {
@@ -273,12 +266,15 @@ label #sidebar_btn:hover {
     margin: 5vh auto 0 auto;
     text-align: center;
     background-color: white;
-    color: black;
+    color: #5a545a;
     position: relative;
     width: 75%;
     padding: 2vh 3vw;
     height: 70%;
     overflow: auto;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
 }
 
 #bugReportFormContainer textarea {
@@ -308,6 +304,7 @@ label #sidebar_btn:hover {
 
 #bugReportFormContainer button {
     margin: 0 2vw;
+    min-width: 35px;
 }
 
 #bugReportFormContainer #bugReportNotification {
@@ -350,17 +347,11 @@ h3 {
 }
 
 #startContainer, #questionnaire {
-    background-image: url('../assets/overlay.png'), url('../assets/questionnaire_background.jpg');
-    -webkit-background-size: cover;
-    background-size: 100% 100%;
     text-align: center;
-    border: 1px solid black;
 }
 
 #questionnaire, #startContainer{
     margin-top: 5vh;
-    color: white;
-    transition: 0.5s;
 }
 
 #startContainer .form-title {
@@ -423,6 +414,7 @@ h3 {
 
 .audit-selectuser-buttonstart-container select {
     margin: 2vh auto;
+    width: 45vw;
 }
 
 .selectAssistant {
@@ -440,7 +432,7 @@ h3 {
 .category-question {
     margin-top: 3vh;
     font-weight: bold;
-    border: 2px solid white;
+    text-decoration: underline;
     padding: 1% 0;
     margin-left: 8vw;
     margin-right: 8vw;
@@ -500,45 +492,56 @@ h3 {
 
 button {
     display: block;
+    border: none;
     padding: 5px;
     background: white;
-    -webkit-border-radius: 20px;
-    -moz-border-radius: 20px;
-    border-radius: 20px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
     font-family: "Arial", sans-serif;
-    border: solid #000000 1px;
     text-decoration: none;
     cursor: pointer;
     text-align: center;
     padding: 10px;
-    color: black;
+    color: #5a545a;
     outline: none;
     transition: background 0.5s;
 }
 
-button:hover, #graphique-resultats button:hover {
-    -webkit-border-radius: 20px;
-    -moz-border-radius: 20px;
-    border-radius: 20px;
-    text-decoration: none;
-    box-shadow: 0px 0px 9px 2px #6c9feb;
-    -moz-box-shadow: 0px 0px 9px 2px #6c9feb;
-    -webkit-box-shadow: 0px 0px 9px 2px #6c9feb;
+button:focus {
+    border: 1px solid black !important;
+}
+
+button:hover {
+    background: rgb(33,150,243);
+    color: white;
+}
+
+.greenButton {
+    background: darkseagreen !important;
+}
+
+.redButton {
+    background: indianred !important;
+}
+
+table .greenButton {
+    background: none !important;
+}
+
+table .redButton {
+    background: none !important;
 }
 
 .greenButton:hover {
-    background: #A7DB55;
-    box-shadow: 0px 0px 9px 2px #A7DB55;
-    -moz-box-shadow: 0px 0px 9px 2px #A7DB55;
-    -webkit-box-shadow: 0px 0px 9px 2px #A7DB55;
+    background: #A7DB55 !important;
+    color: white !important;
+    min-width: 35px;
 }
 
 .redButton:hover {
-    background: #EE5046;
-    color: white;
-    box-shadow: 0px 0px 9px 2px #EE5046;
-    -moz-box-shadow: 0px 0px 9px 2px #EE5046;
-    -webkit-box-shadow: 0px 0px 9px 2px #EE5046;
+    background: #EE5046 !important;
+    color: white !important;
 }
 
 .button-next {
@@ -567,16 +570,13 @@ button:hover, #graphique-resultats button:hover {
     display: none;
     margin: 5vh auto;
     white-space: break-spaces;
-    background: rgba(255,255,255,0.7);
     padding: 3vh 2vw;
     font-weight: bold;
-    box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.75);
-    -webkit-box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.75);
 }
 
 #message {
     flex-direction: column;
+    color: #EE5046;
 }
 
 #message .phrase {
@@ -586,7 +586,7 @@ button:hover, #graphique-resultats button:hover {
 #errorMessage {
     font-weight: bold;
     text-align: center;
-    color: black;
+    color: #5a545a;
     margin-top: 5vh;
 }
 
@@ -596,7 +596,7 @@ button:hover, #graphique-resultats button:hover {
 
 #dateGraphique {
     font-weight: bold;
-    color: black;
+    color: #5a545a;
     text-align: left;
     width: 90%;
     margin: 10vh auto 5vh auto;
@@ -606,14 +606,6 @@ button:hover, #graphique-resultats button:hover {
     height: 50vh;
     width: 90%;
     margin: 10vh auto 0.5vh auto;
-}
-
-#graphique-resultats button {
-    border: 2px solid black !important;
-}
-
-#graphique-resultats button:hover {
-    border: 2px solid black !important;
 }
 
 #tableauContainer {
@@ -629,18 +621,11 @@ button:hover, #graphique-resultats button:hover {
 .helper-container-start-screen, .helper-container-questions {
     display: flex;
     flex-direction: column;
-    border: 2px solid #00FFFF;
-    margin: 10vh 5vw 10vh 5vw;
-    box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.75);
-    -webkit-box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.75);
-    padding: 3vh 3vw;
-    background: radial-gradient(circle, rgba(29,37,28,1) 37%, rgba(13,20,37,1) 75%);
-
+    margin: 3vh 5vw 3vh 5vw;
 }
 
 .helper-container-questions img {
-    width: 3vw;
+    width: 2.5vw;
     position: relative;
     left: 95%;
     margin-bottom: 5vh;
@@ -656,7 +641,7 @@ button:hover, #graphique-resultats button:hover {
     margin: 2% auto;
 }
 
-.helper-content .help-shortcuts {
+.helper-content .help-shortcuts, .helper-content .help-acronyms {
     margin-bottom: 2vh;
 }
 
@@ -666,12 +651,17 @@ button:hover, #graphique-resultats button:hover {
     text-align: left;
 }
 
-.helper-content .shortcuts span {
+.helper-content .shortcuts span, .helper-content .acronyms span {
     margin: 0.5vh 0;
 }
 
 .helper-content .shortcuts i {
     margin-right: 1vw;
+}
+
+.helper-content .acronyms {
+    display: flex;
+    flex-direction: column;
 }
 
 .actu-date {
@@ -732,20 +722,17 @@ button:hover, #graphique-resultats button:hover {
 }
 
 #questionnairesParams h3 {
-    background-color: black;
+    background-color: #5a545a;
     padding: 2vh 0;
     margin: 0 10vw;
-    border-radius: 20px;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
 }
 
 #titleContainer {
-    background-image: url('../assets/overlay.png'), url('../assets/title_background.jpg');
-    -webkit-background-size: cover;
-    background-size: 100% 100%;
     height: 15vh;
-    color: white;
     margin-top: 5vh;
-    border: 1px solid black;
 }
 
 #titleContainer select {
@@ -754,12 +741,17 @@ button:hover, #graphique-resultats button:hover {
 }
 
 .userInputBar {
-    background-color: #192C3C;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
     display: inline-block;
     width: 100%;
     padding: 3vh 0;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
+}
+
+.userInputBar button:hover {
+    background: white;
+    color: #5a545a;
 }
 
 .userInputBar .fa-plus {
@@ -809,7 +801,7 @@ table {
     font-family: "Arial Black", Gadget, sans-serif;
     border: 2px solid #6C9FEB;
     background-color: #FFFFFF;
-    color: black;
+    color: #5a545a;
     width: 100%;
     height: 100px;
     text-align: left;
@@ -818,13 +810,13 @@ table {
 }
 
 table td a {
-    color: black;
     text-decoration: none;
+    color: inherit;
 }
 
 table td a:hover {
-    color: black;
     text-decoration: none;
+    color: inherit;
 }
 
 table td {
@@ -863,7 +855,7 @@ table thead th:first-child {
 table tfoot {
     font-size: 2vh;
     font-weight: bold;
-    color: black;
+    color: #5a545a;
     background: #000000;
     background: -moz-linear-gradient(top, #404040 0%, #191919 66%, #000000 100%);
     background: -webkit-linear-gradient(top, #404040 0%, #191919 66%, #000000 100%);
@@ -876,7 +868,7 @@ table tfoot td {
 }
 
 table#tableauQuestionnaire tbody td {
-    padding: 1vh 1vw;
+    padding: 3vh 1vw;
 }
 
 table#tableauQuestionnaire .questionnaire-border-white {
@@ -896,6 +888,10 @@ table#tableauQuestionnaire .questionnaire-border-white {
 
 .buttonsModificationQuestionnaire button {
     margin: 1vh auto;
+}
+
+.buttonsModificationQuestionnaire button i {
+    margin-bottom: 1.5vh;
 }
 
 table#tableauResultatsAutoevalUtilisateur, table#tableauResultatsAuditsUtilisateur{
@@ -952,10 +948,6 @@ table#tableauNonConformites td, table#tableauNonApplicables td, table#tableauNon
     text-align: left;
 }
 
-table#tableauNonConformites td.autoeval-nonconforme {
-    text-align: center;
-}
-
 table#tableauGlobalStats td .number {
     text-align: center;
 }
@@ -978,7 +970,7 @@ table#tableauGlobalStats th.forceInline i {
 }
 
 table#tableauGlobalStats th.forceInline i.active {
-    color: black;
+    color: #5a545a;
 }
 
 .responsiveOrderBy {
@@ -992,6 +984,14 @@ table#tableauAssistants {
 }
 
 /* Responsive CSS */
+
+@media screen and (orientation: portrait) {
+
+    .backgroundImage {
+        background-image: url('../assets/homeResponsive.jpg');
+    }
+
+}
 
 @media screen and (max-width: 780px) {
 
@@ -1019,6 +1019,10 @@ table#tableauAssistants {
         width: calc(100% - 0%);
     }
 
+    .left_area h3 {
+        margin-left: unset;
+    }
+
     .nav_bar {
         background: rgb(68,163,61);
         background: -moz-linear-gradient(309deg, rgba(68,163,61,1) 25%, rgba(135,187,52,1) 61%);
@@ -1037,6 +1041,8 @@ table#tableauAssistants {
         width: 50px;
         height: 50px;
         border-radius: 50%;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
     }
 
     .nav_bar .nav_btn {
@@ -1048,7 +1054,7 @@ table#tableauAssistants {
     }
 
     .nav_bar .nav_btn:hover {
-        color: #0062b9;
+        color: black;
     }
 
     .mobile_nav_items {
@@ -1056,7 +1062,7 @@ table#tableauAssistants {
     }
 
     .mobile_nav_items a {
-        color: black;
+        color: #5a545a;
         display: block;
         text-align: center;
         letter-spacing: 1px;
@@ -1102,7 +1108,7 @@ table#tableauAssistants {
     }
 
     table tr:last-child td:last-child {
-        border-bottom: unset;
+        border-bottom: unset !important;
     }
 
     table tr:last-child td {
@@ -1123,7 +1129,6 @@ table#tableauAssistants {
     }
 
     table button {
-        width: 20%;
         margin: 1.5vh auto !important;
     }
 
@@ -1139,6 +1144,10 @@ table#tableauAssistants {
 
     table#tableauQuestionnaire td:last-child {
         border-bottom: 2px solid black;
+    }
+
+    .buttonsModificationQuestionnaire button i {
+        margin-bottom: unset !important;
     }
 
     table#tableauGlobalStats .questionnaire-border-white {

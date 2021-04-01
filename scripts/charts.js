@@ -2,10 +2,10 @@ function createChart(container, title, myData) {
 
     CanvasJS.addColorSet("redGreen",
         [//colorSet Array
-        "#35B5A0", // Conforme
-        "#F4700E", // Non conforme
-        "#A8A8A8", // Non applicable
-        "#EDCF18"  // Non disponible actuellement
+        "#35B5A0", // Compliance
+        "#F4700E", // Non compliance
+        "#A8A8A8", // Not available
+        "#EDCF18"  // Not currently available
         ]
     );
 
@@ -25,12 +25,6 @@ function createChart(container, title, myData) {
             fontWeight: "bold",
         
         },
-        
-        /* subtitles: [{
-        
-            text: "Currency Used: Thai Baht (฿)"
-        
-        }], */
         
         toolTip: {
         
@@ -56,12 +50,6 @@ function createChart(container, title, myData) {
         
         }],
         
-        // axisX: {
-
-        //     labelFontColor: "#FFFFFF", 
-
-        //  },
-        
         axisY: {
 
             titleFontWeight: "bolder",
@@ -82,6 +70,13 @@ function createChart(container, title, myData) {
 
     });
 
+    /* 
+       This is what renders a chart
+       Above are the global style parameters.
+       But a chart can also have special style parameters passed directly
+       from the processing data pages
+    */
+   
     chart.render();
 
 }

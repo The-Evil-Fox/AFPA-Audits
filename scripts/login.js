@@ -119,14 +119,19 @@ $('#form-login').submit(function(e) {
         
     };
     
-    // creating a empty variable wich will hold the password
+    // create a empty variable wich will hold the password
     let password;
-    // Inserting the hash into the variable
+    // Insert the hash into the variable
     password = sha256(document.getElementById("passwordInput").value);
 
     let email = $('#emailInput').val();
 
     let errorDiv = document.getElementById('error-message');
+
+    /* Sends the email and password via ajax for the processing.
+       If there is no bad response from the processing then the login is valid.
+       Else the login is invalid and a error message is displayed in a alert box.
+    */
 
     $.ajax({
     
@@ -159,6 +164,8 @@ $('#form-login').submit(function(e) {
         },
         
         error: function(xhr, textStatus, error){
+
+            // If something unexpected happens shows the server error message instead of the login form
 
             document.body.innerHTML = `
                 <div class='errorContainer'>

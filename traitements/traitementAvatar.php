@@ -2,6 +2,8 @@
 
 require_once('../config/dbConnection.php');
 
+// Returns a non-authorised access message to ajax, which will head the user to the index(login) page if that happens.
+
 if(!isset($_SESSION['ID'])) {
 
     echo "Acces refusé ! Veuillez vous connectez !";
@@ -11,53 +13,66 @@ if(!isset($_SESSION['ID'])) {
 
 if(isset($_FILES['inputAvatar']) && !empty($_FILES['inputAvatar']['name'])) {
         
-    // Taille max d'une image = 2Mo
-    $tailleMax = 2000000;
-    // Extension valides
+    // Max size of a image
+    
+    $tailleMax = 2097152;
+
+    // Valid extensions
+
     $extensionsValides = array('jpg', 'jpeg', 'gif', 'png');
-    // Si la taille du nouvel avatar de l'utilisateur ne dépasse pas la taille maximum:
+
+    // If the size of the new avatar does not exceed the maximum size:
+    
     if($_FILES['inputAvatar']['size'] <= $tailleMax) {
         
-        // Stockage de l'extension de l'image dans une variable
+        // Stores the extension of the new avatar in a variable
+
         $extensionUpload = strtolower(substr(strrchr($_FILES['inputAvatar']['name'], '.'), 1));
-        // Si l'extension de l'image uploadé fais partie des extension valides:
+        
+        // If the extension of the uploaded image is one of the valid extensions:
+
         if(in_array($extensionUpload, $extensionsValides)) {
             
-            // Création du chemin d'upload de l'image avec l'id de l'utilisateur pour le nom du fichier
+            // Creation of the image upload path wih the user id for the file name
+
             $chemin = "../assets/avatars/".$_SESSION['ID'].".".$extensionUpload;
-            // Stockage du résultat du déplacement de l'image uploadé vers le chemin
+
+            // Storage of the result of moving the uploaded image to the path
+
             $resultat = move_uploaded_file($_FILES['inputAvatar']['tmp_name'], $chemin);
-            // Si le résultat est positif:
+            // if the result is true
             if($resultat) {
                 
-                // stockage du nom du nouvel avatar de l'utilisateur
+                // Storage of the user's new avatar name
+
                 $avatar = $_SESSION['ID'].".".$extensionUpload;
-                // Mise à jour de l'avatar de l'utilisateur dans la base de données
+
+                // Update of the user's avatar in the database
+
                 $updateAvatar = $db->prepare('UPDATE Users SET Avatar = :avatar WHERE ID = :id');
                 $updateAvatar->bindParam(':avatar', $avatar, PDO::PARAM_STR);
                 $updateAvatar->bindParam(':id', $_SESSION['ID'], PDO::PARAM_INT);
                 $updateAvatar->execute();
                 
-                // On retourne le nom du fichier uploadé pour que javascript puisse le mettre à jour au niveau du front
-                $feedback = "assets/avatars/".$_SESSION['ID'].".".$extensionUpload;
+                // $feedback = "assets/avatars/".$_SESSION['ID'].".".$extensionUpload;
                 
             } else {
                 
-                // Message d'erreur si une erreur survient
+                // Error message if a error occurs
                 $feedback = "Erreur: Une erreur est survenue durant l'importation de votre nouvelle photo de profil !";
                 
             }
             
         } else {
             
-            // Message d'erreur si l'extension n'est pas valide
+            // Error message if the extension is not valid
             $feedback = "Erreur: Votre nouvelle photo de profil dois être au format JPG, JPEG, GIF ou PNG !";
             
         }
         
     } else {
         
-        // Message d'erreur si le nouvel avatar dépasse la taille autorisé
+        // Error message is the size of the avatar is too heavy
         $feedback = "Erreur: Votre nouvelle photo de profil ne doit pas dépasser 2Mo !";
         
     }

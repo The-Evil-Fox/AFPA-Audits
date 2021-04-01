@@ -5,7 +5,7 @@ function showAdministration(category) {
     $(document).ready(function() {
 
         // Shows the loading image
-        showLoading(contentWindow);
+        myFunctions.showLoading(contentWindow);
 
         $.ajax({
 
@@ -944,7 +944,7 @@ function deleteDocument(action, id, link) {
 
 function refreshDocuments() {
 
-    showLoading(contentWindow);
+    myFunctions.showLoading(contentWindow);
 
     $.ajax({
 
@@ -974,7 +974,7 @@ function refreshDocuments() {
 
 function showTab() {
 
-    showLoading(document.getElementById('tableauContainer'));
+    myFunctions.showLoading(document.getElementById('tableauContainer'));
 
     $.ajax({
 
@@ -1015,7 +1015,7 @@ function showStats() {
 
         }
 
-        showLoading(contentWindow);
+        myFunctions.showLoading(contentWindow);
 
         let countAudits = true;
 
@@ -1201,8 +1201,8 @@ function getAllResultsUser(user) {
 
     if(user !== "") {
         
-        showLoading(evalsContainer);
-        showLoading(auditsContainer);
+        myFunctions.showLoading(evalsContainer);
+        myFunctions.showLoading(auditsContainer);
         
         getEvals = true;
 

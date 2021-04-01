@@ -1,14 +1,10 @@
 const contentWindow = document.getElementById('content');
 
-function showLoading(container) {
-
-    container.innerHTML = "<img class='contentLoadingImage' src='assets/loading2.gif'>";
-
-}
-
 function showContent(category) {
     
     $(document).ready(function() {
+
+        myFunctions.showLoading(contentWindow);
 
         if(typeof(autoEvalKeyboardControlsActive) !== "undefined" && autoEvalKeyboardControlsActive == true) {
 
@@ -54,8 +50,6 @@ function showContent(category) {
             }
         
         }
-
-        contentWindow.innerHTML = "<img class='contentLoadingImage' src='assets/loading2.gif'>";
 
         if(category == "home") {
 

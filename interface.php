@@ -14,9 +14,13 @@ require_once('config/roles.php');
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
   <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-  <link rel="stylesheet" href="stylesheets/interface2.css">
+  <link rel="stylesheet" href="stylesheets/interface.css">
   <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
-  <title>Afpa: formation professionnelle</title>
+  <!-- No cache -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-relavidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Afpa: outil qualité</title>
 </head>
 <body>
   <?php require_once('config/header.php'); ?>

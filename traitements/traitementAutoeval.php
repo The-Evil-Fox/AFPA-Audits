@@ -2,12 +2,16 @@
 
 require_once('../config/dbConnection.php');
 
+// Returns a non-authorised access message to ajax, which will head the user to the index(login) page if that happens.
+
 if(!isset($_SESSION['ID'])) {
 
     echo "Acces refusé ! Veuillez vous connectez !";
     return;
 
 }
+
+// Delete the reason associated to the question if it exists when the user "Oui" in the autoevaluation
 
 if(isset($_POST['checkReason']) && isset($_POST['evalNumber']) && isset($_POST['question'])) {
 
@@ -30,6 +34,8 @@ if(isset($_POST['checkReason']) && isset($_POST['evalNumber']) && isset($_POST['
     }
 
 }
+
+// Update or insert the answer to a question and delete the reason if the user says "Oui" and the reason for a non compliance already exist
 
 if(isset($_POST['answer']) && !empty($_POST['answer'])) {
 
@@ -63,6 +69,8 @@ if(isset($_POST['answer']) && !empty($_POST['answer'])) {
 
         }
 
+        // 
+
         if($_POST['answer'] == "Oui" && $countResultExist == 1) {
 
             $checkIfReasonExist1 = $db->prepare('SELECT * FROM RaisonsNonConformitesAutoevaluation WHERE User = :user AND Question_ID = :question AND Eval_Number = :eval');
@@ -92,6 +100,8 @@ if(isset($_POST['answer']) && !empty($_POST['answer'])) {
     }
 
 }
+
+// Insert or update the reason to a non compliance in the autoevaluation
 
 if(isset($_POST['reason']) && !empty($_POST['reason'])) {
 
@@ -133,11 +143,15 @@ if(isset($_POST['reason']) && !empty($_POST['reason'])) {
 
 }
 
+// Finalise the autoevaluation
+
 if(isset($_POST['eval']) && !empty($_POST['eval'])) {
 
     $evalNumber = intval($_POST['eval']);
 
     try {
+
+        // Update the autoevaluation in the database and set the completion date and hour and set it to completed too
 
         $actualDate = date('Y-m-d H:i:s');
         $completed = true;
@@ -148,12 +162,16 @@ if(isset($_POST['eval']) && !empty($_POST['eval'])) {
         $completeAutoEval->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
         $completeAutoEval->execute();
 
+        // Insert the news in the database
+
         $actualite = "s'est autoévalué !";
         $insertActualite = $db->prepare('INSERT INTO Actualites(User, Actualite, Eval_Number) VALUES(:user, :actualite, :eval)');
         $insertActualite->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
         $insertActualite->bindParam(':actualite', $actualite, PDO::PARAM_STR);
         $insertActualite->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
         $insertActualite->execute();
+
+        // get the compliances and non compliances for the charts displayed after the finalisation
 
         $countCompliances = $db->prepare('SELECT count(*) as nb_compliance FROM ResultatsAutoevaluations WHERE Evaluation_Number = :eval AND Answer = "Oui" AND User_ID = :user');
         $countCompliances->bindParam(':eval', $evalNumber, PDO::PARAM_INT);
@@ -173,6 +191,11 @@ if(isset($_POST['eval']) && !empty($_POST['eval'])) {
 
         $nonCompliances = (int) $resultCount2['nb_noncompliance'];
 
+        /* 
+           Checks each result defined above and if it's not equal to 0: 
+           Create an array containing the data to display on the chart with the styling parameters
+        */
+        
         if($compliances !== 0) {
 
             $compliancesTab = array(
@@ -189,29 +212,30 @@ if(isset($_POST['eval']) && !empty($_POST['eval'])) {
 
         }
 
+        // Creates a empty array wich will contain the data to send as a response
+
         $dataPoints = array(
 
         );
 
-        if(isset($compliancesTab)) {
-        
-            if(is_array($compliancesTab)) {
+        /*
+           Checks if each of our expected results exists and if they are stored in a array.
+           If they do, push the array into the $datapoints array that will be sent back as a response
+        */
 
-                array_push($dataPoints, $compliancesTab);
+        if(isset($compliancesTab) && is_array($compliancesTab)) {
 
-            }
+            array_push($dataPoints, $compliancesTab);
+
+        }
+
+        if(isset($nonCompliancesTab) && is_array($nonCompliancesTab)) {
+
+            array_push($dataPoints, $nonCompliancesTab);
 
         }
 
-        if(isset($nonCompliancesTab)) {
-
-            if(is_array($nonCompliancesTab)) {
-
-                array_push($dataPoints, $nonCompliancesTab);
-    
-            }
-
-        }
+        // Returns the $datapoints array, encoded in JSON
 
         echo json_encode($dataPoints, JSON_NUMERIC_CHECK);
 
@@ -221,6 +245,8 @@ if(isset($_POST['eval']) && !empty($_POST['eval'])) {
     }
 
 }
+
+// Creates and shows the tables containing all the non compliances questions and reasons
 
 if(isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
 
@@ -234,6 +260,8 @@ if(isset($_POST['getNonCompliances']) && isset($_POST['evalNumber'])) {
     $result = $numberAllNonCompliances->fetch();
 
     $numberNonCompliances = (int) $result['nbr_non_compliances'];
+
+    // If there is no non compliances, don't show anything
 
     if($numberNonCompliances !== 0) {
 

@@ -2,6 +2,8 @@
 
 require_once('../config/dbConnection.php');
 
+// Returns a non-authorised access message to ajax, which will head the user to the index(login) page if that happens.
+
 if(!isset($_SESSION['ID'])) {
 
     echo "Acces refusé ! Veuillez vous connectez !";
@@ -9,7 +11,11 @@ if(!isset($_SESSION['ID'])) {
 
 }
 
+// If ajax ask to get the localisations:
+
 if(isset($_POST['getCenters'])) {
+
+    // Select all the localisation available in the database and returns them in a selector
 
     $getCenters = $db->query('SELECT ID, Localisation FROM Facilities'); ?>
     
@@ -29,7 +35,11 @@ if(isset($_POST['getCenters'])) {
 
 }
 
+// If ajax ask to get the auditors
+
 if(isset($_POST['getAuditeurs1'])) {
+
+    // Select all the auditors who are not the actual user and return them in a selector
 
     $getAuditeurs = $db->prepare('SELECT ID, Name, FirstName FROM Users WHERE ID != :user AND Role = 2');
     $getAuditeurs->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
@@ -47,7 +57,14 @@ if(isset($_POST['getAuditeurs1'])) {
     
 <?php }
 
+// If ajax ask to get a second assistant list
+
 if(isset($_POST['assistant1']) && !empty($_POST['assistant1']) && isset($_POST['getAuditeurs2'])) {
+
+    /*
+       Get the list of all the auditors who are not the actual user and not 
+       the first assistant selected by him. Then returns the selector
+    */
 
     $getAuditeurs2 = $db->prepare('SELECT ID, Name, FirstName FROM Users WHERE ID != :user AND ID != :assistant AND Role = 2');
     $getAuditeurs2->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
@@ -63,30 +80,38 @@ if(isset($_POST['assistant1']) && !empty($_POST['assistant1']) && isset($_POST['
     
 <?php }
 
+// If ajax ask to check if a audit is in progress:
+
 if(isset($_POST['checkAudit']) && isset($_POST['user']) && !empty($_POST['user'])) {
 
     $user = (int) $_POST['user'];
+
+    // Select the last completed audit of the user inserted in the database
 
     $checkAuditInProgress = $db->prepare('SELECT Completed FROM Audits WHERE User_ID = :user AND Completed = 0 ORDER BY ID DESC LIMIT 1');
     $checkAuditInProgress->bindParam(':user', $user, PDO::PARAM_INT);
     $checkAuditInProgress->execute();
     $countAuditInProgress = $checkAuditInProgress->rowCount();
 
+    /*
+       If there is a result then a audit is in progress actually: 
+       returns a message to ajax so he know what to show to the user
+    */
+
     if($countAuditInProgress == 1) {
 
         echo "Un audit est déjà en cours !";
-        return;
-
-    } else {
-
-        echo "nope";
         return;
 
     }
 
 }
 
+// Resuming a audit:
+
 if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_POST['auditedUserID']) && !empty($_POST['auditedUserID'])) {
+
+    // Select the audit number of the selected user in the database
 
     $selectAuditInProgress = $db->prepare('SELECT Audit_Number, User_ID FROM Audits WHERE User_ID = :user AND Completed = false');
     $selectAuditInProgress->bindParam(':user', $_POST['auditedUserID'], PDO::PARAM_INT);
@@ -95,10 +120,14 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
     $auditInProgress = $selectAuditInProgress->fetch();
     $auditNumber = $auditInProgress['Audit_Number'];
 
+    // Count the number of questions active in the database
+
     $countQuestions = $db->query('SELECT COUNT(*) AS nb_questions FROM QuestionsAudit WHERE Active = true');
     $result = $countQuestions->fetch();
     $questionsNumber = (int) $result['nb_questions'];
 
+    // Select the questions and the answers already submitted
+    
     $selectQuestions = $db->prepare('SELECT a.Facility, a.Auditor, a.Assistant1, a.Assistant2, qa.ID, qa.Question, qa.Evidence, ar.Report, ar.Observation, cqa.Name 
     FROM QuestionsAudit qa 
     LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID 
@@ -116,10 +145,12 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
     $compteur = 1; ?>
 
     <form method="POST" id="questionnaire">
+        <!-- Form logos -->
         <div class="autoevaluation-logos-container">
             <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
             <img class="logo-afpa" src="assets/logoAFPABlack.png" alt="logo afpa blanc">
         </div>
+        <!-- Audit helper content -->
         <div class="helper-container-questions" id="helper">
             <img src="assets/close_button.png" title="Cliquez ici pour fermer l'aide" onclick="showTip()">
             <div class="helper-content">
@@ -151,6 +182,7 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
             </div>
         </div>
         <?php while($questions = $selectQuestions->fetch()) { ?>
+            <!-- Questions -->
             <div class="form-part" id="question<?= $compteur; ?>">
                 <div class="question-number">
                     <?php if($compteur == $questionsNumber) { echo "Question finale"; } else { echo "Question n°$compteur"; } ?><img src="assets/tooltip.png" alt="infobulle" title="cliquez ici pour afficher l'aide" onclick="showTip()">
@@ -164,6 +196,7 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
                         <span class="preuves-label">Preuve(s) attendue(s):</span><span><?= $questions['Evidence']; ?></span>
                     </div>
                 <?php } ?>
+                <!-- Answers -->
                 <div class="inputGroup">
                     <div id="radioDiv">
                         <div class="radiobox">
@@ -183,10 +216,12 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
                             <label for="<?= $questions['ID']; ?>NDA">NDA</label>
                         </div>
                     </div>
+                    <!-- Textarea for the observation -->
                     <textarea <?php if($questions['Report'] == "NC") {?> class="visible" <?php } ?> name="textAreas" id="<?= $compteur; ?>" placeholder="Pourquoi avez vous répondu négativement ?" cols="60" rows="5" onchange="updateObservation(<?= $auditInProgress['User_ID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>)"><?php if($questions['Observation'] !== null) { echo $questions['Observation']; } ?></textarea>
                     <?php if($compteur == $questionsNumber) { ?>
                         <div id="message"></div>
                     <?php } ?>
+                    <!-- Buttons -->
                     <div class="form-buttons">
                         <?php if($compteur > 1) { ?>
                             <button type="button" class="button-previous" onclick="previousQuestion(<?= $compteur; ?>)"><i class="fas fa-long-arrow-alt-left"></i> Précédent</button>
@@ -201,15 +236,17 @@ if(isset($_POST['continueAudit']) && !empty($_POST['continueAudit']) && isset($_
                     </div>
                 </div>
             </div>
-            <?php $compteur++; ?>
-        <?php } ?>
+            <?php $compteur++;
+        } ?>
     </form>
 
-<?php } ?>
+<?php }
 
-<?php
+// Creating a audit
 
 if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_POST['auditedUserID']) && !empty($_POST['auditedUserID']) && isset($_POST['auditedCenter']) && !empty($_POST['auditedCenter']) && isset($_POST['assistantAudit1']) && !empty($_POST['assistantAudit1']) && isset($_POST['assistantAudit2']) && !empty($_POST['assistantAudit2'])) {
+
+    // Select the last audit number of the selected user in the database
 
     $selectLastAudit = $db->prepare('SELECT Audit_Number, User_ID FROM Audits WHERE User_ID = :user ORDER BY Audit_Number DESC LIMIT 1');
     $selectLastAudit->bindParam(':user', $_POST['auditedUserID'], PDO::PARAM_INT);
@@ -217,10 +254,14 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
 
     $countRowLastAudit = $selectLastAudit->rowCount();
 
+    // If there is a result: stock the number in a variable and increment it by 1
+
     if($countRowLastAudit !== 0) {
 
         $lastAudit = $selectLastAudit->fetch();
         $auditNumber = (int) $lastAudit['Audit_Number'] + 1 ;
+    
+    // Else sets the audit number to 1
 
     } else {
 
@@ -232,6 +273,8 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
 
     $auditAssistant1 = htmlspecialchars($_POST['assistantAudit1']);
     $auditAssistant2 = htmlspecialchars($_POST['assistantAudit2']);
+
+    // Insert the audit in the database as a audit in progress
 
     $insertNewAudit = $db->prepare('INSERT INTO Audits(Audit_Number, User_iD, Completed, Auditor, Assistant1, Assistant2, Facility) VALUES(:auditNumber, :user, :completed, :auditor, :assistant1, :assistant2, :facility)');
     $insertNewAudit->bindParam(':auditNumber', $auditNumber, PDO::PARAM_INT);
@@ -262,9 +305,13 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
     $insertNewAudit->bindParam(':facility', $_POST['auditedCenter'], PDO::PARAM_INT);
     $insertNewAudit->execute();
 
+    // Count the total number of questions
+
     $countQuestions = $db->query('SELECT COUNT(*) AS nb_questions FROM QuestionsAudit WHERE Active = true');
     $result = $countQuestions->fetch();
     $questionsNumber = (int) $result['nb_questions'];
+
+    // Get the questions
 
     $selectQuestions = $db->query('SELECT qa.Question, qa.ID, qa.Evidence, cqa.Name FROM QuestionsAudit qa LEFT JOIN CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID WHERE qa.Active = true ORDER BY cqa.ID, qa.ID');
 
@@ -280,10 +327,12 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
     $compteur = 1; ?>
 
     <form method="POST" id="questionnaire">
+        <!-- Form logos -->
         <div class="autoevaluation-logos-container">
             <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
             <img class="logo-afpa" src="assets/logoAFPABlack.png" alt="logo afpa blanc">
         </div>
+        <!-- Audit helper content -->
         <div class="helper-container-questions" id="helper">
             <img src="assets/close_button.png" title="Cliquez ici pour fermer l'aide" onclick="showTip()">
             <div class="helper-content">
@@ -315,6 +364,7 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
             </div>
         </div>
         <?php while($questions = $selectQuestions->fetch()) { ?>
+            <!-- Questions -->
             <div class="form-part" id="question<?= $compteur; ?>">
                 <div class="question-number">
                     <?php if($compteur == $questionsNumber) { echo "Question finale"; } else { echo "Question n°$compteur"; } ?><img src="assets/tooltip.png" alt="infobulle" title="cliquez ici pour afficher l'aide" onclick="showTip()">
@@ -328,6 +378,7 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
                         <span class="preuves-label">Preuve(s) attendue(s):</span><span><?= $questions['Evidence']; ?></span>
                     </div>
                 <?php } ?>
+                <!-- Answers -->
                 <div class="inputGroup">
                     <div id="radioDiv">
                         <div class="radiobox">
@@ -347,10 +398,12 @@ if(isset($_POST['demarrerAudit']) && !empty($_POST['demarrerAudit']) && isset($_
                             <label for="<?= $questions['ID']; ?>NDA">NDA</label>
                         </div>
                     </div>
+                    <!-- Textarea for the observations -->
                     <textarea name="textAreas" id="<?= $compteur; ?>" placeholder="Pourquoi avez vous répondu négativement ?" cols="60" rows="5" onchange="updateObservation(<?= $_POST['auditedUserID']; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>)"></textarea>
                     <?php if($compteur == $questionsNumber) { ?>
                         <div id="message"></div>
                     <?php } ?>
+                    <!-- Buttons -->
                     <div class="form-buttons">
                         <?php if($compteur > 1) { ?>
                             <button type="button" class="button-previous" onclick="previousQuestion(<?= $compteur; ?>)"><i class="fas fa-long-arrow-alt-left"></i> Précédent</button>

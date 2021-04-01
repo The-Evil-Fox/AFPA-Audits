@@ -1,8 +1,22 @@
+// My global reccuring functions used in the differents js files
+
 myFunctions = {
 
+  // Shows a loading in the specified area
+
   showLoading: function(container) {
+
+    if(container.className == "content backgroundImage") {
+
+      container.className = "content";
+
+    }
     
-  }
+    container.innerHTML = "<img class='contentLoadingImage' src='assets/loading.gif'>";
+
+  },
+
+  // Shows the ajax error message in a specified area
 
   showError: function(container, xhr) {
     
@@ -20,6 +34,8 @@ myFunctions = {
 
   },
 
+  // Checks if ajax got a unauthorised access error code and head the user to the login page if true
+
   checkAuthentifiedUser: function(dataGet) {
 
     if(dataGet == "Acces refusé ! Veuillez vous connectez !") {
@@ -33,11 +49,15 @@ myFunctions = {
 
 }
 
+// Shows the dropdown of the responsive navbar
+
 $(document).ready(function(){
     $('.nav_btn').click(function(){
       $('.mobile_nav_items').toggleClass('active');
     });
 });
+
+// Change the navbars(normal and responsive) if a authorised user click on the button "administration" in the navbar
 
 function getNavbar(category) {
     
@@ -72,6 +92,8 @@ function getNavbar(category) {
   });
 
 }
+
+// Shows the bug report form
 
 function bugReportForm() {
 
@@ -115,6 +137,10 @@ function bugReportForm() {
 
 }
 
+/* Shows the textarea about the errorcode if the user check "Oui" in the radio input
+   of the report bug form
+*/
+
 function showTextAreaErrorCode(radiovalue) {
 
   let errorCodeInput = document.getElementById('errorCodeInput');
@@ -131,11 +157,18 @@ function showTextAreaErrorCode(radiovalue) {
 
 }
 
+// Send the report bug form to the processing php page
+
 function sendBugReport() {
 
   let bugReportNotification = document.getElementById('bugReportNotification');
   let bug = document.getElementById('bugDescription').value;
   let errorCode = document.getElementById('errorCodeInput').value;
+
+  /*
+     Shows a error message if the user didn't fill the description of the bug
+     and abandon the sending of the data to the processing page
+  */
 
   if(bug == "") {
 
@@ -161,6 +194,11 @@ function sendBugReport() {
 
   }
 
+  /*
+     Shows a error message if the user didn't check if whether or not he got a error code 
+     and abandon the sending of the data to the processing page
+  */
+ 
   if(!$("input[name='errorCode']").is(':checked')) {
 
     bugReportNotification.innerHTML = "Veuillez cocher si oui ou non vous avez reçu une code d'erreur !";
@@ -188,6 +226,11 @@ function sendBugReport() {
     let radioboxValue = $("input[name='errorCode']:checked").val();
     
     if(radioboxValue == "Oui") {
+
+      /*
+        Shows a error message if the user didn't filled the errorCode textarea
+        and abandon the sending of the data to the processing page
+      */
 
       if(errorCode.length < 5) {
 

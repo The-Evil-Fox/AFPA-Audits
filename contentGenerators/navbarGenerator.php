@@ -57,7 +57,7 @@ if(isset($_POST['administration'])) {
         <a onclick="showAdministration('documents')" href="#documents"><i class="fas fa-file-pdf"></i><span>Documents</span></a>
         <a onclick="showStats()" href="#statistiques"><i class="fas fa-chart-pie"></i><span>Statistiques globales</span></a>
         <a onclick="showAdministration('autoevaluation')" href="#edit-autoevaluation"><i class="fas fa-screwdriver"></i><span>Autoévaluation</span></a>
-        <a onclick="showAdministration('audit')" href="#edit-audit"><i class="fas fa-screwdriver"></i><span>Audit</span></a>
+        <a onclick="showAdministration('audit')" href="#edit-audit"><i class="fas fa-wrench"></i><span>Audit</span></a>
     
     <?php } ?>
 

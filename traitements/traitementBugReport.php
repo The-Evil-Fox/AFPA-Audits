@@ -2,6 +2,8 @@
 
 require_once('../config/dbConnection.php');
 
+// Returns a non-authorised access message to ajax, which will head the user to the index(login) page if that happens.
+
 if(!isset($_SESSION['ID'])) {
 
     echo "Acces refusé ! Veuillez vous connectez !";
@@ -10,6 +12,8 @@ if(!isset($_SESSION['ID'])) {
 }
 
 if(isset($_POST['bug']) && !empty($_POST['bug'])) {
+
+    // Insert the bug report into the database with the errorcode if the user gives one
 
     $insertBugReport = $db->prepare('INSERT INTO BugReports(Bug, ErrorCode, SubmittedBy) VALUES(:bug, :errorCode, :user)');
     $insertBugReport->bindParam(':bug', $_POST['bug'], PDO::PARAM_STR);

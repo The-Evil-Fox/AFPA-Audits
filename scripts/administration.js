@@ -4,6 +4,7 @@ function showAdministration(category) {
     
     $(document).ready(function() {
 
+        // Shows the loading image
         showLoading(contentWindow);
 
         $.ajax({

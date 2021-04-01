@@ -1,9 +1,14 @@
+// Initialisation the variable page to 1 when the user log in the application
 page = 1;
 
-function showTip(helperid) {
+// Shows the help during the autoevaluation or audit
+
+function showTip() {
 
     let helper = document.getElementById('helper');
     let questionsContainers = document.getElementsByClassName('form-part');
+
+    // If the helper is displayed: hide it and shows the questions
 
     if(helper.style.display == "flex") {
 
@@ -11,6 +16,8 @@ function showTip(helperid) {
         for(var i = 0; i<questionsContainers.length; i++) {
             questionsContainers[i].className = "form-part";
         }
+
+    // Else shows the helper and hide the questions
 
     } else {
 

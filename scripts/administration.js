@@ -55,7 +55,7 @@ function showAdministration(category) {
 
 }
 
-// Edit autoeval functions
+// Show the result of the autoeval of the selected user
 
 function showUserResultEval(userID, eval, userName, userFirstName, date) {
 
@@ -64,8 +64,7 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
         eval 
     };
 
-    contentWindow.innerHTML = "";
-    contentWindow.innerHTML = "<img class='contentLoadingImage' src='assets/loading2.gif'>";
+    myFunctions.showLoading(contentWindow);
 
     $.ajax({
 

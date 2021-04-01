@@ -14,6 +14,8 @@ if(!isset($_SESSION['ID'])) {
 
 // Audit start container generator
 
+// Test
+
 if(isset($_POST['auditer'])) {
 
     $getFormateurs = $db->query('SELECT ID, Name, FirstName FROM Users WHERE Role = 1'); ?>

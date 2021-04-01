@@ -1,5 +1,9 @@
 myFunctions = {
 
+  showLoading: function(container) {
+    
+  }
+
   showError: function(container, xhr) {
     
     if(container.className == "content backgroundImage") {

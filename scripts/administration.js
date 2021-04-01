@@ -97,41 +97,41 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
                 hideMessages();
                 
             }, 15);
+
+            $.ajax({
+
+                type: 'POST',
+                url: 'contentGenerators/userResultEval.php',
+                data: {
+                    'getNonCompliances': true,
+                    'evalNumber' : eval,
+                    'userID': userID
+                },
+                dataType: 'text',
+                success: function(dataTableau) {
         
-        },
-
-        error: function(xhr, textStatus, error){
-
-            myFunctions.showError(contentWindow, xhr);
+                    myFunctions.checkAuthentifiedUser(dataTableau);
+        
+                    if(dataTableau !== "") {
+        
+                        setTimeout(() => {
+        
+                            document.getElementById('tableauContainer').style.display = "block";
+                            document.getElementById('tableauContainer').innerHTML = dataTableau;
             
-        }
-
-    });
-
-    $.ajax({
-
-        type: 'POST',
-        url: 'contentGenerators/userResultEval.php',
-        data: {
-            'getNonCompliances': true,
-            'evalNumber' : eval,
-            'userID': userID
-        },
-        dataType: 'text',
-        success: function(dataTableau) {
-
-            myFunctions.checkAuthentifiedUser(dataTableau);
-
-            if(dataTableau !== "") {
-
-                setTimeout(() => {
-
-                    document.getElementById('tableauContainer').style.display = "block";
-                    document.getElementById('tableauContainer').innerHTML = dataTableau;
-    
-                }, 750);
-
-            }
+                        }, 1500);
+        
+                    }
+                
+                },
+        
+                error: function(xhr, textStatus, error){
+        
+                    myFunctions.showError(contentWindow, xhr);
+                    
+                }
+        
+            });
         
         },
 
@@ -236,41 +236,41 @@ function showUserResultAudit(userID, audit, userName, userFirstName, auditeurNam
                 hideMessages();
                 
             }, 15);
+
+            $.ajax({
+
+                type: 'POST',
+                url: 'contentGenerators/userResultAudit.php',
+                data: {
+                    'getNonCompliances': true,
+                    'audit' : audit,
+                    'userID': userID
+                },
+                dataType: 'text',
+                success: function(dataTableau) {
         
-        },
-
-        error: function(xhr, textStatus, error){
-
-            myFunctions.showError(contentWindow, xhr);
+                    myFunctions.checkAuthentifiedUser(dataTableau);
+        
+                    if(dataTableau !== "") {
+        
+                        setTimeout(() => {
+        
+                            document.getElementById('tableauContainer').style.display = "block";
+                            document.getElementById('tableauContainer').innerHTML = dataTableau;
             
-        }
-
-    });
-
-    $.ajax({
-
-        type: 'POST',
-        url: 'contentGenerators/userResultAudit.php',
-        data: {
-            'getNonCompliances': true,
-            'audit' : audit,
-            'userID': userID
-        },
-        dataType: 'text',
-        success: function(dataTableau) {
-
-            myFunctions.checkAuthentifiedUser(dataTableau);
-
-            if(dataTableau !== "") {
-
-                setTimeout(() => {
-
-                    document.getElementById('tableauContainer').style.display = "block";
-                    document.getElementById('tableauContainer').innerHTML = dataTableau;
-    
-                }, 750);
-
-            }
+                        }, 1500);
+        
+                    }
+                
+                },
+        
+                error: function(xhr, textStatus, error){
+        
+                    myFunctions.showError(contentWindow, xhr);
+                    
+                }
+        
+            });
         
         },
 
@@ -1124,6 +1124,20 @@ function showStats() {
 
                         }, 15);
 
+                        let getTab = true;
+
+                        dataSend = {
+
+                            getTab
+
+                        }
+
+                        setTimeout(() => {
+
+                            showTab();
+
+                        }, 1500);
+
                     },
 
                     error: function(xhr, textStatus, error){
@@ -1133,20 +1147,6 @@ function showStats() {
                     }
 
                 });
-
-                let getTab = true;
-
-                dataSend = {
-
-                    getTab
-
-                }
-
-                setTimeout(() => {
-
-                    showTab();
-
-                }, 750);
 
             }
 

@@ -38,41 +38,41 @@ function showChart(autoeval_number, date) {
 
                 }, 15);
 
+                $.ajax({
+
+                    type: 'POST',
+                    url: 'contentGenerators/myResultsGenerator.php',
+                    data: {
+                        'getNonCompliances': true,
+                        'evalNumber' : evalNumber 
+                    }, 
+                    dataType: 'text',
+                    success: function(dataTableau) {
+        
+                        myFunctions.checkAuthentifiedUser(dataTableau);
+        
+                        if(dataTableau !== "") {
+        
+                            setTimeout(() => {
+        
+                                document.getElementById('tableauContainer').style.display = "block";
+                                document.getElementById('tableauContainer').innerHTML = dataTableau;
+        
+                            }, 1500);
+        
+                        }
+        
+                    },
+                    
+                    error: function(xhr, textStatus, error){
+        
+                        myFunctions.showError(contentWindow, xhr);
+                        
+                    }
+        
+                });
+
             },
-            error: function(xhr, textStatus, error){
-
-                myFunctions.showError(contentWindow, xhr);
-                
-            }
-
-        });
-
-        $.ajax({
-
-            type: 'POST',
-            url: 'contentGenerators/myResultsGenerator.php',
-            data: {
-                'getNonCompliances': true,
-                'evalNumber' : evalNumber 
-            }, 
-            dataType: 'text',
-            success: function(dataTableau) {
-
-                myFunctions.checkAuthentifiedUser(dataTableau);
-
-                if(dataTableau !== "") {
-
-                    setTimeout(() => {
-
-                        document.getElementById('tableauContainer').style.display = "block";
-                        document.getElementById('tableauContainer').innerHTML = dataTableau;
-
-                    }, 250);
-
-                }
-
-            },
-            
             error: function(xhr, textStatus, error){
 
                 myFunctions.showError(contentWindow, xhr);

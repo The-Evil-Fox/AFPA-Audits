@@ -33,19 +33,23 @@ if(isset($_FILES['inputAvatar']) && !empty($_FILES['inputAvatar']['name'])) {
 
         if(in_array($extensionUpload, $extensionsValides)) {
             
+            // Storage of the user's new avatar name
+
+            $avatarName = basename($_FILES['inputAvatar']['name']);
+            $whiteSpace = " ";
+            $avatar = str_replace($whiteSpace, "-", $avatarName);
+
             // Creation of the image upload path wih the user id for the file name
 
-            $chemin = "../assets/avatars/".$_SESSION['ID'].".".$extensionUpload;
+            $chemin = "../assets/avatars/".$avatar;
 
             // Storage of the result of moving the uploaded image to the path
 
             $resultat = move_uploaded_file($_FILES['inputAvatar']['tmp_name'], $chemin);
+            
             // if the result is true
+            
             if($resultat) {
-                
-                // Storage of the user's new avatar name
-
-                $avatar = $_SESSION['ID'].".".$extensionUpload;
 
                 // Update of the user's avatar in the database
 
@@ -54,7 +58,7 @@ if(isset($_FILES['inputAvatar']) && !empty($_FILES['inputAvatar']['name'])) {
                 $updateAvatar->bindParam(':id', $_SESSION['ID'], PDO::PARAM_INT);
                 $updateAvatar->execute();
                 
-                // $feedback = "assets/avatars/".$_SESSION['ID'].".".$extensionUpload;
+                $feedback = "assets/avatars/".$avatar;
                 
             } else {
                 

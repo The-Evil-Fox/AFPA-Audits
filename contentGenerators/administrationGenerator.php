@@ -120,7 +120,7 @@ if(isset($_POST['autoevaluation'])) {
     <table id="tableauQuestionnaire">
         <thead>
             <tr>
-                <th>Status</th>
+                <th>Statut</th>
                 <th>Question</th>
                 <th>Categorie</th>
                 <th>Actions</th>
@@ -259,7 +259,7 @@ if(isset($_POST['audit'])) {
     <table id="tableauQuestionnaire">
         <thead>
             <tr>
-                <th>Status</th>
+                <th>Statut</th>
                 <th>Question</th>
                 <th>Preuves</th>
                 <th>Categorie</th>

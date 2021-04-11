@@ -17,7 +17,7 @@ require_once('config/roles.php');
   <link rel="stylesheet" href="stylesheets/interface.css">
   <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
   <!-- No cache -->
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-relavidate" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Afpa: outil qualité</title>

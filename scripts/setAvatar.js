@@ -53,7 +53,8 @@ function setAvatar() {
 
                 } else {
 
-                    document.location.reload();
+                    avatar.src = data;
+                    avatarResponsive.src = data;
                     
                 }
     

@@ -1378,13 +1378,13 @@ CREATE TABLE `Users` (
   `Localisation` int DEFAULT NULL,
   `Password` varchar(255) NOT NULL,
   `Role` int NOT NULL,
-  `InvitatedBy` int DEFAULT NULL,
+  `InvitedBy` int DEFAULT NULL,
   `Activated` bit(1) DEFAULT NULL,
   `Avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'default.png',
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
-INSERT INTO `Users` (`ID`, `Name`, `FirstName`, `Email`, `Localisation`, `Password`, `Role`, `InvitatedBy`, `Activated`, `Avatar`) VALUES
+INSERT INTO `Users` (`ID`, `Name`, `FirstName`, `Email`, `Localisation`, `Password`, `Role`, `InvitedBy`, `Activated`, `Avatar`) VALUES
 (1,	'Steven',	'Durieux',	'stevenhonor@live.fr',	14,	'8d150051e155cd5a77030a8c8c2ea9a59f4a0b82e42f140be50faf79005a0f07',	14,	NULL,	CONV('1', 2, 10) + 0,	'TheEvilFoxLogo.png'),
 (2,	'Jennifer',	'Couturier',	'test@test.com',	7,	'9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',	2,	NULL,	NULL,	'default.png'),
 (3,	'Compte',	'Auditeur',	'auditeur@auditeur.com',	4,	'9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',	2,	NULL,	NULL,	'21.gif'),
@@ -1397,4 +1397,4 @@ INSERT INTO `Users` (`ID`, `Name`, `FirstName`, `Email`, `Localisation`, `Passwo
 (10,	'Amelie',	'Boulesteix',	'amelie.boulesteix@afpa.fr',	14,	'9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',	2,	NULL,	NULL,	'default.png'),
 (11,	'Mektar',	'Outgda',	'mektar.outgda@test.fr',	14,	'9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',	1,	NULL,	NULL,	'default.png');
 
--- 2021-04-20 15:18:04
+-- 2021-04-20 16:10:26

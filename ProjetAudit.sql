@@ -20,7 +20,7 @@ CREATE TABLE `Actualites` (
   `Assistant2` int DEFAULT NULL,
   `DateAndHour` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=139 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8;
 
 INSERT INTO `Actualites` (`ID`, `User`, `Actualite`, `Eval_Number`, `Audit_Number`, `Facility`, `Auditor`, `Assistant1`, `Assistant2`, `DateAndHour`) VALUES
 (121,	11,	'a été audité !',	NULL,	1,	14,	10,	NULL,	NULL,	'2021-03-30 15:23:03'),
@@ -38,7 +38,11 @@ INSERT INTO `Actualites` (`ID`, `User`, `Actualite`, `Eval_Number`, `Audit_Numbe
 (135,	2,	's\'est autoévalué !',	2,	NULL,	NULL,	NULL,	NULL,	NULL,	'2021-04-07 16:59:43'),
 (136,	7,	'a été audité !',	NULL,	1,	8,	1,	10,	NULL,	'2021-04-07 20:45:48'),
 (137,	11,	'a été audité !',	NULL,	3,	14,	1,	10,	2,	'2021-04-11 14:03:04'),
-(138,	1,	's\'est autoévalué !',	4,	NULL,	NULL,	NULL,	NULL,	NULL,	'2021-04-11 14:03:59');
+(138,	1,	's\'est autoévalué !',	4,	NULL,	NULL,	NULL,	NULL,	NULL,	'2021-04-11 14:03:59'),
+(139,	5,	'a été audité !',	NULL,	1,	11,	1,	NULL,	NULL,	'2021-04-14 14:17:50'),
+(140,	1,	's\'est autoévalué !',	5,	NULL,	NULL,	NULL,	NULL,	NULL,	'2021-04-14 15:10:02'),
+(141,	5,	'a été audité !',	NULL,	2,	14,	1,	10,	NULL,	'2021-04-14 15:27:29'),
+(142,	5,	's\'est autoévalué !',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	'2021-04-14 15:33:37');
 
 CREATE TABLE `Audits` (
   `ID` int NOT NULL AUTO_INCREMENT,
@@ -51,7 +55,7 @@ CREATE TABLE `Audits` (
   `Assistant2` int DEFAULT NULL,
   `Facility` int DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=99 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
 
 INSERT INTO `Audits` (`ID`, `Audit_Number`, `User_ID`, `DateAndHour`, `Completed`, `Auditor`, `Assistant1`, `Assistant2`, `Facility`) VALUES
 (80,	1,	11,	'2021-04-01 15:26:28',	CONV('1', 2, 10) + 0,	10,	NULL,	NULL,	14),
@@ -61,7 +65,9 @@ INSERT INTO `Audits` (`ID`, `Audit_Number`, `User_ID`, `DateAndHour`, `Completed
 (95,	1,	8,	'2021-04-01 21:00:12',	CONV('1', 2, 10) + 0,	3,	9,	10,	16),
 (96,	1,	7,	'2021-04-07 20:45:48',	CONV('1', 2, 10) + 0,	1,	10,	NULL,	8),
 (97,	2,	11,	'2021-04-07 14:56:11',	CONV('1', 2, 10) + 0,	3,	4,	9,	13),
-(98,	3,	11,	'2021-04-11 14:03:04',	CONV('1', 2, 10) + 0,	1,	10,	2,	14);
+(98,	3,	11,	'2021-04-11 14:03:04',	CONV('1', 2, 10) + 0,	1,	10,	2,	14),
+(99,	1,	5,	'2021-04-14 14:17:49',	CONV('1', 2, 10) + 0,	1,	NULL,	NULL,	11),
+(100,	2,	5,	'2021-04-14 15:27:29',	CONV('1', 2, 10) + 0,	1,	10,	NULL,	14);
 
 CREATE TABLE `AuditsReports` (
   `ID` int NOT NULL AUTO_INCREMENT,
@@ -72,7 +78,7 @@ CREATE TABLE `AuditsReports` (
   `User_ID` int NOT NULL,
   `Auditor` int NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7020 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7166 DEFAULT CHARSET=utf8;
 
 INSERT INTO `AuditsReports` (`ID`, `Audit_Number`, `Question`, `Report`, `Observation`, `User_ID`, `Auditor`) VALUES
 (5923,	1,	1,	'NC',	'N\'a pas eu le cahier des charges PRF',	11,	10),
@@ -658,7 +664,153 @@ INSERT INTO `AuditsReports` (`ID`, `Audit_Number`, `Question`, `Report`, `Observ
 (7016,	3,	71,	'Conforme',	NULL,	11,	1),
 (7017,	3,	72,	'Conforme',	NULL,	11,	1),
 (7018,	3,	79,	'Conforme',	NULL,	11,	1),
-(7019,	3,	46,	'Conforme',	NULL,	11,	1);
+(7019,	3,	46,	'Conforme',	NULL,	11,	1),
+(7020,	1,	1,	'Conforme',	NULL,	5,	1),
+(7021,	1,	2,	'Conforme',	NULL,	5,	1),
+(7022,	1,	3,	'Conforme',	NULL,	5,	1),
+(7023,	1,	4,	'Conforme',	NULL,	5,	1),
+(7024,	1,	5,	'Conforme',	NULL,	5,	1),
+(7025,	1,	6,	'Conforme',	NULL,	5,	1),
+(7026,	1,	7,	'Conforme',	NULL,	5,	1),
+(7027,	1,	8,	'Conforme',	NULL,	5,	1),
+(7028,	1,	9,	'Conforme',	NULL,	5,	1),
+(7029,	1,	10,	'Conforme',	NULL,	5,	1),
+(7030,	1,	11,	'Conforme',	NULL,	5,	1),
+(7031,	1,	12,	'Conforme',	NULL,	5,	1),
+(7032,	1,	13,	'Conforme',	NULL,	5,	1),
+(7033,	1,	14,	'Conforme',	NULL,	5,	1),
+(7034,	1,	15,	'Conforme',	NULL,	5,	1),
+(7035,	1,	16,	'Conforme',	NULL,	5,	1),
+(7036,	1,	17,	'Conforme',	NULL,	5,	1),
+(7037,	1,	18,	'Conforme',	NULL,	5,	1),
+(7038,	1,	19,	'Conforme',	NULL,	5,	1),
+(7039,	1,	20,	'Conforme',	NULL,	5,	1),
+(7040,	1,	21,	'Conforme',	NULL,	5,	1),
+(7041,	1,	22,	'Conforme',	NULL,	5,	1),
+(7042,	1,	23,	'Conforme',	NULL,	5,	1),
+(7043,	1,	24,	'Conforme',	NULL,	5,	1),
+(7044,	1,	25,	'Conforme',	NULL,	5,	1),
+(7045,	1,	26,	'Conforme',	NULL,	5,	1),
+(7046,	1,	27,	'Conforme',	NULL,	5,	1),
+(7047,	1,	28,	'Conforme',	NULL,	5,	1),
+(7048,	1,	29,	'Conforme',	NULL,	5,	1),
+(7049,	1,	30,	'Conforme',	NULL,	5,	1),
+(7050,	1,	31,	'Conforme',	NULL,	5,	1),
+(7051,	1,	32,	'Conforme',	NULL,	5,	1),
+(7052,	1,	33,	'Conforme',	NULL,	5,	1),
+(7053,	1,	34,	'Conforme',	NULL,	5,	1),
+(7054,	1,	35,	'Conforme',	NULL,	5,	1),
+(7055,	1,	36,	'Conforme',	NULL,	5,	1),
+(7056,	1,	37,	'Conforme',	NULL,	5,	1),
+(7057,	1,	38,	'Conforme',	NULL,	5,	1),
+(7058,	1,	39,	'Conforme',	NULL,	5,	1),
+(7059,	1,	40,	'Conforme',	NULL,	5,	1),
+(7060,	1,	41,	'Conforme',	NULL,	5,	1),
+(7061,	1,	42,	'Conforme',	NULL,	5,	1),
+(7062,	1,	43,	'Conforme',	NULL,	5,	1),
+(7063,	1,	44,	'Conforme',	NULL,	5,	1),
+(7064,	1,	45,	'Conforme',	NULL,	5,	1),
+(7065,	1,	47,	'Conforme',	NULL,	5,	1),
+(7066,	1,	48,	'Conforme',	NULL,	5,	1),
+(7067,	1,	49,	'Conforme',	NULL,	5,	1),
+(7068,	1,	50,	'Conforme',	NULL,	5,	1),
+(7069,	1,	51,	'Conforme',	NULL,	5,	1),
+(7070,	1,	52,	'Conforme',	NULL,	5,	1),
+(7071,	1,	53,	'Conforme',	NULL,	5,	1),
+(7072,	1,	54,	'Conforme',	NULL,	5,	1),
+(7073,	1,	55,	'Conforme',	NULL,	5,	1),
+(7074,	1,	56,	'Conforme',	NULL,	5,	1),
+(7075,	1,	57,	'Conforme',	NULL,	5,	1),
+(7076,	1,	58,	'Conforme',	NULL,	5,	1),
+(7077,	1,	59,	'Conforme',	NULL,	5,	1),
+(7078,	1,	60,	'Conforme',	NULL,	5,	1),
+(7079,	1,	61,	'Conforme',	NULL,	5,	1),
+(7080,	1,	62,	'Conforme',	NULL,	5,	1),
+(7081,	1,	63,	'Conforme',	NULL,	5,	1),
+(7082,	1,	64,	'Conforme',	NULL,	5,	1),
+(7083,	1,	65,	'Conforme',	NULL,	5,	1),
+(7084,	1,	66,	'Conforme',	NULL,	5,	1),
+(7085,	1,	67,	'Conforme',	NULL,	5,	1),
+(7086,	1,	68,	'Conforme',	NULL,	5,	1),
+(7087,	1,	69,	'Conforme',	NULL,	5,	1),
+(7088,	1,	70,	'Conforme',	NULL,	5,	1),
+(7089,	1,	71,	'Conforme',	NULL,	5,	1),
+(7090,	1,	72,	'NC',	'Pas de traçabilité',	5,	1),
+(7091,	1,	79,	'Conforme',	NULL,	5,	1),
+(7092,	1,	46,	'Conforme',	NULL,	5,	1),
+(7093,	2,	1,	'Conforme',	NULL,	5,	1),
+(7094,	2,	2,	'NC',	'Pas eu le temps',	5,	1),
+(7095,	2,	3,	'NC',	'Pas de planification des moyens',	5,	1),
+(7096,	2,	4,	'Conforme',	NULL,	5,	1),
+(7097,	2,	5,	'Conforme',	NULL,	5,	1),
+(7098,	2,	6,	'Conforme',	NULL,	5,	1),
+(7099,	2,	7,	'Conforme',	NULL,	5,	1),
+(7100,	2,	8,	'Conforme',	NULL,	5,	1),
+(7101,	2,	9,	'Conforme',	NULL,	5,	1),
+(7102,	2,	10,	'Conforme',	NULL,	5,	1),
+(7103,	2,	11,	'Conforme',	NULL,	5,	1),
+(7104,	2,	12,	'Conforme',	NULL,	5,	1),
+(7105,	2,	13,	'Conforme',	NULL,	5,	1),
+(7106,	2,	14,	'Conforme',	NULL,	5,	1),
+(7107,	2,	15,	'Conforme',	NULL,	5,	1),
+(7108,	2,	16,	'Conforme',	NULL,	5,	1),
+(7109,	2,	17,	'Conforme',	NULL,	5,	1),
+(7110,	2,	18,	'Conforme',	NULL,	5,	1),
+(7111,	2,	19,	'Conforme',	NULL,	5,	1),
+(7112,	2,	20,	'Conforme',	NULL,	5,	1),
+(7113,	2,	21,	'Conforme',	NULL,	5,	1),
+(7114,	2,	22,	'Conforme',	NULL,	5,	1),
+(7115,	2,	23,	'Conforme',	NULL,	5,	1),
+(7116,	2,	24,	'NA',	NULL,	5,	1),
+(7117,	2,	25,	'NA',	NULL,	5,	1),
+(7118,	2,	26,	'NA',	NULL,	5,	1),
+(7119,	2,	27,	'NDA',	NULL,	5,	1),
+(7120,	2,	28,	'NDA',	NULL,	5,	1),
+(7121,	2,	29,	'Conforme',	NULL,	5,	1),
+(7122,	2,	30,	'Conforme',	NULL,	5,	1),
+(7123,	2,	31,	'Conforme',	NULL,	5,	1),
+(7124,	2,	32,	'Conforme',	NULL,	5,	1),
+(7125,	2,	33,	'Conforme',	NULL,	5,	1),
+(7126,	2,	34,	'Conforme',	NULL,	5,	1),
+(7127,	2,	35,	'Conforme',	NULL,	5,	1),
+(7128,	2,	36,	'Conforme',	NULL,	5,	1),
+(7129,	2,	37,	'Conforme',	NULL,	5,	1),
+(7130,	2,	38,	'Conforme',	NULL,	5,	1),
+(7131,	2,	39,	'Conforme',	NULL,	5,	1),
+(7132,	2,	40,	'Conforme',	NULL,	5,	1),
+(7133,	2,	41,	'Conforme',	NULL,	5,	1),
+(7134,	2,	42,	'Conforme',	NULL,	5,	1),
+(7135,	2,	43,	'Conforme',	NULL,	5,	1),
+(7136,	2,	44,	'Conforme',	NULL,	5,	1),
+(7137,	2,	45,	'Conforme',	NULL,	5,	1),
+(7138,	2,	46,	'Conforme',	NULL,	5,	1),
+(7139,	2,	47,	'Conforme',	NULL,	5,	1),
+(7140,	2,	48,	'Conforme',	NULL,	5,	1),
+(7141,	2,	49,	'Conforme',	NULL,	5,	1),
+(7142,	2,	50,	'Conforme',	NULL,	5,	1),
+(7143,	2,	51,	'Conforme',	NULL,	5,	1),
+(7144,	2,	52,	'Conforme',	NULL,	5,	1),
+(7145,	2,	53,	'Conforme',	NULL,	5,	1),
+(7146,	2,	54,	'Conforme',	NULL,	5,	1),
+(7147,	2,	55,	'Conforme',	NULL,	5,	1),
+(7148,	2,	56,	'Conforme',	NULL,	5,	1),
+(7149,	2,	57,	'Conforme',	NULL,	5,	1),
+(7150,	2,	58,	'Conforme',	NULL,	5,	1),
+(7151,	2,	59,	'Conforme',	NULL,	5,	1),
+(7152,	2,	60,	'Conforme',	NULL,	5,	1),
+(7153,	2,	61,	'Conforme',	NULL,	5,	1),
+(7154,	2,	62,	'Conforme',	NULL,	5,	1),
+(7155,	2,	63,	'Conforme',	NULL,	5,	1),
+(7156,	2,	64,	'Conforme',	NULL,	5,	1),
+(7157,	2,	65,	'Conforme',	NULL,	5,	1),
+(7158,	2,	66,	'Conforme',	NULL,	5,	1),
+(7159,	2,	67,	'Conforme',	NULL,	5,	1),
+(7160,	2,	68,	'Conforme',	NULL,	5,	1),
+(7161,	2,	69,	'Conforme',	NULL,	5,	1),
+(7162,	2,	70,	'Conforme',	NULL,	5,	1),
+(7163,	2,	71,	'Conforme',	NULL,	5,	1),
+(7164,	2,	72,	'Conforme',	NULL,	5,	1),
+(7165,	2,	79,	'Conforme',	NULL,	5,	1);
 
 CREATE TABLE `Autoevaluations` (
   `ID` int NOT NULL AUTO_INCREMENT,
@@ -667,7 +819,7 @@ CREATE TABLE `Autoevaluations` (
   `DateAndHour` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Completed` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=157 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=utf8;
 
 INSERT INTO `Autoevaluations` (`ID`, `Evaluation_Number`, `User_ID`, `DateAndHour`, `Completed`) VALUES
 (151,	1,	1,	'2021-04-01 17:36:13',	CONV('1', 2, 10) + 0),
@@ -675,7 +827,10 @@ INSERT INTO `Autoevaluations` (`ID`, `Evaluation_Number`, `User_ID`, `DateAndHou
 (153,	3,	1,	'2021-04-01 20:50:41',	CONV('1', 2, 10) + 0),
 (154,	1,	2,	'2021-04-07 14:08:20',	CONV('1', 2, 10) + 0),
 (155,	2,	2,	'2021-04-07 16:59:43',	CONV('1', 2, 10) + 0),
-(156,	4,	1,	'2021-04-11 14:03:59',	CONV('1', 2, 10) + 0);
+(156,	4,	1,	'2021-04-11 14:03:59',	CONV('1', 2, 10) + 0),
+(157,	5,	1,	'2021-04-14 15:10:02',	CONV('1', 2, 10) + 0),
+(158,	1,	5,	'2021-04-14 15:33:37',	CONV('1', 2, 10) + 0),
+(159,	6,	1,	'2021-04-20 17:11:42',	CONV('0', 2, 10) + 0);
 
 CREATE TABLE `BugReports` (
   `ID` int NOT NULL AUTO_INCREMENT,
@@ -764,7 +919,7 @@ CREATE TABLE `QuestionsAudit` (
   `Active` bit(1) NOT NULL DEFAULT b'1',
   `Category` int NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8;
 
 INSERT INTO `QuestionsAudit` (`ID`, `CreatedBy`, `DateAndHour`, `Question`, `Evidence`, `Active`, `Category`) VALUES
 (1,	1,	'2021-03-17 14:10:18',	'Connaissance des engagements contractuels pris avec l\'AFPA ?',	'Cahier des charges PRF',	CONV('1', 2, 10) + 0,	1),
@@ -839,7 +994,8 @@ INSERT INTO `QuestionsAudit` (`ID`, `CreatedBy`, `DateAndHour`, `Question`, `Evi
 (70,	1,	'2021-03-10 09:05:25',	'Existe-t-il une évaluation de la satisfaction du groupe à la fin du parcours (espace de dialogue) ?',	'Espace de dialogue final',	CONV('1', 2, 10) + 0,	7),
 (71,	1,	'2021-03-10 09:05:37',	'Remontez vous les réclamations au RF ?',	'Mail',	CONV('1', 2, 10) + 0,	8),
 (72,	1,	'2021-03-10 09:05:54',	'Existe-t-il une traçabilité des réclamations ?',	'Mail',	CONV('1', 2, 10) + 0,	8),
-(79,	1,	'2021-03-19 08:26:18',	'Participez vous au bilan interne ?	',	'Date bilan',	CONV('1', 2, 10) + 0,	8);
+(79,	1,	'2021-03-19 08:26:18',	'Participez vous au bilan interne ?	',	'Date bilan',	CONV('1', 2, 10) + 0,	8),
+(103,	1,	'2021-04-14 15:48:24',	'test',	'test',	CONV('1', 2, 10) + 0,	1);
 
 CREATE TABLE `QuestionsAutoevaluation` (
   `ID` int NOT NULL AUTO_INCREMENT,
@@ -849,7 +1005,7 @@ CREATE TABLE `QuestionsAutoevaluation` (
   `Category` int NOT NULL,
   `Active` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=142 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8;
 
 INSERT INTO `QuestionsAutoevaluation` (`ID`, `CreatedBy`, `DateAndHour`, `Question`, `Category`, `Active`) VALUES
 (40,	1,	'2021-02-25 14:21:01',	'Utilisation du référentiel emploi activité REAC ?',	1,	CONV('1', 2, 10) + 0),
@@ -896,7 +1052,7 @@ CREATE TABLE `RaisonsNonConformitesAutoevaluation` (
   `Reason` tinytext NOT NULL,
   `Eval_Number` int NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=192 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=195 DEFAULT CHARSET=utf8;
 
 INSERT INTO `RaisonsNonConformitesAutoevaluation` (`ID`, `User`, `Question_ID`, `Reason`, `Eval_Number`) VALUES
 (177,	1,	41,	'Pas eu le temps',	1),
@@ -910,7 +1066,10 @@ INSERT INTO `RaisonsNonConformitesAutoevaluation` (`ID`, `User`, `Question_ID`, 
 (188,	2,	67,	'Je n\'ai pas reçu le référentiel d\'évaluation.',	2),
 (189,	2,	64,	'Je ne sais pas ce que c\'est.',	2),
 (190,	1,	41,	'Pas eu le temps',	4),
-(191,	1,	42,	'Pas eu le temps',	4);
+(191,	1,	42,	'Pas eu le temps',	4),
+(192,	1,	41,	'Pas eu le temps',	5),
+(193,	1,	50,	'Non application de l\'état d\'avancement',	5),
+(194,	5,	50,	'Je n\'applique pas l\'état d\'avancement du programme de formation',	1);
 
 CREATE TABLE `ResultatsAutoevaluations` (
   `ID` int NOT NULL AUTO_INCREMENT,
@@ -919,7 +1078,7 @@ CREATE TABLE `ResultatsAutoevaluations` (
   `Answer` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `User_ID` int NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5216 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5288 DEFAULT CHARSET=utf8;
 
 INSERT INTO `ResultatsAutoevaluations` (`ID`, `Evaluation_Number`, `Question`, `Answer`, `User_ID`) VALUES
 (4999,	1,	41,	'Non',	1),
@@ -1137,7 +1296,79 @@ INSERT INTO `ResultatsAutoevaluations` (`ID`, `Evaluation_Number`, `Question`, `
 (5212,	4,	72,	'Oui',	1),
 (5213,	4,	73,	'Oui',	1),
 (5214,	4,	74,	'Oui',	1),
-(5215,	4,	77,	'Oui',	1);
+(5215,	4,	77,	'Oui',	1),
+(5216,	5,	41,	'Non',	1),
+(5217,	5,	42,	'Oui',	1),
+(5218,	5,	40,	'Oui',	1),
+(5219,	5,	48,	'Oui',	1),
+(5220,	5,	51,	'Oui',	1),
+(5221,	5,	50,	'Non',	1),
+(5222,	5,	49,	'Oui',	1),
+(5223,	5,	47,	'Oui',	1),
+(5224,	5,	46,	'Oui',	1),
+(5225,	5,	45,	'Oui',	1),
+(5226,	5,	44,	'Oui',	1),
+(5227,	5,	43,	'Oui',	1),
+(5228,	5,	58,	'Oui',	1),
+(5229,	5,	61,	'Oui',	1),
+(5230,	5,	60,	'Oui',	1),
+(5231,	5,	59,	'Oui',	1),
+(5232,	5,	57,	'Oui',	1),
+(5233,	5,	55,	'Oui',	1),
+(5234,	5,	54,	'Oui',	1),
+(5235,	5,	53,	'Oui',	1),
+(5236,	5,	52,	'Oui',	1),
+(5237,	5,	56,	'Oui',	1),
+(5238,	5,	66,	'Oui',	1),
+(5239,	5,	69,	'Oui',	1),
+(5240,	5,	68,	'Oui',	1),
+(5241,	5,	67,	'Oui',	1),
+(5242,	5,	65,	'Oui',	1),
+(5243,	5,	64,	'Oui',	1),
+(5244,	5,	63,	'Oui',	1),
+(5245,	5,	62,	'Oui',	1),
+(5246,	5,	70,	'Oui',	1),
+(5247,	5,	71,	'Oui',	1),
+(5248,	5,	72,	'Oui',	1),
+(5249,	5,	73,	'Oui',	1),
+(5250,	5,	74,	'Oui',	1),
+(5251,	5,	77,	'Oui',	1),
+(5252,	1,	41,	'Oui',	5),
+(5253,	1,	42,	'Oui',	5),
+(5254,	1,	40,	'Oui',	5),
+(5255,	1,	48,	'Oui',	5),
+(5256,	1,	51,	'Oui',	5),
+(5257,	1,	50,	'Non',	5),
+(5258,	1,	49,	'Oui',	5),
+(5259,	1,	47,	'Oui',	5),
+(5260,	1,	46,	'Oui',	5),
+(5261,	1,	45,	'Oui',	5),
+(5262,	1,	44,	'Oui',	5),
+(5263,	1,	43,	'Oui',	5),
+(5264,	1,	58,	'Oui',	5),
+(5265,	1,	61,	'Oui',	5),
+(5266,	1,	60,	'Oui',	5),
+(5267,	1,	59,	'Oui',	5),
+(5268,	1,	57,	'Oui',	5),
+(5269,	1,	55,	'Oui',	5),
+(5270,	1,	54,	'Oui',	5),
+(5271,	1,	53,	'Oui',	5),
+(5272,	1,	52,	'Oui',	5),
+(5273,	1,	56,	'Oui',	5),
+(5274,	1,	66,	'Oui',	5),
+(5275,	1,	69,	'Oui',	5),
+(5276,	1,	68,	'Oui',	5),
+(5277,	1,	67,	'Oui',	5),
+(5278,	1,	65,	'Oui',	5),
+(5279,	1,	64,	'Oui',	5),
+(5280,	1,	63,	'Oui',	5),
+(5281,	1,	62,	'Oui',	5),
+(5282,	1,	70,	'Oui',	5),
+(5283,	1,	72,	'Oui',	5),
+(5284,	1,	71,	'Oui',	5),
+(5285,	1,	73,	'Oui',	5),
+(5286,	1,	74,	'Oui',	5),
+(5287,	1,	77,	'Oui',	5);
 
 CREATE TABLE `Users` (
   `ID` int NOT NULL AUTO_INCREMENT,
@@ -1166,4 +1397,4 @@ INSERT INTO `Users` (`ID`, `Name`, `FirstName`, `Email`, `Localisation`, `Passwo
 (10,	'Amelie',	'Boulesteix',	'amelie.boulesteix@afpa.fr',	14,	'9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',	2,	NULL,	NULL,	'default.png'),
 (11,	'Mektar',	'Outgda',	'mektar.outgda@test.fr',	14,	'9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',	1,	NULL,	NULL,	'default.png');
 
--- 2021-04-11 12:07:13
+-- 2021-04-20 15:18:04

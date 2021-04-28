@@ -4,8 +4,8 @@ function createChart(container, title, myData) {
         [//colorSet Array
         "#35B5A0", // Compliance
         "#F4700E", // Non compliance
-        "#A8A8A8", // Not available
-        "#EDCF18"  // Not currently available
+        "#EDCF18", // Not available
+        "#A8A8A8"  // Not currently available
         ]
     );
 

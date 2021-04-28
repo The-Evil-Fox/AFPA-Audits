@@ -119,10 +119,14 @@ $('#form-login').submit(function(e) {
         
     };
     
-    // create a empty variable wich will hold the password
+    // Create a empty variable wich will hold the encrypted password
     let password;
+
+    // Get the value of the user password input
+    let userInput = document.getElementById('passwordInput').value;
+
     // Insert the hash into the variable
-    password = sha256(document.getElementById("passwordInput").value);
+    password = sha256(userInput);
 
     let email = $('#emailInput').val();
 
@@ -165,7 +169,7 @@ $('#form-login').submit(function(e) {
         
         error: function(xhr, textStatus, error){
 
-            // If something unexpected happens shows the server error message instead of the login form
+            // If something unexpected happens shows the server a error message instead of the login form
 
             document.body.innerHTML = `
                 <div class='errorContainer'>

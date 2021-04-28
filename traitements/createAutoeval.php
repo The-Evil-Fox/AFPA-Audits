@@ -11,7 +11,7 @@ if(!isset($_SESSION['ID'])) {
 
 }
 
-// Creating a nex autoevaluation
+// Creating a new autoevaluation
 
 if(isset($_POST['createNewEval'])) {
 

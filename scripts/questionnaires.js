@@ -40,8 +40,16 @@ function checkAuditInProgress(user) {
 
     let spanMessage = document.getElementById('auditSelectMessage');
     let startAuditButton = document.getElementById('startAuditButton');
+    let auditTypeContainer = document.getElementById('auditTypeContainer');
     let auditedCenterContainer = document.getElementById('auditedCenterContainer');
     let assistantsContainer = document.getElementById('assistantsContainer');
+
+    if(auditTypeContainer.style.display == "block") {
+
+        auditTypeContainer.style.display = "none";
+        auditTypeContainer.innerHTML = "";
+
+    }
 
     if(assistantsContainer.style.display == "block") {
         
@@ -108,6 +116,35 @@ function checkAuditInProgress(user) {
                 startAuditButton.innerHTML = "Démarrer l'audit";
                 startAuditButton.style.display = "block";
                 startAuditButton.value = "Demarrer";
+
+                getAuditsType = true;
+
+                dataSend = {
+                    getAuditsType
+                };
+
+                $.ajax({
+        
+                    type: 'POST',
+                    url: 'traitements/createAudit.php',
+                    data: dataSend,
+                    dataType: 'text',
+                    success: function(data) {
+            
+                        myFunctions.checkAuthentifiedUser(data);
+                        
+                        auditTypeContainer.style.display = "block";
+                        auditTypeContainer.innerHTML = data;
+                        
+                    },
+            
+                    error: function(xhr, textStatus, error) {
+            
+                        myFunctions.showError(contentWindow, xhr);
+                        
+                    }
+            
+                });
         
                 getCenters = true;
         
@@ -266,6 +303,25 @@ function startAudit(buttonvalue) {
 
         }
 
+        let auditType = document.getElementById('auditType').value;
+
+        // Shows a error message if the user didn't select a type of audit while creating one
+
+        if(auditType == "") {
+
+            spanMessage.innerHTML = "Veuillez sélectionner le type d'audit !";
+            spanMessage.style.color = "#EE5046";
+            spanMessage.style.display = "block";
+            setTimeout(() => {
+
+                spanMessage.innerHTML = "";
+                spanMessage.style.display = "none";
+
+            }, 2500);
+            return;
+            
+        }
+
         // Shows a error message if no localisation is selected by user while creating a audit
 
         if(auditedCenter == "") {
@@ -314,6 +370,7 @@ function startAudit(buttonvalue) {
 
         dataSend = {
             demarrerAudit,
+            auditType,
             auditedUserID,
             auditedCenter,
             assistantAudit1,
@@ -354,7 +411,7 @@ function startAudit(buttonvalue) {
 
 // Update the report on a question in the audit
 
-function updateReport(userID, audit, question, report, textAreaID) {
+function updateReport(userID, auditType, auditNumber, question, report, textAreaID) {
 
     let textArea = document.getElementById(textAreaID);
 
@@ -363,7 +420,8 @@ function updateReport(userID, audit, question, report, textAreaID) {
     newReport = {
         method,
         userID,
-        audit,
+        auditType,
+        auditNumber,
         question,
         report
     }
@@ -413,12 +471,12 @@ function updateReport(userID, audit, question, report, textAreaID) {
 
 // Insert or update the observation on a question in the audit
 
-function updateObservation(userID, audit, question, observation, textAreaID) {
+function updateObservation(userID, auditType, auditNumber, question, observation, textAreaID) {
 
     if(observation.length <= 3) {
 
         alert("Le motif n'est pas valable");
-        document.getElementById(textareaID).value = "";
+        document.getElementById(textAreaID).value = "";
         return;
 
     }
@@ -430,7 +488,8 @@ function updateObservation(userID, audit, question, observation, textAreaID) {
     newObservation = {
         method,
         userID,
-        audit,
+        auditType,
+        auditNumber,
         question,
         observation
     }
@@ -461,7 +520,7 @@ function updateObservation(userID, audit, question, observation, textAreaID) {
 
 // Finalise the audit and get the chart witch the tables containing the non compliances, etc...
 
-function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2) {
+function sendAudit(auditType, auditNumber, userID, localisation, auditor, assistant1, assistant2) {
 
     let content = document.getElementById('content');
     let messageWindow = document.getElementById('message');
@@ -517,7 +576,8 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
 
     finaliseAudit = {
         method,
-        audit,
+        auditType,
+        auditNumber,
         userID,
         localisation,
         auditor
@@ -529,7 +589,8 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
         
         finaliseAudit = {
             method,
-            audit,
+            auditType,
+            auditNumber,
             userID,
             localisation,
             auditor,
@@ -542,7 +603,8 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
 
         finaliseAudit = {
             method,
-            audit,
+            auditType,
+            auditNumber,
             userID,
             localisation,
             auditor,
@@ -591,7 +653,8 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
 
             finaliseAudit = {
                 method,
-                audit,
+                auditType,
+                auditNumber,
                 userID
             }
         
@@ -620,7 +683,7 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
                 
                 error: function(xhr, textStatus, error) {
         
-                    myFunctions.showError(contentWindow, xhr);
+                    myFunctions.showError(document.getElementById('tableauContainer'), xhr);
                     
                 }
         
@@ -630,7 +693,7 @@ function sendAudit(audit, userID, localisation, auditor, assistant1, assistant2)
 
         error: function(xhr, textStatus, error) {
 
-            myFunctions.showError(contentWindow, xhr);
+            myFunctions.showError(document.getElementById('graphique-resultats'), xhr);
             
         }
 

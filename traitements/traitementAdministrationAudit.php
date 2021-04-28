@@ -11,124 +11,240 @@ if(!isset($_SESSION['ID'])) {
 
 }
 
-// If a question is edited:
+if(isset($_POST['auditType']) && !empty($_POST['auditType'])) {
 
-if(isset($_POST['operation']) && !empty($_POST['operation'])) {
+// Modification of the audit type 1
 
-    if(isset($_POST['questionID']) && !empty($_POST['questionID'])) {
+    if($_POST['auditType'] == 1) {
 
-        $question = intval($_POST['questionID']);
+        // If a question is edited:
 
-        // If a question is deleted
+        if(isset($_POST['operation']) && !empty($_POST['operation'])) {
 
-        if($_POST['operation'] == "delete") {
+            if(isset($_POST['questionID']) && !empty($_POST['questionID'])) {
 
-            // Delete the question from the database and the auditsreports associated to it
+                $question = intval($_POST['questionID']);
 
-            $deleteQuestion = $db->prepare('DELETE FROM QuestionsAudit WHERE ID = :questionID');
-            $deleteQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
-            $deleteQuestion->execute();
+                // If a question is deleted
 
-            $deleteConstatsAudits = $db->prepare('DELETE FROM AuditsReports WHERE Question = :questionID');
-            $deleteConstatsAudits->bindParam(':questionID', $question, PDO::PARAM_INT);
-            $deleteConstatsAudits->execute();
+                if($_POST['operation'] == "delete") {
 
-            $message = "La question a bien été supprimée !";
+                    // Delete the question from the database and the auditsreports associated to it
 
-        // If a question is disabled
-        
-        } else if($_POST['operation'] == "disable") {
+                    $deleteQuestion = $db->prepare('DELETE FROM QuestionsAuditFormateur WHERE ID = :questionID');
+                    $deleteQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
+                    $deleteQuestion->execute();
 
-            $active = 0;
+                    $deleteConstatsAudits = $db->prepare('DELETE FROM AuditsReports WHERE Question = :questionID AND Audit_Type = :auditType');
+                    $deleteConstatsAudits->bindParam(':questionID', $question, PDO::PARAM_INT);
+                    $deleteConstatsAudits->bindParam(':auditType', $_POST['auditType'], PDO::PARAM_INT);
+                    $deleteConstatsAudits->execute();
 
-            // Disable the question in the dabase
+                    $message = "La question a bien été supprimée !";
 
-            $updateQuestion = $db->prepare('UPDATE QuestionsAudit SET Active = :active WHERE ID = :questionID');
-            $updateQuestion->bindParam(':active', $active, PDO::PARAM_BOOL);
-            $updateQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
-            $updateQuestion->execute();
-            
-            $message = "La question a bien été désactivée !";
-        
-        // If a question is enabled
-        
-        } else if($_POST['operation'] == "enable") {
+                // If a question is disabled
+                
+                } else if($_POST['operation'] == "disable") {
 
-            $active = 1;
+                    $active = 0;
 
-            // Activate the question in the database
-            
-            $updateQuestion = $db->prepare('UPDATE QuestionsAudit SET Active = :active WHERE ID = :questionID');
-            $updateQuestion->bindParam(':active', $active, PDO::PARAM_BOOL);
-            $updateQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
-            $updateQuestion->execute();
+                    // Disable the question in the dabase
 
-            $message = "La question a bien été activée !";
+                    $updateQuestion = $db->prepare('UPDATE QuestionsAuditFormateur SET Active = :active WHERE ID = :questionID');
+                    $updateQuestion->bindParam(':active', $active, PDO::PARAM_BOOL);
+                    $updateQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
+                    $updateQuestion->execute();
+                    
+                    $message = "La question a bien été désactivée !";
+                
+                // If a question is enabled
+                
+                } else if($_POST['operation'] == "enable") {
 
-        // If a question label is updated
+                    $active = 1;
 
-        } else if($_POST['operation'] == "editQuestion" && isset($_POST['updatedQuestion']) && !empty($_POST['updatedQuestion'])) {
+                    // Activate the question in the database
+                    
+                    $updateQuestion = $db->prepare('UPDATE QuestionsAuditFormateur SET Active = :active WHERE ID = :questionID');
+                    $updateQuestion->bindParam(':active', $active, PDO::PARAM_BOOL);
+                    $updateQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
+                    $updateQuestion->execute();
 
-            // Update the question label in the database
+                    $message = "La question a bien été activée !";
 
-            $editQuestion = $db->prepare('UPDATE QuestionsAudit SET Question = :question WHERE ID = :questionID');
-            $editQuestion->bindParam(':question', $_POST['updatedQuestion'], PDO::PARAM_STR);
-            $editQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
-            $editQuestion->execute();
+                // If a question label is updated
 
-            $message = "La question a bien été éditée !";
+                } else if($_POST['operation'] == "editQuestion" && isset($_POST['updatedQuestion']) && !empty($_POST['updatedQuestion'])) {
 
-        // If a evidence label is updated
-        
-        } else if($_POST['operation'] == "editEvidence" && isset($_POST['updatedEvidence']) && !empty($_POST['updatedEvidence'])) {
+                    // Update the question label in the database
 
-            // Update the evidence label in the database
+                    $editQuestion = $db->prepare('UPDATE QuestionsAuditFormateur SET Question = :question WHERE ID = :questionID');
+                    $editQuestion->bindParam(':question', $_POST['updatedQuestion'], PDO::PARAM_STR);
+                    $editQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
+                    $editQuestion->execute();
 
-            $editQuestion = $db->prepare('UPDATE QuestionsAudit SET Evidence = :evidence WHERE ID = :questionID');
-            $editQuestion->bindParam(':evidence', $_POST['updatedEvidence'], PDO::PARAM_STR);
-            $editQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
-            $editQuestion->execute();
+                    $message = "La question a bien été éditée !";
 
-            $message = "La preuve à fournir a bien été éditée !";
+                // If a evidence label is updated
+                
+                } else if($_POST['operation'] == "editEvidence" && isset($_POST['updatedEvidence']) && !empty($_POST['updatedEvidence'])) {
+
+                    // Update the evidence label in the database
+
+                    $editQuestion = $db->prepare('UPDATE QuestionsAuditFormateur SET Evidence = :evidence WHERE ID = :questionID');
+                    $editQuestion->bindParam(':evidence', $_POST['updatedEvidence'], PDO::PARAM_STR);
+                    $editQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
+                    $editQuestion->execute();
+
+                    $message = "La preuve à fournir a bien été éditée !";
+
+                }
+
+            }
 
         }
 
-    }
+        // If a new question is created
 
-}
+        if(isset($_POST['newQuestion']) && !empty($_POST['newQuestion'])) {
 
-// If a new question is created
+            if(isset($_POST['categorieQuestion']) && !empty($_POST['categorieQuestion'])) {
 
-if(isset($_POST['newQuestion']) && !empty($_POST['newQuestion'])) {
+                if(isset($_POST['evidenceQuestion'])) {
 
-    if(isset($_POST['categorieQuestion']) && !empty($_POST['categorieQuestion'])) {
+                    $evidenceQuestion = htmlspecialchars($_POST['evidenceQuestion']);
 
-        if(isset($_POST['evidenceQuestion'])) {
+                    if($evidenceQuestion == "false") {
 
-            $evidenceQuestion = htmlspecialchars($_POST['evidenceQuestion']);
+                        $evidenceQuestion = NULL;
 
-            if($evidenceQuestion == "false") {
+                    }
 
-                $evidenceQuestion = NULL;
+                    try {
+
+                        // Inserts the new question in the database
+
+                        $addQuestion = $db->prepare('INSERT INTO QuestionsAuditFormateur(CreatedBy, Question, Evidence, Category) VALUES(:user, :question, :evidence, :category)');
+                        $addQuestion->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
+                        $addQuestion->bindParam(':question', $_POST['newQuestion'], PDO::PARAM_STR);
+                        if($evidenceQuestion !== NULL) {
+
+                            $addQuestion->bindParam(':evidence', $evidenceQuestion, PDO::PARAM_STR);
+
+                        } else {
+
+                            $addQuestion->bindValue(':evidence', $evidenceQuestion, PDO::PARAM_NULL);
+
+                        }
+                        $addQuestion->bindParam(':category', $_POST['categorieQuestion'], PDO::PARAM_INT);
+                        $addQuestion->execute();
+
+                        $message = "La question a bien été ajoutée !";
+
+                    } catch(PDOException $e) {
+
+                        echo $e;
+
+                    }
+
+                }
 
             }
+
+        }
+
+    } elseif($_POST['auditType'] == 2) {
+
+        if(isset($_POST['operation']) && !empty($_POST['operation'])) {
+
+            if(isset($_POST['questionID']) && !empty($_POST['questionID'])) {
+
+                $question = intval($_POST['questionID']);
+
+                if($_POST['operation'] == "delete") {
+
+                    $deleteQuestion = $db->prepare('DELETE FROM QuestionsAuditQualiopi WHERE ID = :questionID');
+                    $deleteQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
+                    $deleteQuestion->execute();
+
+                    $deleteConstatsAudits = $db->prepare('DELETE FROM AuditsReports WHERE Question = :questionID AND Audit_Type = :auditType');
+                    $deleteConstatsAudits->bindParam(':questionID', $question, PDO::PARAM_INT);
+                    $deleteConstatsAudits->bindParam(':auditType', $_POST['auditType'], PDO::PARAM_INT);
+                    $deleteConstatsAudits->execute();
+
+                    $message = "La question a bien été supprimée !";
+
+                } else if($_POST['operation'] == "disable") {
+
+                    $active = 0;
+
+                    // Disable the question in the dabase
+
+                    $updateQuestion = $db->prepare('UPDATE QuestionsAuditQualiopi SET Active = :active WHERE ID = :questionID');
+                    $updateQuestion->bindParam(':active', $active, PDO::PARAM_BOOL);
+                    $updateQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
+                    $updateQuestion->execute();
+                    
+                    $message = "La question a bien été désactivée !";
+                
+                // If a question is enabled
+                
+                } else if($_POST['operation'] == "enable") {
+
+                    $active = 1;
+
+                    // Activate the question in the database
+                    
+                    $updateQuestion = $db->prepare('UPDATE QuestionsAuditQualiopi SET Active = :active WHERE ID = :questionID');
+                    $updateQuestion->bindParam(':active', $active, PDO::PARAM_BOOL);
+                    $updateQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
+                    $updateQuestion->execute();
+
+                    $message = "La question a bien été activée !";
+
+                // If a question label is updated
+
+                } else if($_POST['operation'] == "editQuestion" && isset($_POST['updatedQuestion']) && !empty($_POST['updatedQuestion'])) {
+
+                    // Update the question label in the database
+
+                    $editQuestion = $db->prepare('UPDATE QuestionsAuditQualiopi SET Question = :question WHERE ID = :questionID');
+                    $editQuestion->bindParam(':question', $_POST['updatedQuestion'], PDO::PARAM_STR);
+                    $editQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
+                    $editQuestion->execute();
+
+                    $message = "La question a bien été éditée !";
+
+                // If a evidence label is updated
+                
+                } else if($_POST['operation'] == "editEvidence" && isset($_POST['updatedEvidence']) && !empty($_POST['updatedEvidence'])) {
+
+                    // Update the evidence label in the database
+
+                    $editQuestion = $db->prepare('UPDATE QuestionsAuditQualiopi SET Question = :question WHERE ID = :questionID');
+                    $editQuestion->bindParam(':question', $_POST['updatedEvidence'], PDO::PARAM_STR);
+                    $editQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
+                    $editQuestion->execute();
+
+                    $message = "La preuve à fournir a bien été éditée !";
+
+                }
+
+            }
+
+        }
+
+        if(isset($_POST['categorieQuestion']) && !empty($_POST['categorieQuestion']) && isset($_POST['evidenceQuestion']) && !empty($_POST['evidenceQuestion'])) {
+
+            $evidenceQuestion = htmlspecialchars($_POST['evidenceQuestion']);
 
             try {
 
                 // Inserts the new question in the database
 
-                $addQuestion = $db->prepare('INSERT INTO QuestionsAudit(CreatedBy, Question, Evidence, Category) VALUES(:user, :question, :evidence, :category)');
+                $addQuestion = $db->prepare('INSERT INTO QuestionsAuditQualiopi(CreatedBy, Question, Category) VALUES(:user, :question, :category)');
                 $addQuestion->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-                $addQuestion->bindParam(':question', $_POST['newQuestion'], PDO::PARAM_STR);
-                if($evidenceQuestion !== NULL) {
-
-                    $addQuestion->bindParam(':evidence', $evidenceQuestion, PDO::PARAM_STR);
-
-                } else {
-
-                    $addQuestion->bindValue(':evidence', $evidenceQuestion, PDO::PARAM_NULL);
-
-                }
+                $addQuestion->bindParam(':question', $evidenceQuestion, PDO::PARAM_STR);
                 $addQuestion->bindParam(':category', $_POST['categorieQuestion'], PDO::PARAM_INT);
                 $addQuestion->execute();
 

@@ -144,6 +144,7 @@ header {
 
 .sidebar #sidebarLinks {
     padding-bottom: 15vh;
+    font-size: 15px;
 }
 
 .sidebar a {
@@ -610,7 +611,6 @@ table .redButton {
 
 #tableauContainer {
     padding: 3vh 3vw;
-    margin-top: 5vh;
     display: none;
 }
 
@@ -797,6 +797,10 @@ table .redButton {
     margin: 0 2vw;
 }
 
+#modifyingToolContainer {
+    display: none;
+}
+
 table {
     font-family: "Arial Black", Gadget, sans-serif;
     border: 2px solid #6C9FEB;
@@ -912,36 +916,35 @@ table#tableauQuestionnaire .edit-notification {
     display: block;
 }
 
-table#tableauNonConformites {
+table#tableauNonConformites, table#tableauNonConformitesmajeures {
     border: 2px solid #F16137;
 }
 
-table#tableauNonConformites thead {
+table#tableauNonConformites thead, table#tableauNonConformitesmajeures thead{
     background: #F16137;
     border-bottom: 3px solid #F16137;
 }
 
+table#tableauNonConformitesmineures, table#tableauNonApplicables {
+    border: 2px solid #EDCF18;
+}
 
-table#tableauNonConformites td {
+table#tableauNonConformitesmineures thead, table#tableauNonApplicables thead {
+    background: #EDCF18;
+    border-bottom: 3px solid #EDCF18;
+}
+
+table#tableauNonConformites td, table#tableauNonConformitesmajeures td, table#tableauNonConformitesmineures td {
     border-right: 1px solid black;
 }
 
-table#tableauNonApplicables {
-    border: 2px solid #308B7C;
-}
-
-table#tableauNonApplicables thead {
-    background: #308B7C;
-    border-bottom: 3px solid #308B7C;
-}
-
 table#tableauNonDisponiblesActuellement {
-    border: 2px solid #2F4A72;
+    border: 2px solid #A8A8A8;
 }
 
 table#tableauNonDisponiblesActuellement thead {
-    background: #2F4A72;
-    border-bottom: 3px solid #2F4A72;
+    background: #A8A8A8;
+    border-bottom: 3px solid #A8A8A8;
 }
 
 table#tableauNonConformites td, table#tableauNonApplicables td, table#tableauNonDisponiblesActuellement td {
@@ -975,6 +978,11 @@ table#tableauGlobalStats th.forceInline i.active {
 
 .responsiveOrderBy {
     display: none;
+}
+
+#selectTypeContainer {
+    text-align: center;
+    margin: 10vh auto 0 auto;
 }
 
 table#tableauAssistants {
@@ -1092,6 +1100,7 @@ table#tableauAssistants {
 
     .responsiveOrderBy {
         display: block;
+        margin: auto;
     }
 
     table thead {

@@ -144,11 +144,14 @@ function showUserResultEval(userID, eval, userName, userFirstName, date) {
 
 }
 
-function showUserResultAudit(userID, audit, userName, userFirstName, auditeurName, auditeurFirstName, date, centre, assistant1Name, assistant1FirstName, assistant2Name, assistant2FirstName) {
+function showUserResultAudit(userID, auditType, auditNumber, userName, userFirstName, auditeurName, auditeurFirstName, date, centre, assistant1Name, assistant1FirstName, assistant2Name, assistant2FirstName) {
 
-    userData = { 
+    userData = {
+
         userID,
-        audit 
+        auditType,
+        auditNumber
+        
     };
 
     $.ajax({
@@ -242,7 +245,8 @@ function showUserResultAudit(userID, audit, userName, userFirstName, auditeurNam
                 url: 'contentGenerators/userResultAudit.php',
                 data: {
                     'getNonCompliances': true,
-                    'audit' : audit,
+                    'auditType' : auditType,
+                    'auditNumber' : auditNumber,
                     'userID': userID
                 },
                 dataType: 'text',
@@ -325,9 +329,14 @@ function showAdminForm(questionnaire) {
 
 }
 
-function addQuestionQuestionnaire(questionnaire) {
+function addQuestionQuestionnaire(questionnaire, auditType) {
 
-    let newQuestion = document.getElementById('newQuestion').value;
+    if(auditType == 1) {
+    
+        let newQuestion = document.getElementById('newQuestion').value;
+    
+    }
+
     let categorieQuestion = document.getElementById('categorie').value;
     let messageWindow = document.getElementById('message');
 
@@ -337,9 +346,27 @@ function addQuestionQuestionnaire(questionnaire) {
 
     }
 
-    if(newQuestion == "") {
+    if(auditType == 1) {
 
-        messageWindow.innerHTML = "Veuillez insérer votre question !";
+        if(newQuestion == "") {
+
+            messageWindow.innerHTML = "Veuillez insérer votre question !";
+            messageWindow.style.display = "flex";
+            setTimeout(() => {
+
+                messageWindow.style.display = "none";
+                messageWindow.innerHTML = "";
+
+            }, 2500);
+            return false;
+
+        }
+
+    }
+
+    if(auditType == 2 && evidenceQuestion == "") {
+
+        messageWindow.innerHTML = "Veuillez insérer la nouvelle question !";
         messageWindow.style.display = "flex";
         setTimeout(() => {
 
@@ -365,7 +392,7 @@ function addQuestionQuestionnaire(questionnaire) {
 
     }
 
-    if(questionnaire == "audit" && preuvesQuestion == "") {
+    if(questionnaire == "audit" && auditType == 1 && preuvesQuestion == "") {
 
         preuvesQuestion = false;
 
@@ -380,11 +407,30 @@ function addQuestionQuestionnaire(questionnaire) {
 
     } else if(questionnaire == "audit") {
 
-        dataSend = {
-            newQuestion,
-            categorieQuestion,
-            evidenceQuestion
-        };
+        if(auditType == 1) {
+
+            dataSend = {
+
+                newQuestion,
+                categorieQuestion,
+                evidenceQuestion,
+                auditType
+
+            };
+
+        }
+
+        if(auditType == 2) {
+
+            dataSend = {
+
+                categorieQuestion,
+                evidenceQuestion,
+                auditType
+
+            };
+
+        }
 
     }
 
@@ -458,11 +504,20 @@ function addQuestionQuestionnaire(questionnaire) {
 
         });
 
+        let modificationAudit = true;
+
+        dataSend = {
+
+            modificationAudit,
+            auditType
+
+        };
+
         $.ajax({
 
             type: 'POST',
-            url: 'contentGenerators/administrationGenerator.php',
-            data: "audit",
+            url: 'contentGenerators/auditModificatorGenerator.php',
+            data: dataSend,
             dataType: 'text',
             success: function(data) {
 
@@ -470,7 +525,7 @@ function addQuestionQuestionnaire(questionnaire) {
     
                 setTimeout(() => {
     
-                    contentWindow.innerHTML = data;
+                    document.getElementById('modifyingToolContainer').innerHTML = data;
     
                 }, 750);
     
@@ -489,7 +544,7 @@ function addQuestionQuestionnaire(questionnaire) {
 }
 
 
-function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, questionID) {
+function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, questionID, auditType) {
 
 
     let operation = button.value;
@@ -499,7 +554,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
     dataSend = {
 
         operation,
-        questionID
+        questionID,
         
     };
 
@@ -571,6 +626,14 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
 
     } else if(questionnaire == "audit") {
 
+        dataSend = {
+
+            operation,
+            questionID,
+            auditType
+            
+        };
+
         $.ajax({
 
             type: 'POST',
@@ -581,13 +644,22 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
 
                 myFunctions.checkAuthentifiedUser(data);
 
+                let modificationAudit = true;
+
                 if(operation == "delete") {
+
+                    dataSend = {
+
+                        modificationAudit,
+                        auditType
+
+                    };
 
                     $.ajax({
 
                         type: 'POST',
-                        url: 'contentGenerators/administrationGenerator.php',
-                        data: "audit",
+                        url: 'contentGenerators/auditModificatorGenerator.php',
+                        data: dataSend,
                         dataType: 'text',
                         success: function(data) {
 
@@ -595,7 +667,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
                 
                             setTimeout(() => {
                 
-                                contentWindow.innerHTML = data;
+                                document.getElementById('modifyingToolContainer').innerHTML = data;
                 
                             }, 500);
                 
@@ -642,7 +714,7 @@ function updateStatusRemoveQuestionQuestionnaire(questionnaire, button, question
 
 }
 
-function updateQuestionQuestionnaire(questionnaire, questionID) {
+function updateQuestionQuestionnaire(questionnaire, questionID, auditType) {
 
     let question = document.getElementById('question-label-'+questionID);
 
@@ -694,7 +766,7 @@ function updateQuestionQuestionnaire(questionnaire, questionID) {
         dataSend = {
             operation,
             questionID,
-            updatedQuestion
+            updatedQuestion,
         };
 
         if(questionnaire == "autoeval") {
@@ -727,6 +799,13 @@ function updateQuestionQuestionnaire(questionnaire, questionID) {
             });
 
         } else if(questionnaire == "audit") {
+
+            dataSend = {
+                operation,
+                questionID,
+                updatedQuestion,
+                auditType
+            };
 
             $.ajax({
 
@@ -761,7 +840,7 @@ function updateQuestionQuestionnaire(questionnaire, questionID) {
 
 }
 
-function updateEvidenceQuestionnaire(questionID) {
+function updateEvidenceQuestionnaire(questionID, auditType) {
 
     let evidence = document.getElementById('question-evidence-'+questionID);
 
@@ -813,7 +892,8 @@ function updateEvidenceQuestionnaire(questionID) {
         dataSend = {
             operation,
             questionID,
-            updatedEvidence
+            updatedEvidence,
+            auditType
         };
 
         $.ajax({
@@ -971,9 +1051,59 @@ function refreshDocuments() {
 
 // global stats function
 
-function showTab() {
+function getSelectTypeList() {
+
+    getAuditsTypes = true;
+
+    dataSend = {
+
+        getAuditsTypes
+
+    }
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/traitementStats.php',
+        data: dataSend,
+        dataType: 'text',
+        success: function(data) {
+
+            myFunctions.checkAuthentifiedUser(data);
+
+            if(data !== "") {
+
+                document.getElementById('selectTypeContainer').innerHTML = data;
+
+            }
+
+        },
+
+        error: function(xhr, textStatus, error){
+
+            myFunctions.showError(contentWindow, xhr);
+
+        }
+
+    });
+
+}   
+
+function showTab(auditType) {
+
+    document.getElementById('tableauContainer').style.display = "block";
 
     myFunctions.showLoading(document.getElementById('tableauContainer'));
+
+    let getTab = true;
+    let type = auditType;
+
+    dataSend = {
+
+        getTab,
+        type
+
+    }
 
     $.ajax({
 
@@ -987,7 +1117,6 @@ function showTab() {
 
             if(data !== "") {
 
-                document.getElementById('tableauContainer').style.display = "block";
                 document.getElementById('tableauContainer').innerHTML = data;
 
             }
@@ -1004,23 +1133,28 @@ function showTab() {
 
 }
 
-function showStats() {
+function showStats(auditType) {
 
     $(document).ready(function() {
 
-        if(contentWindow.className == "content backgroundImage") {
+        let globalStatsContainer = document.getElementById('globalStats-container');
 
-            contentWindow.className = "content";
+        if(auditType == "") {
+            
+            globalStatsContainer.style.opacity = 0;
+            globalStatsContainer.innerHTML = "";
+            return;
 
         }
 
-        myFunctions.showLoading(contentWindow);
+        myFunctions.showLoading(globalStatsContainer);
 
         let countAudits = true;
 
         dataSend = {
 
-            countAudits
+            countAudits,
+            auditType
 
         };
 
@@ -1044,9 +1178,8 @@ function showStats() {
     
                     }
 
-                    contentWindow.style.opacity = 0;
-                    contentWindow.innerHTML = data;
-                    contentWindow.style.opacity = 1;
+                    globalStatsContainer.innerHTML = data;
+                    globalStatsContainer.style.opacity = 1;
                     noDataForStats = true;
 
                 }
@@ -1055,7 +1188,7 @@ function showStats() {
 
             error: function(xhr, textStatus, error){
 
-                myFunctions.showError(contentWindow, xhr);
+                myFunctions.showError(globalStatsContainer, xhr);
 
             }
 
@@ -1069,11 +1202,22 @@ function showStats() {
 
             } else {
 
+                if(auditType == 1) {
+
+                    titleChart = "Stastiques globales audits formateur"
+
+                } else if(auditType == 2) {
+
+                    titleChart = "Statistiques globales audits Qualiopi"
+
+                }
+
                 let getStats = true;
 
                 dataSend = {
 
-                    getStats
+                    getStats,
+                    auditType
                     
                 }
 
@@ -1093,17 +1237,13 @@ function showStats() {
 
                         }
 
-                        contentWindow.className = "content";
-
-                        contentWindow.style.opacity = 0;
-
                         setTimeout(function() {
 
-                            contentWindow.innerHTML = "<div id='graphique-resultats'></div><div id='tableauContainer'></div>";
+                            globalStatsContainer.innerHTML = "<div id='graphique-resultats'></div><div id='tableauContainer'></div>";
 
-                            createChart("graphique-resultats", "Statistiques globales des audits", data);
+                            createChart("graphique-resultats", titleChart, data);
 
-                            contentWindow.style.opacity = 1;
+                            globalStatsContainer.style.opacity = 1;
 
                         }, 500);
 
@@ -1123,17 +1263,9 @@ function showStats() {
 
                         }, 15);
 
-                        let getTab = true;
-
-                        dataSend = {
-
-                            getTab
-
-                        }
-
                         setTimeout(() => {
 
-                            showTab();
+                            getTab(auditType);
 
                         }, 1500);
 
@@ -1155,30 +1287,92 @@ function showStats() {
 
 }
 
-function statsOrderBy(orderBy) {
+function getTab(auditType) {
 
+    let tableauContainer = document.getElementById('tableauContainer');
     let getTab = true;
+
+    dataSend = {
+        
+        getTab,
+        auditType
+
+    };
+
+    tableauContainer.style.display = "block";
+
+    myFunctions.showLoading(tableauContainer);
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'contentGenerators/globalStats.php',
+        data: dataSend,
+        dataType: 'text',
+        success: function(data) {
+
+            setTimeout(function() {
+
+                tableauContainer.innerHTML = data;
+
+            }, 750);
+
+        },
+
+        error: function(xhr, textStatus, error){
+
+            myFunctions.showError(tableauContainer, xhr);
+
+        }
+
+    });
+
+}
+
+function statsOrderBy(auditType, orderBy) {
+
+    let tableauContainer = document.getElementById('tableauContainer');
+    myFunctions.showLoading(tableauContainer);
+
+    let orderByParam = orderBy;
+    let type = auditType;
 
     if(orderBy !== "") {
 
         dataSend = {
 
-            getTab,
-            orderBy
-
-        }
-    
-    } else {
-
-        dataSend = {
-
-            getTab
+            orderByParam,
+            type
 
         }
 
     }
 
-    showTab();
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/traitementStats.php',
+        data: dataSend, 
+        dataType: 'text',
+        success: function(data) {
+
+            myFunctions.checkAuthentifiedUser(data);
+
+            if(data !== "") {
+
+                document.getElementById('tableauContainer').innerHTML = data;
+
+            }
+
+        },
+        
+        error: function(xhr, textStatus, error){
+
+            myFunctions.showError(tableauContainer, xhr);
+            
+        }
+
+    });
 
 }
 
@@ -1276,5 +1470,61 @@ function getAllResultsUser(user) {
         });
 
     }
+
+}
+
+function generateModifyingAuditTool(auditType) {
+
+    let modifyingToolContainer = document.getElementById('modifyingToolContainer');
+
+    if(auditType == "") {
+
+        modifyingToolContainer.innerHTML = "";
+        modifyingToolContainer.style.opacity = 0;
+        modifyingToolContainer.style.display = 'none';
+        return;
+
+    }
+
+    myFunctions.showLoading(modifyingToolContainer);
+
+    let modificationAudit = true;
+
+    let dataSend = {
+
+        modificationAudit,
+        auditType
+
+    };
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'contentGenerators/auditModificatorGenerator.php',
+        data: dataSend,
+        dataType: 'text',
+        success: function(data) {
+
+            myFunctions.checkAuthentifiedUser(data);
+
+            modifyingToolContainer.style.opacity = 0;
+
+            setTimeout(function() {
+
+                modifyingToolContainer.style.display = "block";
+                modifyingToolContainer.innerHTML = data;
+                modifyingToolContainer.style.opacity = 1;
+
+            }, 500)
+
+        },
+
+        error: function(xhr, textStatus, error){
+
+            myFunctions.showError(modifyingToolContainer, xhr);
+            
+        }
+
+    });
 
 }

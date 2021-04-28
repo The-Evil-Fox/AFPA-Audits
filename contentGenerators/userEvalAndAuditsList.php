@@ -61,7 +61,7 @@ if(isset($_POST['getEvals']) && isset($_POST['user']) && !empty($_POST['user']))
 if(isset($_POST['getAudits']) && isset($_POST['user']) && !empty($_POST['user'])) { 
 
     $getAudits = $db->prepare(
-        "SELECT u.ID, a.Audit_Number, u.Name, u.FirstName, a.DateAndHour, ca.Localisation,
+        "SELECT u.ID, a.Type, a.Audit_Number, u.Name, u.FirstName, a.DateAndHour, ca.Localisation,
             (SELECT u.Name FROM Users u WHERE a.Auditor = u.ID) AS 'auditeurName',
             (SELECT u.FirstName FROM Users u WHERE a.Auditor = u.ID) AS 'auditeurFirstName',
             (SELECT u.Name FROM Users u WHERE a.Assistant1 = u.ID) AS 'Assistant1Name',
@@ -93,6 +93,7 @@ if(isset($_POST['getAudits']) && isset($_POST['user']) && !empty($_POST['user'])
         <table id="tableauResultatsAuditsUtilisateur">
             <thead>
                 <tr>
+                    <th>Type</th>
                     <th>Date</th>
                     <th>Action</th>
                 </tr>
@@ -100,8 +101,9 @@ if(isset($_POST['getAudits']) && isset($_POST['user']) && !empty($_POST['user'])
             <tbody>
                 <?php while($audits = $getAudits->fetch()) { ?>
                     <tr>
+                        <td data-label="Type"><?php if($audits['Type'] == 1) { echo "Audit formateur"; } elseif($audits['Type'] == 2) { echo "Audit Qualiopi"; } ?></td>
                         <td data-label="Date audit"><?= dateConvert($audits['DateAndHour']); ?></td>
-                        <td data-label="Action"><button class="button-show-autoeval-result" onclick="showUserResultAudit(<?= $audits['ID']; ?>, <?= $audits['Audit_Number']; ?>, '<?= $audits['Name']; ?>', '<?= $audits['FirstName']; ?>', '<?= $audits['auditeurName']; ?>', '<?= $audits['auditeurFirstName']; ?>', '<?= dateConvert($audits['DateAndHour']); ?>','<?= $audits['Localisation']; ?>'<?php if($audits['Assistant1Name'] && $audits['Assistant1FirstName'] !== NULL) { ?>, '<?= $audits['Assistant1Name']; ?>', '<?= $audits['Assistant1FirstName']; ?>' <?php } if($audits['Assistant2Name'] && $audits['Assistant2FirstName'] !== NULL) { ?>, '<?= $audits['Assistant2Name']; ?>', '<?= $audits['Assistant2FirstName']; ?>' <?php } ?>)" ><i class="fas fa-eye"></i> Voir les résultats</button></td>
+                        <td data-label="Action"><button class="button-show-autoeval-result" onclick="showUserResultAudit(<?= $audits['ID']; ?>, <?= $audits['Type']; ?>, <?= $audits['Audit_Number']; ?>, '<?= $audits['Name']; ?>', '<?= $audits['FirstName']; ?>', '<?= $audits['auditeurName']; ?>', '<?= $audits['auditeurFirstName']; ?>', '<?= dateConvert($audits['DateAndHour']); ?>','<?= $audits['Localisation']; ?>'<?php if($audits['Assistant1Name'] && $audits['Assistant1FirstName'] !== NULL) { ?>, '<?= $audits['Assistant1Name']; ?>', '<?= $audits['Assistant1FirstName']; ?>' <?php } if($audits['Assistant2Name'] && $audits['Assistant2FirstName'] !== NULL) { ?>, '<?= $audits['Assistant2Name']; ?>', '<?= $audits['Assistant2FirstName']; ?>' <?php } ?>)" ><i class="fas fa-eye"></i> Voir les résultats</button></td>
                     </tr>
                 <?php } ?>
             </tbody>

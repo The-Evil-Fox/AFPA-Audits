@@ -20,7 +20,7 @@ if(isset($_POST['actualites'])) {
     // Get the last 15 autoevaluations and/or audits completed in the actualites table
 
     $reqActus = $db->query(
-        "SELECT u.ID, u.Name, u.FirstName, a.Actualite, a.Eval_Number, a.Audit_Number, a.DateAndHour, f.Localisation,
+        "SELECT u.ID, u.Name, u.FirstName, a.Actualite, a.Audit_Type, a.Eval_Number, a.Audit_Number, a.DateAndHour, f.Localisation,
             (SELECT u.Name FROM Users u WHERE a.Auditor = u.ID) AS 'auditeurName',
             (SELECT u.FirstName FROM Users u WHERE a.Auditor = u.ID) AS 'auditeurFirstName',
             (SELECT u.Name FROM Users u WHERE a.Assistant1 = u.ID) AS 'Assistant1Name',
@@ -60,13 +60,13 @@ if(isset($_POST['actualites'])) {
 
                     <tr>
                         <td data-label="Utilisateur"><?= $actu['Name'] . " " . $actu['FirstName']; ?></td>
-                        <td data-label="Actualité"><?= $actu['Actualite']; ?></td>
+                        <td data-label="Actualité"><?= $actu['Actualite']; ?> <?php if($actu['Audit_Type'] !== null) { if($actu['Audit_Type'] == 1) { ?> (Audit formateur) <?php } elseif($actu['Audit_Type'] == 2) { ?>(Audit Qualiopi) <?php } } ?></td>
                         <td data-label="Date">le <?= dateConvert($actu['DateAndHour']); ?></td>
                         <?php if($actu['Eval_Number'] !== null) { ?>
                             <td><button class="button-show-autoeval-result" onclick="showUserResultEval(<?= $actu['ID']; ?>, <?= $actu['Eval_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['FirstName']; ?>', '<?= dateConvert($actu['DateAndHour']); ?>')"><i class="fas fa-eye"></i> Voir les résultats</button></td>
                         <?php } ?>
                         <?php if($actu['Audit_Number'] !== null) {?>
-                            <td><button class="button-show-audit-result" onclick="showUserResultAudit(<?= $actu['ID']; ?>, <?= $actu['Audit_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['FirstName']; ?>', '<?= $actu['auditeurName']; ?>', '<?= $actu['auditeurFirstName']; ?>', '<?= dateConvert($actu['DateAndHour']); ?>','<?= $actu['Localisation']; ?>'<?php if($actu['Assistant1Name'] && $actu['Assistant1FirstName'] !== NULL) { ?>, '<?= $actu['Assistant1Name']; ?>', '<?= $actu['Assistant1FirstName']; ?>' <?php } if($actu['Assistant2Name'] && $actu['Assistant2FirstName'] !== NULL) { ?>, '<?= $actu['Assistant2Name']; ?>', '<?= $actu['Assistant2FirstName']; ?>' <?php } ?>)"><i class="fas fa-eye"></i> Voir les résultats</button></td>
+                            <td><button class="button-show-audit-result" onclick="showUserResultAudit(<?= $actu['ID']; ?>, <?= $actu['Audit_Type']; ?>, <?= $actu['Audit_Number']; ?>, '<?= $actu['Name']; ?>', '<?= $actu['FirstName']; ?>', '<?= $actu['auditeurName']; ?>', '<?= $actu['auditeurFirstName']; ?>', '<?= dateConvert($actu['DateAndHour']); ?>','<?= $actu['Localisation']; ?>'<?php if($actu['Assistant1Name'] && $actu['Assistant1FirstName'] !== NULL) { ?>, '<?= $actu['Assistant1Name']; ?>', '<?= $actu['Assistant1FirstName']; ?>' <?php } if($actu['Assistant2Name'] && $actu['Assistant2FirstName'] !== NULL) { ?>, '<?= $actu['Assistant2Name']; ?>', '<?= $actu['Assistant2FirstName']; ?>' <?php } ?>)"><i class="fas fa-eye"></i> Voir les résultats</button></td>
                         <?php } ?>
                     </tr>
 
@@ -224,71 +224,17 @@ if(isset($_POST['documents'])) {
 
 if(isset($_POST['audit'])) {
 
-    // Get all the audit questions and their categories
+    $getAuditsTypes = $db->query('SELECT * FROM TypesAudits'); ?>
 
-    $getQuestions = $db->query('SELECT qa.ID, qa.Question, qa.Evidence, qa.Active, cqa.Name FROM QuestionsAudit qa LEFT JOIN 
-    CategoriesQuestionsAudit cqa ON qa.Category = cqa.ID ORDER BY cqa.ID, qa.ID ASC');
-
-    // Get all the categories for the question add toolbar
-    
-    $getCategories = $db->query('SELECT * FROM CategoriesQuestionsAudit ORDER BY ID ASC');
-
-?>
-    <div id="titleContainer">
-        <h3>Modification de l'audit</h3>
-    </div>
-    <div class="userInputBar">
-        <button id="auditAddQuestionButton" onclick="showAdminForm('audit')"><i class="fas fa-plus"></i> Ajouter une question</button>
-        <div class="audit-param-ajoutquestion" id="auditFormContainer">
-            <input type="text" id="newQuestion" placeholder="Ajouter une nouvelle question...">
-            <input type="text" id="preuvesQuestion" placeholder="Insérer les preuves à fournir (optionnel)">
-            <select id="categorie">
-                <option value="">Veuillez selectionner une catégorie</option>
-                <?php while($categories = $getCategories->fetch()) { ?>
-                    <option value="<?=  $categories['ID']; ?>"><?= $categories['Name']; ?></option>
-                <?php } ?>
-            </select>
-            <div id="message"></div>
-            <div class="audit-param-ajoutquestion-buttonsContainer">
-                <button class="greenButton" onclick="addQuestionQuestionnaire('audit')"><i class="fas fa-check"></i></button>
-                <button class="redButton" onclick="showAdminForm('audit')"><i class="fas fa-times"></i></button>
-            </div>
-        </div>
-    </div>
-
-    <table id="tableauQuestionnaire">
-        <thead>
-            <tr>
-                <th>Statut</th>
-                <th>Question</th>
-                <th>Preuves</th>
-                <th>Categorie</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while($question = $getQuestions->fetch()) { ?>
-                <tr>
-                    <td data-label="Statut" id="questionStatus<?= $question['ID']; ?>"><?php if($question['Active'] == true) { ?>Active<?php } else { ?>Inactive<?php } ?></td>
-                    <td data-label="Question" class="questionnaire-border-white" id="question-label-<?= $question['ID']; ?>"><?= $question['Question']; ?></td>
-                    <td data-label="Preuves" class="questionnaire-border-white" id="question-evidence-<?= $question['ID']; ?>"><?php if($question['Evidence'] !== NULL) { echo $question['Evidence']; } else { echo "/"; } ?></td>
-                    <td data-label="Categorie" class="questionnaire-border-white"><?= $question['Name']; ?></td>
-                    <td data-label="Actions">
-                        <div class="buttonsModificationQuestionnaire">
-                            <button <?php if($question['Active'] == true) { ?> class="redButton"<?php } else { ?> class="greenButton"<?php } ?>
-                            <?php if($question['Active'] == true) { ?> id="disable<?= $question['ID']; ?>" <?php } else { ?> id="enable<?= $question['ID']; ?>"<?php } ?>
-                             onclick="updateStatusRemoveQuestionQuestionnaire('audit', this, <?= $question['ID']; ?>)"
-                              <?php if($question['Active'] == true) { ?> value="disable" <?php } else { ?> value="enable" <?php } ?>>
-                              <?php if($question['Active'] == true) { ?> <i class="fas fa-toggle-on"></i> Désactiver<?php } else { ?><i class="fas fa-toggle-off"></i> Activer<?php } ?>
-                            <button onclick="updateQuestionQuestionnaire('audit', <?= $question['ID']; ?>)" value="edit"><i class="far fa-edit"></i> Modifier question</button>
-                            <button onclick="updateEvidenceQuestionnaire(<?= $question['ID']; ?>)" value="edit"><i class="far fa-edit"></i> Modifier preuve</button>
-                            <button class="redButton" onclick="updateStatusRemoveQuestionQuestionnaire('audit', this, <?= $question['ID']; ?>)" value="delete"><i class="fas fa-trash-alt"></i> Supprimer</button>
-                        </div>
-                    </td>
-                </tr>
+    <div id="selectContainer">
+        <select id="modificationAuditSelect" onchange="generateModifyingAuditTool(this.value)">
+            <option value="">Veuillez sélectionner un audit à modifier</option>
+            <?php while($auditsTypes = $getAuditsTypes->fetch()) { ?>
+                <option value="<?= $auditsTypes['ID']; ?>"><?= $auditsTypes['Name']; ?></option>
             <?php } ?>
-        </tbody>
-    </table>
+        </select>
+    </div>
+    <div id="modifyingToolContainer"></div>
 
 <?php }
 
@@ -316,5 +262,23 @@ if(isset($_POST['utilisateurs'])) {
     </div>
     <div id="userAutoevals"></div>
     <div id="userAudits"></div>
+
+<?php }
+
+if(isset($_POST['globalStats'])) { 
+    
+    $allAuditsTypes = $db->query('SELECT * FROM TypesAudits');
+
+    ?>
+
+    <div class="container-select">
+        <select id="globalStatsSelect" onchange="showStats(this.value)">
+        <option value="">Selectionner un type d'audit</option>
+        <?php while($auditsTypes = $allAuditsTypes->fetch()) { ?>
+            <option value="<?= $auditsTypes['ID']; ?>"><?= $auditsTypes['Name']; ?></option>
+        <?php } ?>
+        </select>
+    </div>
+    <div id="globalStats-container"></div>
 
 <?php } ?>

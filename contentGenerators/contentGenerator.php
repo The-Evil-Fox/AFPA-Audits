@@ -69,6 +69,7 @@ if(isset($_POST['auditer'])) {
                 <?php } ?>
             </select>
             <span id="auditSelectMessage"></span>
+            <div id="auditTypeContainer"></div>
             <div id="auditedCenterContainer"></div>
             <div id="assistantsContainer"></div>
             <button id="startAuditButton" class="button-start" onclick="startAudit(this.value)">Démarrer</button>

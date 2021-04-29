@@ -315,14 +315,14 @@ if(isset($_POST['getTab']) && isset($_POST['auditType'])) {
             ORDER BY qaf.ID, qaf.Category ASC"
         ); ?>
 
-        <select class="responsiveOrderBy" onchange="statsOrderBy(this.value)">
+        <select class="responsiveOrderBy" onchange="statsOrderBy(1, this.value)">
             <option value="">Sélectionnez une option de tri</option>
-            <option value="NCDESC" <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NCDESC") { ?>selected<?php } ?>>Non conformes décroissant</option>
-            <option value="NCASC" <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NCASC") { ?>selected<?php } ?>>Non conformes croissant</option>
-            <option value="NADESC" <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NADESC") { ?>selected<?php } ?>>Non applicables décroissant</option>
-            <option value="NAASC" <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NAASC") { ?>selected<?php } ?>>Non applicables décroissant</option>
-            <option value="NDDESC" <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NDDESC") { ?>selected<?php } ?>>Non disponibles décroissant</option>
-            <option value="NDASC" <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NDASC") { ?>selected<?php } ?>>Non disponibles décroissant</option>
+            <option value="NCDESC">Non conformes décroissant</option>
+            <option value="NCASC">Non conformes croissant</option>
+            <option value="NADESC">Non applicables décroissant</option>
+            <option value="NAASC">Non applicables croissant</option>
+            <option value="NDADESC">Non disponibles décroissant</option>
+            <option value="NDAASC">Non disponibles croissant</option>
         </select>
 
         <!-- Base of the table -->
@@ -366,14 +366,12 @@ if(isset($_POST['getTab']) && isset($_POST['auditType'])) {
             ORDER BY qaq.ID, qaq.Category ASC"
         ); ?>
 
-        <select class="responsiveOrderBy" onchange="statsOrderBy(this.value)">
+        <select class="responsiveOrderBy" onchange="statsOrderBy(2, this.value)">
             <option value="">Sélectionnez une option de tri</option>
-            <option value="NCDESC" <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NCDESC") { ?>selected<?php } ?>>Non conformes décroissant</option>
-            <option value="NCASC" <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NCASC") { ?>selected<?php } ?>>Non conformes croissant</option>
-            <option value="NADESC" <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NADESC") { ?>selected<?php } ?>>Non applicables décroissant</option>
-            <option value="NAASC" <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NAASC") { ?>selected<?php } ?>>Non applicables décroissant</option>
-            <option value="NDDESC" <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NDDESC") { ?>selected<?php } ?>>Non disponibles décroissant</option>
-            <option value="NDASC" <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NDASC") { ?>selected<?php } ?>>Non disponibles décroissant</option>
+            <option value="RecurrenceNCmajeuresDESC">Non conformes majeures décroissant</option>
+            <option value="RecurrenceNCmajeuresASC">Non conformes majeures croissant</option>
+            <option value="RecurrenceNCmineuresDESC">Non conformes mineures décroissant</option>
+            <option value="RecurrenceNCmineuresASC">Non conformes mineures croissant</option>
         </select>
 
         <!-- Base of the table -->

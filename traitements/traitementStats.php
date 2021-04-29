@@ -91,18 +91,27 @@ if(isset($_POST['orderByParam']) && isset($_POST['type']) && !empty($_POST['type
 
         } ?>
 
+        <select class="responsiveOrderBy" onchange="statsOrderBy(1, this.value)">
+            <option value="">Sélectionnez une option de tri</option>
+            <option value="NCDESC" <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "NCDESC") { ?>selected<?php } ?>>Non conformes décroissant</option>
+            <option value="NCASC" <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "NCASC") { ?>selected<?php } ?>>Non conformes croissant</option>
+            <option value="NADESC" <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "NADESC") { ?>selected<?php } ?>>Non applicables décroissant</option>
+            <option value="NAASC" <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "NAASC") { ?>selected<?php } ?>>Non applicables croissant</option>
+            <option value="NDADESC" <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "NDADESC") { ?>selected<?php } ?>>Non disponibles décroissant</option>
+            <option value="NDAASC" <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "NDAASC") { ?>selected<?php } ?>>Non disponibles croissant</option>
+        </select>
         <table id="tableauGlobalStats">
             <thead>
                 <tr>
                     <th>Thématique</th>
                     <th class="forceInline">Non conformes 
-                        <i onclick="statsOrderBy(1, 'NCDESC')" class="fas fa-sort-up <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NCDESC") { ?>active<?php } ?>"></i> <i onclick="statsOrderBy(1, 'NCASC')" class="fas fa-sort-down <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NCASC") { ?>active<?php } ?>"></i>
+                        <i onclick="statsOrderBy(1, 'NCDESC')" class="fas fa-sort-up <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "NCDESC") { ?>active<?php } ?>"></i> <i onclick="statsOrderBy(1, 'NCASC')" class="fas fa-sort-down <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "NCASC") { ?>active<?php } ?>"></i>
                     </th>
                     <th class="forceInline">Non applicables 
-                        <i onclick="statsOrderBy(1, 'NADESC')" class="fas fa-sort-up <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NADESC") { ?>active<?php } ?>"></i> <i onclick="statsOrderBy(1, 'NAASC')" class="fas fa-sort-down <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NAASC") { ?>active<?php } ?>"></i>
+                        <i onclick="statsOrderBy(1, 'NADESC')" class="fas fa-sort-up <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "NADESC") { ?>active<?php } ?>"></i> <i onclick="statsOrderBy(1, 'NAASC')" class="fas fa-sort-down <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "NAASC") { ?>active<?php } ?>"></i>
                     </th>
                     <th class="forceInline">Non disponibles 
-                        <i onclick="statsOrderBy(1, 'NDADESC')"class="fas fa-sort-up <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NDADESC") { ?>active<?php } ?>"></i> <i onclick="statsOrderBy(1, 'NDAASC')"class="fas fa-sort-down  <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "NDAASC") { ?>active<?php } ?>"></i>
+                        <i onclick="statsOrderBy(1, 'NDADESC')"class="fas fa-sort-up <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "NDADESC") { ?>active<?php } ?>"></i> <i onclick="statsOrderBy(1, 'NDAASC')"class="fas fa-sort-down  <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "NDAASC") { ?>active<?php } ?>"></i>
                     </th>
                 </tr>
             </thead>
@@ -166,17 +175,23 @@ if(isset($_POST['orderByParam']) && isset($_POST['type']) && !empty($_POST['type
             );
 
         }?>
-
+        <select class="responsiveOrderBy" onchange="statsOrderBy(2, this.value)">
+            <option value="">Sélectionnez une option de tri</option>
+            <option value="RecurrenceNCmajeuresDESC" <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "RecurrenceNCmajeuresDESC") { ?>selected<?php } ?>>Non conformes majeures décroissant</option>
+            <option value="RecurrenceNCmajeuresASC" <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "RecurrenceNCmajeuresASC") { ?>selected<?php } ?>>Non conformes majeures croissant</option>
+            <option value="RecurrenceNCmineuresDESC" <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "RecurrenceNCmineuresDESC") { ?>selected<?php } ?>>Non conformes mineures décroissant</option>
+            <option value="RecurrenceNCmineuresASC" <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "RecurrenceNCmineuresASC") { ?>selected<?php } ?>>Non conformes mineures croissant</option>
+        </select>
         <table id="tableauGlobalStats">
             <thead>
                 <tr>
                     <th>Indicateur</th>
                     <th>Preuves à fournir</th>
                     <th class="forceInline">Non conformités majeures 
-                        <i onclick="statsOrderBy(2, 'RecurrenceNCmajeuresDESC')" class="fas fa-sort-up <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "RecurrenceNCmajeuresDESC") { ?>active<?php } ?>"></i> <i onclick="statsOrderBy(2, 'RecurrenceNCmajeuresASC')" class="fas fa-sort-down <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "RecurrenceNCmajeuresASC") { ?>active<?php } ?>"></i>
+                        <i onclick="statsOrderBy(2, 'RecurrenceNCmajeuresDESC')" class="fas fa-sort-up <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "RecurrenceNCmajeuresDESC") { ?>active<?php } ?>"></i> <i onclick="statsOrderBy(2, 'RecurrenceNCmajeuresASC')" class="fas fa-sort-down <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "RecurrenceNCmajeuresASC") { ?>active<?php } ?>"></i>
                     </th>
                     <th class="forceInline">Non conformités mineures 
-                        <i onclick="statsOrderBy(2, 'RecurrenceNCmineuresDESC')"class="fas fa-sort-up <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "RecurrenceNCmineuresDESC") { ?>active<?php } ?>"></i> <i onclick="statsOrderBy(2, 'RecurrenceNCmineuresASC')"class="fas fa-sort-down  <?php if(isset($_POST['orderBy']) && !empty($_POST['orderBy']) && $_POST['orderBy'] == "RecurrenceNCmineuresASC") { ?>active<?php } ?>"></i>
+                        <i onclick="statsOrderBy(2, 'RecurrenceNCmineuresDESC')"class="fas fa-sort-up <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "RecurrenceNCmineuresDESC") { ?>active<?php } ?>"></i> <i onclick="statsOrderBy(2, 'RecurrenceNCmineuresASC')"class="fas fa-sort-down  <?php if(isset($_POST['orderByParam']) && !empty($_POST['orderByParam']) && $_POST['orderByParam'] == "RecurrenceNCmineuresASC") { ?>active<?php } ?>"></i>
                     </th>
                 </tr>
             </thead>

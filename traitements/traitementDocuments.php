@@ -66,14 +66,14 @@ if(isset($_FILES['addDocument']) && !empty($_FILES['addDocument']['name'])) {
             // Storage of the result of moving the uploaded document to the path
 
             $resultat = move_uploaded_file($_FILES['addDocument']['tmp_name'], $chemin);
+
             // If the result is true:
+            
             if($resultat) {
                 
                 // Stores the name of the document into a new variable and delete the extension from it
 
-                $deleteExtensionFromName = basename($_FILES['addDocument']['name'], ".pdf");
-                $occurences = array("-", "_");
-                $documentName = str_replace($occurences, " ", $deleteExtensionFromName);
+                $documentName = basename($_FILES['addDocument']['name'], ".pdf");
                 
                 // Insert the document in the database
 
@@ -81,8 +81,6 @@ if(isset($_FILES['addDocument']) && !empty($_FILES['addDocument']['name'])) {
                 $insertDocument->bindParam(':document', $documentName, PDO::PARAM_STR);
                 $insertDocument->bindParam(':link', $_FILES['addDocument']['name'], PDO::PARAM_STR);
                 $insertDocument->execute();
-                
-                return;
 
             } else {
                 

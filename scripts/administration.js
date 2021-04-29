@@ -975,12 +975,6 @@ function addDocument() {
 
                 }
     
-            },
-
-            error: function(xhr, textStatus, error){
-
-                myFunctions.showError(contentWindow, xhr);
-                
             }
     
         });

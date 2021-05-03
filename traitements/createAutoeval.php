@@ -6,7 +6,7 @@ require_once('../config/dbConnection.php');
 
 if(!isset($_SESSION['ID'])) {
 
-    echo "Acces refusé ! Veuillez vous connectez !";
+    echo "Acces refusé !";
     return;
 
 }
@@ -96,8 +96,9 @@ if(isset($_POST['createNewEval'])) {
             <?php while($questions = $selectQuestions->fetch()) { ?>
                 <!-- Questions -->
                 <div class="form-part" id="question<?= $compteur; ?>">
+                    <button class="buttonHelp" type="button" onclick="showTip()"><i class="fas fa-info-circle"></i> Afficher l'aide</button>
                     <div class="question-number">
-                        <?php if($compteur == $questionsNumber) { echo "Question finale"; } else { echo "Question n°$compteur"; } ?><img src="assets/tooltip.png" alt="infobulle" title="cliquez ici pour afficher l'aide" onclick="showTip('helper<?= $compteur; ?>')">
+                        <?php if($compteur == $questionsNumber) { echo "Question finale"; } else { echo "Question n°$compteur"; } ?>
                     </div>
                     <div class="category-question">
                         <?= $questions['Name']; ?>
@@ -136,5 +137,10 @@ if(isset($_POST['createNewEval'])) {
                 <?php $compteur++; ?>
             <?php } ?>
         </form>
-
+        <div class="paginationContainer" id="summaryContainer">
+            <?php $i = 1; while($i < $questionsNumber +1 ) { ?>
+                <button id="paginationButton<?= $i;?>" value="<?= $i; ?>" class="paginationButton <?php if($i == 1) { ?> paginationActive <?php } ?>" type="button" onclick="goToQuestion(this.value)"><?= $i; ?></button>
+                <?php $i++; ?>
+            <?php } ?>
+        </div>
 <?php } ?>

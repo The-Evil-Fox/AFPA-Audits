@@ -1,117 +1,129 @@
 <?php
 
 require_once('../config/dbConnection.php');
+require_once('../config/reqUser.php');
+require_once('../config/roles.php');
+require_once('../config/dateConvert.php');
 
 // Returns a non-authorised access message to ajax, which will head the user to the index(login) page if that happens.
 
 if(!isset($_SESSION['ID'])) {
 
-    echo "Acces refusé ! Veuillez vous connectez !";
+    echo "Acces refusé !";
     return;
 
 }
 
-if(isset($_POST['action']) && !empty($_POST['action']) && isset($_POST['id']) && !empty($_POST['id'])  && isset($_POST['link']) && !empty($_POST['link'])) {
+// Checks if the user is authorised to access this, if not disconnect the user
 
-    $action = htmlspecialchars($_POST['action']);
+if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
 
-    // If the user delete a file
-    if($action == "delete") {
+    if(isset($_POST['action']) && !empty($_POST['action']) && isset($_POST['id']) && !empty($_POST['id'])  && isset($_POST['link']) && !empty($_POST['link'])) {
 
         $action = htmlspecialchars($_POST['action']);
-        $url = "../documents/" . $_POST['link'];
 
-        // Delete the file from the database
+        // If the user delete a file
+        if($action == "delete") {
 
-        $deleteDocument = $db->prepare('DELETE FROM Documents WHERE ID = :id');
-        $deleteDocument->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
-        $deleteDocument->execute();
+            $action = htmlspecialchars($_POST['action']);
+            $url = "../documents/" . $_POST['link'];
 
-        // Delete the file from the server directory
+            // Delete the file from the database
 
-        unlink($url);
+            $deleteDocument = $db->prepare('DELETE FROM Documents WHERE ID = :id');
+            $deleteDocument->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
+            $deleteDocument->execute();
 
-        return;
+            // Delete the file from the server directory
 
-    }
-    
-}
+            unlink($url);
 
-if(isset($_FILES['addDocument']) && !empty($_FILES['addDocument']['name'])) {
+            return;
 
-    // Max size of a document
-
-    $tailleMax = 5000000;
-
-    // Valid extension
-
-    $extensionValide = "pdf";
-
-    // If the size of the new document does not exceed the maximum size:
-
-    if($_FILES['addDocument']['size'] <= $tailleMax) {
+        }
         
-        // Stores the extension of the new avatar in a variable
+    }
 
-        $extensionUpload = strtolower(substr(strrchr($_FILES['addDocument']['name'], '.'), 1));
+    if(isset($_FILES['addDocument']) && !empty($_FILES['addDocument']['name'])) {
 
-        // If the extension of the uploaded document is one of the valid extensions:
+        // Max size of a document
 
-        if($extensionUpload == $extensionValide) {
+        $tailleMax = 5000000;
+
+        // Valid extension
+
+        $extensionValide = "pdf";
+
+        // If the size of the new document does not exceed the maximum size:
+
+        if($_FILES['addDocument']['size'] <= $tailleMax) {
             
-            // Creation of the document upload path
+            // Stores the extension of the new avatar in a variable
 
-            $chemin = "../documents/".$_FILES['addDocument']['name'];
+            $extensionUpload = strtolower(substr(strrchr($_FILES['addDocument']['name'], '.'), 1));
 
-            // Storage of the result of moving the uploaded document to the path
+            // If the extension of the uploaded document is one of the valid extensions:
 
-            $resultat = move_uploaded_file($_FILES['addDocument']['tmp_name'], $chemin);
-
-            // If the result is true:
-            
-            if($resultat) {
+            if($extensionUpload == $extensionValide) {
                 
-                // Stores the name of the document into a new variable and delete the extension from it
+                // Creation of the document upload path
 
-                $documentName = basename($_FILES['addDocument']['name'], ".pdf");
+                $chemin = "../documents/".$_FILES['addDocument']['name'];
+
+                // Storage of the result of moving the uploaded document to the path
+
+                $resultat = move_uploaded_file($_FILES['addDocument']['tmp_name'], $chemin);
+
+                // If the result is true:
                 
-                // Insert the document in the database
+                if($resultat) {
+                    
+                    // Stores the name of the document into a new variable and delete the extension from it
 
-                $insertDocument = $db->prepare('INSERT INTO Documents(Document, Link) VALUES(:document, :link)');
-                $insertDocument->bindParam(':document', $documentName, PDO::PARAM_STR);
-                $insertDocument->bindParam(':link', $_FILES['addDocument']['name'], PDO::PARAM_STR);
-                $insertDocument->execute();
+                    $documentName = basename($_FILES['addDocument']['name'], ".pdf");
+                    
+                    // Insert the document in the database
 
+                    $insertDocument = $db->prepare('INSERT INTO Documents(Document, Link) VALUES(:document, :link)');
+                    $insertDocument->bindParam(':document', $documentName, PDO::PARAM_STR);
+                    $insertDocument->bindParam(':link', $_FILES['addDocument']['name'], PDO::PARAM_STR);
+                    $insertDocument->execute();
+
+                } else {
+                    
+                    // Error message if a error occurs
+
+                    $feedback = "Erreur: Une erreur est survenue durant l'importation de votre document";
+                    
+                }
+                
             } else {
                 
-                // Error message if a error occurs
+                // Error message if the extension is not valid
 
-                $feedback = "Erreur: Une erreur est survenue durant l'importation de votre document";
+                $feedback = "Erreur: Le document doit être au format PDF !";
                 
             }
             
         } else {
             
-            // Error message if the extension is not valid
+            // Error message is the size of the document is too heavy
 
-            $feedback = "Erreur: Le document doit être au format PDF !";
+            $feedback = "Erreur: Le document ne doit pas dépasser 5Mo !";
             
         }
-        
-    } else {
-        
-        // Error message is the size of the document is too heavy
 
-        $feedback = "Erreur: Le document ne doit pas dépasser 5Mo !";
-        
     }
 
-}
+    if(isset($feedback) && !empty($feedback)) {
 
-if(isset($feedback) && !empty($feedback)) {
+        echo $feedback;
 
-    echo $feedback;
+    }
 
-}
+} else {
 
-?>
+    echo "Acces refusé !";
+    return;
+
+} ?>

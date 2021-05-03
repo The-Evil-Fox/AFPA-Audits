@@ -6,7 +6,7 @@ require_once('../config/dbConnection.php');
 
 if(!isset($_SESSION['ID'])) {
 
-    echo "Acces refusé ! Veuillez vous connectez !";
+    echo "Acces refusé !";
     return;
 
 }

@@ -51,4 +51,28 @@ function isFormateur($role) {
 
 // Those methods are used to show/hide things in page, granting access to a certain content of the portal, ...
 
+// The methods below convert the role int of a user to a string displaying the role
+
+function roleToStr($role) {
+
+    if($role == 1) {
+
+        return "Utilisateur";
+
+    } elseif($role == 2) {
+
+        return "Auditeur";
+
+    } elseif($role == 4) {
+
+        return "Administrateur";
+
+    } elseif($role == 14) {
+
+        return "Superadministrateur";
+
+    }
+
+}
+
 ?>

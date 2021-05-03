@@ -38,7 +38,7 @@ myFunctions = {
 
   checkAuthentifiedUser: function(dataGet) {
 
-    if(dataGet == "Acces refusé ! Veuillez vous connectez !") {
+    if(dataGet == "Acces refusé !") {
 
       window.location.replace('index.php');
       return;
@@ -232,7 +232,7 @@ function sendBugReport() {
         and abandon the sending of the data to the processing page
       */
 
-      if(errorCode.length < 5) {
+      if(errorCode.length < 3) {
 
         bugReportNotification.innerHTML = "Veuillez insérer le code ou le message d'erreur reçu !";
         bugReportNotification.style.color = "#EE5046";

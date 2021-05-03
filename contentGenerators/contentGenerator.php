@@ -2,12 +2,14 @@
 
 require_once('../config/dbConnection.php');
 require_once('../config/dateConvert.php');
+require_once('../config/reqUser.php');
+require_once('../config/roles.php');
 
 // Returns a non-authorised access message to ajax, which will head the user to the index(login) page if that happens.
 
 if(!isset($_SESSION['ID'])) {
 
-    echo "Acces refusé ! Veuillez vous connectez !";
+    echo "Acces refusé !";
     return;
 
 }
@@ -16,67 +18,80 @@ if(!isset($_SESSION['ID'])) {
 
 if(isset($_POST['auditer'])) {
 
-    // Gets the list of all the teachers
+    // Checks if the user is authorised to access this, if not disconnect the user
+    
+    if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
 
-    $getFormateurs = $db->query('SELECT ID, Name, FirstName FROM Users WHERE Role = 1'); ?>
+        // Gets the list of all the teachers
 
-    <div id="startContainer">
-        <!-- Form logos -->
-        <div class="audit-logos-container">
-            <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
-            <img class="logo-afpa" src="assets/logoAFPABlack.png" alt="logo afpa blanc">
-        </div>
-        <!-- Title of the content actually displayed -->
-        <div class="form-title">
-            <h3>Audit formateur</h3>
-        </div>
-        <!-- Audit helper content -->
-        <div class="helper-container-start-screen">
-            <div class="helper-content">
-                Toutes les questions doivent être répondues.
+        $getFormateurs = $db->query('SELECT ID, Name, FirstName FROM Users WHERE Role = 1'); ?>
+
+        <div id="startContainer">
+            <!-- Form logos -->
+            <div class="audit-logos-container">
+                <img class="logo-qualite" src="assets/logoQualiteHautsDeFrance.png" alt="logo qualite hauts de france">
+                <img class="logo-afpa" src="assets/logoAFPABlack.png" alt="logo afpa blanc">
             </div>
-            <div class="helper-content">
-                Si vous répondez négativement à une question, veuillez insérer la raison (observation) dans le champ qui apparaitra.
+            <!-- Title of the content actually displayed -->
+            <div class="form-title">
+                <h3>Audit</h3>
             </div>
-            <div class="helper-content">
-                Les réponses sont sauvegardées automatiquement lors de leurs ajouts et/ou modifications.
-            </div>
-            <div class="helper-content">
-                <div class="help-shortcuts">Raccourcis clavier:</div>
-                <div class="shortcuts">
-                    <span><i class="far fa-caret-square-left"></i>Question précédente</span>
-                    <span><i class="far fa-caret-square-right"></i>Question suivante</span>
+            <!-- Audit helper content -->
+            <div class="helper-container-start-screen">
+                <div class="helper-content">
+                    Toutes les questions doivent être répondues.
+                </div>
+                <div class="helper-content">
+                    Si vous répondez négativement à une question, veuillez insérer la raison (observation) dans le champ qui apparaitra.
+                </div>
+                <div class="helper-content">
+                    Les réponses sont sauvegardées automatiquement lors de leurs ajouts et/ou modifications.
+                </div>
+                <div class="helper-content">
+                    <div class="help-shortcuts">Raccourcis clavier:</div>
+                    <div class="shortcuts">
+                        <span><i class="far fa-caret-square-left"></i>Question précédente</span>
+                        <span><i class="far fa-caret-square-right"></i>Question suivante</span>
+                    </div>
+                </div>
+                <div class="helper-content">
+                    <div class="help-acronyms">Signification des sigles:</div>
+                    <div class="acronyms">
+                        <span>NC: non conforme</span>
+                        <span>NA: non applicable</span>
+                        <span>NDA: non disponible actuellement</span>
+                        <span>NCm: non conformité mineure</span>
+                        <span>NCM: non conformité majeure</span>
+                    </div>
+                </div>
+                <div class="helper-content">
+                    Durée moyenne: 1 heure minimum.
                 </div>
             </div>
-            <div class="helper-content">
-                <div class="help-acronyms">Signification des sigles:</div>
-                <div class="acronyms">
-                    <span>NC: non conforme</span>
-                    <span>NA: non applicable</span>
-                    <span>NDA: non disponible actuellement</span>
-                </div>
-            </div>
-            <div class="helper-content">
-                Durée moyenne: 1 heure minimum.
+            <!-- Form teacher to audit selector -->
+            <div class="audit-selectuser-buttonstart-container">
+                <select id="auditedUser" onchange="checkAuditInProgress(this.value)">
+                    <option value="">Veuillez sélectionner l'utilisateur que vous voulez auditer</option>
+                    <?php while($allFormateurs = $getFormateurs->fetch()) {?>
+                        <option value="<?= $allFormateurs['ID']; ?>"><?= $allFormateurs['Name'] . " " . $allFormateurs['FirstName']; ?></option>
+                    <?php } ?>
+                </select>
+                <span id="auditSelectMessage"></span>
+                <div id="auditTypeContainer"></div>
+                <div id="auditedCenterContainer"></div>
+                <div id="assistantsContainer"></div>
+                <button id="startAuditButton" class="button-start" onclick="startAudit(this.value)">Démarrer</button>
             </div>
         </div>
-        <!-- Form teacher to audit selector -->
-        <div class="audit-selectuser-buttonstart-container">
-            <select id="auditedUser" onchange="checkAuditInProgress(this.value)">
-                <option value="">Veuillez sélectionner l'utilisateur que vous voulez auditer</option>
-                <?php while($allFormateurs = $getFormateurs->fetch()) {?>
-                    <option value="<?= $allFormateurs['ID']; ?>"><?= $allFormateurs['Name'] . " " . $allFormateurs['FirstName']; ?></option>
-                <?php } ?>
-            </select>
-            <span id="auditSelectMessage"></span>
-            <div id="auditTypeContainer"></div>
-            <div id="auditedCenterContainer"></div>
-            <div id="assistantsContainer"></div>
-            <button id="startAuditButton" class="button-start" onclick="startAudit(this.value)">Démarrer</button>
-        </div>
-    </div>
 
-<?php }
+    <?php } else {
+
+        echo "Acces refusé !";
+        return;
+
+    }
+
+}
 
 // User result space generator
 
@@ -213,8 +228,9 @@ if(isset($_POST['autoevaluation'])) { ?>
             </div>
             <?php while($questions = $selectQuestions->fetch()) { ?>
                 <div class="form-part" id="question<?= $compteur; ?>">
+                    <button class="buttonHelp" type="button" onclick="showTip()"><i class="fas fa-info-circle"></i> Afficher l'aide</button>
                     <div class="question-number">
-                        <?php if($compteur == $questionsNumber) { echo "Question finale"; } else { echo "Question n°$compteur"; } ?><img src="assets/tooltip.png" alt="infobulle" title="cliquez ici pour afficher l'aide" onclick="showTip()">
+                        <?php if($compteur == $questionsNumber) { echo "Question finale"; } else { echo "Question n°$compteur"; } ?>
                     </div>
                     <div class="category-question">
                         <?= $questions['Name']; ?>
@@ -250,8 +266,12 @@ if(isset($_POST['autoevaluation'])) { ?>
                 <?php $compteur++; ?>
             <?php } ?>
         </form>
-
-    
+        <div class="paginationContainer" id="summaryContainer">
+            <?php $i = 1; while($i < $questionsNumber +1 ) { ?>
+                <button id="paginationButton<?= $i;?>" value="<?= $i; ?>" class="paginationButton <?php if($i == 1) { ?> paginationActive <?php } ?>" type="button" onclick="goToQuestion(this.value)"><?= $i; ?></button>
+                <?php $i++; ?>
+            <?php } ?>
+        </div>
     <?php 
 
     // Shows the start autoeval container

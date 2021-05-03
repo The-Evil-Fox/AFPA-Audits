@@ -12,6 +12,10 @@ body {
     display: none !important;
 }
 
+.centerMargin {
+    margin: auto auto;
+}
+
 header {
     z-index: 3;
     position: fixed;
@@ -75,22 +79,23 @@ header {
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-button {
-  width: 0px;
+  width: 30px;
   height: 0px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #e1e1e1;
+  background: #333333;
   border: 0px none #ffffff;
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #ffffff;
+    background: rgb(33,150,243);
 }
 
 ::-webkit-scrollbar-thumb:active {
@@ -98,8 +103,8 @@ header {
 }
 
 ::-webkit-scrollbar-track {
-  background: #666666;
-  border: 0px none #ffffff;
+  background: #a7a7a7;
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-track:hover {
@@ -385,11 +390,8 @@ h3 {
     margin-left: 0.5vw;
 }
 
-.question-number img {
-    width: 25px;
-    cursor: pointer;
-    margin-left: 1vw;
-    vertical-align: bottom;
+#questionnaire .buttonHelp {
+    margin: 5vh auto;
 }
 
 .autoevaluation-logos-container, .audit-logos-container{
@@ -443,8 +445,17 @@ h3 {
     margin:3.5vh auto;
     display: block;
 }
+
 #questionnaire .preuves-label {
     margin-right: 0.5vw;
+}
+
+#questionnaire .preuves-container-qualiopi {
+    margin-top: 3vh;
+}
+
+#questionnaire .preuves-label-qualiopi {
+    margin-bottom: 2vh;
 }
 
 #questionnaire .inputGroup {
@@ -476,6 +487,29 @@ h3 {
 
 #questionnaire h3, #questionnaire .answer{
     user-select: none;
+}
+
+.paginationContainer {
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+    margin: auto 25% 10vh 25%;
+}
+
+.paginationContainer .paginationButton {
+    margin-bottom: 1vh;
+    margin-left: 0.3vw;
+    margin-right: 0.3vw;
+}
+
+.paginationContainer .paginationButton:hover {
+    background: rgb(211, 210, 210);
+    color: #5a545a;
+}
+
+.paginationActive {
+    background: rgb(33,150,243);
+    color: white;
 }
 
 .form-part {
@@ -679,7 +713,7 @@ table .redButton {
     height: 5vh;
 }
 
-#questionnairesParams .questionnaires-input-edit {
+.questionnaires-input-edit {
     margin: 2.5vh auto;
     width: 100%;
 }
@@ -797,7 +831,7 @@ table .redButton {
     margin: 0 2vw;
 }
 
-#modifyingToolContainer {
+#modifyingToolContainer, #userInfosContainer {
     display: none;
 }
 
@@ -875,41 +909,31 @@ table#tableauQuestionnaire tbody td {
     padding: 3vh 1vw;
 }
 
-table#tableauQuestionnaire .questionnaire-border-white {
-    border-left: 1px solid black;
-    border-right: 1px solid black;
-}
-
 .questionnaires-input-edit {
     width: 90%;
 }
 
-.buttonsModificationQuestionnaire {
+.buttonsModificationTableau {
     display: flex;
     flex-direction: column;
     margin: 2vh 2vh;
 }
 
-.buttonsModificationQuestionnaire button {
+.buttonsModificationTableau button {
     margin: 1vh auto;
 }
 
-.buttonsModificationQuestionnaire button i {
+.buttonsModificationTableau button i {
     margin-bottom: 1.5vh;
 }
 
-table#tableauResultatsAutoevalUtilisateur, table#tableauResultatsAuditsUtilisateur{
+table#tableauResultatsAutoevalUtilisateur, table#tableauResultatsAuditsUtilisateur, table#tableauActualites tr, table#tableauDocuments tr, table#tableauUserInfos tr {
     text-align: center;
 }
 
-table#tableauActualites tr, table#tableauDocuments tr {
-    text-align: center;
-}
-
-table#tableauQuestionnaire .edit-notification {
+table .edit-notification {
     font-weight: bolder;
     color: aqua;
-    position: relative;
     top: 50px;
     white-space: break-spaces;
     text-align: center;
@@ -990,6 +1014,16 @@ table#tableauAssistants {
     text-align: center;
     width: 90%;
 }
+
+table#tableauRapportsBug td {
+    text-align: center;
+}
+
+table#tableauQuestionnaire .border-black, table#tableauRapportsBug .border-black, table#tableauUserInfos .border-black, table#tableauGlobalStats .border-black{
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+
 
 /* Responsive CSS */
 
@@ -1141,11 +1175,7 @@ table#tableauAssistants {
         margin: 1.5vh auto !important;
     }
 
-    table .edit-notification {
-        display: none !important;
-    }
-
-    table#tableauQuestionnaire .questionnaire-border-white {
+    table#tableauQuestionnaire .border-black, table#tableauRapportsBug .border-black, table#tableauUserInfos .border-black, table#tableauGlobalStats .border-black {
         border-bottom: 1px solid black;
         border-left: none;
         border-right: none;
@@ -1155,7 +1185,7 @@ table#tableauAssistants {
         border-bottom: 2px solid black;
     }
 
-    .buttonsModificationQuestionnaire button i {
+    .buttonsModificationTableau button i {
         margin-bottom: unset !important;
     }
 

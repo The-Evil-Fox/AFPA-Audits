@@ -6,7 +6,7 @@ require_once('../config/dbConnection.php');
 
 if(!isset($_SESSION['ID'])) {
 
-    echo "Acces refusé ! Veuillez vous connectez !";
+    echo "Acces refusé !";
     return;
 
 }
@@ -165,7 +165,7 @@ if(isset($_POST['eval']) && !empty($_POST['eval'])) {
         // Insert the news in the database
 
         $actualite = "s'est autoévalué !";
-        $insertActualite = $db->prepare('INSERT INTO Actualites(User, Actualite, Eval_Number) VALUES(:user, :actualite, :eval)');
+        $insertActualite = $db->prepare('INSERT INTO News(User, Actualite, Eval_Number) VALUES(:user, :actualite, :eval)');
         $insertActualite->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
         $insertActualite->bindParam(':actualite', $actualite, PDO::PARAM_STR);
         $insertActualite->bindParam(':eval', $evalNumber, PDO::PARAM_INT);

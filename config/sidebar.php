@@ -12,7 +12,7 @@
             <a onclick="getNavbar('administration');" href="#administration"><i class="fas fa-toggle-off"></i><span>Administration</span></a>
         <?php } ?>
         <!-- Links -->
-        <?php if(isAuditeur($userInfos['Role'])) { ?>
+        <?php if(isAuditeur($userInfos['Role']) || isAdmin($userInfos['Role'])) { ?>
             <a onclick="showContent('auditer');" href="#auditer"><i class="fas fa-comments"></i><span>Auditer</span></a>
         <?php } ?>
         <a onclick="showContent('autoevaluation');" href="#autoevaluation"><i class="fas fa-briefcase"></i><span>M'auto-évaluer</span></a>
@@ -34,7 +34,7 @@
             <a onclick="getNavbar('administration');" href="#administration"><i class="fas fa-toggle-off"></i><span>Administration</span></a>
         <?php } ?>
         <!-- Links -->
-        <?php if(isAuditeur($userInfos['Role'])) { ?>
+        <?php if(isAuditeur($userInfos['Role']) || isAdmin($userInfos['Role'])) { ?>
             <a onclick="showContent('auditer');" href="#auditer"><i class="fas fa-comments"></i><span>Auditer</span></a>
         <?php } ?>
         <a onclick="showContent('autoevaluation');" href="#autoevaluation"><i class="fas fa-briefcase"></i><span>M'auto-évaluer</span></a>

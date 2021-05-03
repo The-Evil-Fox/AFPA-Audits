@@ -1522,3 +1522,429 @@ function generateModifyingAuditTool(auditType) {
     });
 
 }
+
+function editUser(editedUserID) {
+
+    let userInfosContainer = document.getElementById('userModifications');
+
+    if(editedUserID == "") {
+
+        userInfosContainer.innerHTML = "";
+        return;
+
+    }
+
+
+    let getEditedUserInfo = true;
+
+    dataSend = {
+
+        getEditedUserInfo,
+        editedUserID
+
+    }
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/traitementUserModification.php',
+        data: dataSend,
+        dataType: 'text',
+        success: function(data) {
+
+            myFunctions.checkAuthentifiedUser(data);
+
+            userInfosContainer.style.opacity = 0;
+
+            setTimeout(function() {
+
+                userInfosContainer.style.display = "block";
+                userInfosContainer.innerHTML = data;
+                userInfosContainer.style.opacity = 1;
+
+            }, 500)
+
+        },
+
+        error: function(xhr, textStatus, error){
+
+            myFunctions.showError(userInfosContainer, xhr);
+            
+        }
+
+    });
+
+}
+
+function updateEmail(editedUserID) {
+
+    let email = document.getElementById('user-email-'+editedUserID);
+
+    emailText = email.innerHTML;
+
+    email.innerHTML = "<input class='questionnaires-input-edit' type='email' id='input"+editedUserID+"' value='"+emailText+"'><span class='edit-notification'>Appuyez sur ECHAP ou cliquez en dehors du champ pour annuler.</span>";
+
+    emailInput = document.getElementById('input'+editedUserID);
+
+    emailInput.focus();
+
+    function cancelModification() {
+
+        email.innerHTML = emailText;
+        return false;
+
+    }
+
+    enterDetect = (e) => {
+
+        keyPressed = e.which || e.keyCode;
+        
+        if(keyPressed === 13) {
+            
+            sendUpdatedEmail(emailInput.value);
+
+        }
+
+        if(keyPressed === 27) {
+
+            cancelModification();
+
+        }
+    
+    }
+
+    $('#input'+editedUserID).on('focusout', function() {
+
+        cancelModification();
+
+    });
+
+    email.addEventListener('keydown', enterDetect);
+
+    function sendUpdatedEmail(updatedEmail) {
+
+        operation = "editEmail";
+
+        dataSend = {
+
+            operation,
+            editedUserID,
+            updatedEmail
+
+        };
+
+        $.ajax({
+
+            type: 'POST',
+            url: 'traitements/traitementUserModification.php',
+            data: dataSend,
+            dataType: 'text',
+            success: function(data) {
+
+                myFunctions.checkAuthentifiedUser(data);
+
+                if(data == "L'adresse email a bien été modifiée !") {
+                
+                    email.innerHTML = updatedEmail;
+                    return;
+                
+                }
+
+            },
+
+            error: function(xhr, textStatus, error) {
+
+                myFunctions.showError(document.getElementById('userModifications'), xhr);
+
+            }
+
+        });
+
+    }
+
+}
+
+function updateLocalisation(editedUserID) {
+
+    let localisation = document.getElementById('user-localisation-'+editedUserID);
+
+    localisationText = localisation.innerHTML;
+
+    getLocalisations = true;
+
+    dataSend = {
+
+        getLocalisations,
+        localisationText,
+        editedUserID
+
+    }
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/traitementUserModification.php',
+        data: dataSend,
+        dataType: 'text',
+        success: function(data) {
+
+            myFunctions.checkAuthentifiedUser(data);
+
+            if(data !== "") {
+            
+                localisation.innerHTML = data;
+                document.getElementById('updateLocalisationButton').removeAttribute('onclick');
+            
+            } else {
+
+                return;
+
+            }
+
+        },
+
+        error: function(xhr, textStatus, error) {
+
+            myFunctions.showError(document.getElementById('userModifications'), xhr);
+
+        }
+
+    });
+    
+}
+
+function editLocalisation(editedUserID, newLocalisationID) {
+
+    operation = "editLocalisation";
+
+    dataSend = {
+
+        operation,
+        editedUserID,
+        newLocalisationID
+
+    };
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/traitementUserModification.php',
+        data: dataSend,
+        dataType: 'text',
+        success: function(data) {
+
+            myFunctions.checkAuthentifiedUser(data);
+
+            if(data == "La localisation a bien été modifiée !") {
+
+                let localisation = document.getElementById('user-localisation-'+editedUserID);
+                let newLocalisation = $('#changeLocalisation option:selected').text();
+            
+                localisation.innerHTML = newLocalisation;
+                document.getElementById('updateLocalisationButton').setAttribute('onclick', 'updateLocalisation('+editedUserID+')');
+
+                return;
+            
+            }
+
+        },
+
+        error: function(xhr, textStatus, error) {
+
+            myFunctions.showError(document.getElementById('userModifications'), xhr);
+
+        }
+
+    });
+
+}
+
+function updateRole(editedUserID, role) {
+
+    let roleContainer = document.getElementById('user-role-'+editedUserID);
+
+    roleText = roleContainer.innerHTML;
+
+    if(role == 1) {
+
+        roleContainer.innerHTML = 
+            `<select onchange="editRole(`+editedUserID+`, this.value)" id="changeRole">
+                <option value="1" selected>Utilisateur</option>
+                <option value="2">Auditeur</option>
+                <option value="4">Administrateur</option>
+                <option value="14">Superadministrateur</option>
+            </select>`
+        ;
+
+    } else if(role == 2) {
+
+        roleContainer.innerHTML = 
+            `<select onchange="editRole(`+editedUserID+`, this.value)" id="changeRole">
+                <option value="1">Utilisateur</option>
+                <option value="2" selected>Auditeur</option>
+                <option value="4">Administrateur</option>
+                <option value="14">Superadministrateur</option>
+            </select>`
+        ;
+
+    } else if(role == 4) {
+
+        roleContainer.innerHTML = 
+            `<select onchange="editRole(`+editedUserID+`, this.value)" id="changeRole">
+                <option value="1">Utilisateur</option>
+                <option value="2">Auditeur</option>
+                <option value="4" selected>Administrateur</option>
+                <option value="14">Superadministrateur</option>
+            </select>`
+        ;
+
+    } else if(role == 14 ) {
+
+        roleContainer.innerHTML = 
+            `<select onchange="editRole(`+editedUserID+`, this.value)" id="changeRole">
+                <option value="1">Utilisateur</option>
+                <option value="2">Auditeur</option>
+                <option value="4">Administrateur</option>
+                <option value="14" selected>Superadministrateur</option>
+            </select>`
+        ;
+
+    }
+
+    document.getElementById('updateRoleButton').removeAttribute('onclick');
+
+}
+
+function editRole(editedUserID, newRole) {
+
+    operation = "editRole";
+
+    dataSend = {
+
+        operation,
+        editedUserID,
+        newRole
+
+    };
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/traitementUserModification.php',
+        data: dataSend,
+        dataType: 'text',
+        success: function(data) {
+
+            myFunctions.checkAuthentifiedUser(data);
+
+            if(data == "Le role a bien été modifié !") {
+
+                let roleContainer = document.getElementById('user-role-'+editedUserID);
+                let newLocalisation = $('#changeRole option:selected').text();
+            
+                roleContainer.innerHTML = newLocalisation;
+                document.getElementById('updateRoleButton').setAttribute('onclick', 'updateRole('+editedUserID+', '+newRole+')');
+
+                return;
+            
+            }
+
+        },
+
+        error: function(xhr, textStatus, error) {
+
+            myFunctions.showError(document.getElementById('userModifications'), xhr);
+
+        }
+
+    });
+
+}
+
+function updateStatus(operation, editedUserID) {
+
+    let button = document.getElementById('updateStatus');
+    
+    dataSend = {
+
+        operation,
+        editedUserID
+
+    };
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/traitementUserModification.php',
+        data: dataSend,
+        dataType: 'text',
+        success: function(data) {
+
+            myFunctions.checkAuthentifiedUser(data);
+
+            if(data == "Opération réussie !") {
+
+                if(operation == "disable") {
+
+                    button.value = "enable";
+                    button.className = "greenButton";
+                    button.innerHTML = "<i class='fas fa-toggle-off'></i> Activer";
+
+                } else if(operation == "enable") {
+
+                    button.value = "disable";
+                    button.className = "redButton";
+                    button.innerHTML = "<i class='fas fa-toggle-on'></i> Désactiver";
+
+                }
+
+                return;
+            
+            }
+
+        },
+
+        error: function(xhr, textStatus, error) {
+
+            myFunctions.showError(document.getElementById('userModifications'), xhr);
+
+        }
+
+    });
+
+}
+
+function deleteBugReport(bugReportID) {
+
+    operation = "deleteBugReport";
+
+    dataSend = {
+
+        operation,
+        bugReportID
+
+    };
+
+    $.ajax({
+
+        type: 'POST',
+        url: 'traitements/traitementBugReport.php',
+        data: dataSend,
+        dataType: 'text',
+        success: function(data) {
+
+            myFunctions.checkAuthentifiedUser(data);
+
+            contentWindow.innerHTML = data;
+
+        },
+
+        error: function(xhr, textStatus, error) {
+
+            myFunctions.showError(contentWindow, xhr);
+
+        }
+
+    });
+
+}

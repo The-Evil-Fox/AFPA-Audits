@@ -7,11 +7,13 @@ function showTip() {
 
     let helper = document.getElementById('helper');
     let questionsContainers = document.getElementsByClassName('form-part');
+    let summaryContainer = document.getElementById('summaryContainer');
 
     // If the helper is displayed: hide it and shows the questions
 
     if(helper.style.display == "flex") {
 
+        summaryContainer.style.display = "flex";
         helper.style.display = "none";
         for(var i = 0; i<questionsContainers.length; i++) {
             questionsContainers[i].className = "form-part";
@@ -21,6 +23,7 @@ function showTip() {
 
     } else {
 
+        summaryContainer.style.display = "none";
         helper.style.display = "flex";
         for(var i = 0; i<questionsContainers.length; i++) {
             questionsContainers[i].className = "form-part none";
@@ -782,6 +785,9 @@ function previousQuestion(partNumber) {
     document.getElementById(questionId+questionNumber).style.display = "none";
 
     questionNumber--;
+
+    updateCurrentSummary(page, questionNumber);
+    
     page--;
 
     document.getElementById(questionId+questionNumber).style.display = "block";
@@ -810,11 +816,47 @@ function nextQuestion(partNumber) {
     document.getElementById(questionId+questionNumber).style.display = "none";
 
     questionNumber++;
+
+    updateCurrentSummary(page, questionNumber);
+
     page++;
 
     document.getElementById(questionId+questionNumber).style.display = "block";
 
     content.style.opacity = "1";
+
+}
+
+function goToQuestion(questionNumber) {
+
+    let content = document.getElementById('content');
+
+    let actualQuestion = page;
+
+    updateCurrentSummary(actualQuestion, questionNumber);
+    
+    const questionId = "question";
+
+    content.style.opacity = "0";
+
+    document.getElementById(questionId+actualQuestion).style.display = "none";
+
+    page = questionNumber;
+
+    document.getElementById(questionId+questionNumber).style.display = "block";
+
+    content.style.opacity = "1";
+
+}
+
+function updateCurrentSummary(previousPage, newPage) {
+
+    let previousCurrent = document.getElementById('paginationButton'+previousPage)
+    let newCurrent = document.getElementById('paginationButton'+newPage);
+    let summary = document.getElementById('summaryContainer');
+    
+    previousCurrent.className = "paginationButton";
+    newCurrent.className = "paginationButton paginationActive";
 
 }
 

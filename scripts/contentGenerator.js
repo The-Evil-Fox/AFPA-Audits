@@ -11,6 +11,7 @@ function showContent(category) {
             autoEvalKeyboardControlsActive = false;
             document.body.removeEventListener('keydown', autoEvalShortcutsControls);
             page = 1;
+            
         }
 
         autoEvalShortcutsControls = (e) => {

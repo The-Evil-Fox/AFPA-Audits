@@ -567,8 +567,8 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
                                     <?php while($majorNonCompliances = $getMajorNonCompliances->fetch()) { ?>
                                         <tr>
                                             <td data-label="Non conformitée majeure"><?= $majorNonCompliances['Indicator']; ?></td>
-                                            <td data-label="Preuves à fournir"><?= $majorNonCompliances['Evidences']; ?></td>
-                                            <td data-label="Observation"><?= nl2br($majorNonCompliances['Observation']); ?></td>
+                                            <td data-label="Preuves à fournir"><?= str_replace(".", "<br>", $majorNonCompliances['Evidences']); ?></td>
+                                            <td data-label="Observation"><?= $majorNonCompliances['Observation']; ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
@@ -591,7 +591,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
                                         <tr>
                                             <td data-label="Non conformitée mineure"><?= $minorNonCompliances['Indicator']; ?></td>
                                             <td data-label="Preuves à fournir"><?= $minorNonCompliances['Evidences']; ?></td>
-                                            <td data-label="Observation"><?= nl2br($minorNonCompliances['Observation']); ?></td>
+                                            <td data-label="Observation"><?= $minorNonCompliances['Observation']; ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>

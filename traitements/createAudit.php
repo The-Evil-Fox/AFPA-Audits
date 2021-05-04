@@ -306,7 +306,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
                         Toutes les questions doivent être répondues.
                     </div>
                     <div class="helper-content">
-                        Si vous répondez "non conforme" à une question, veuillez insérer la raison (observation) dans le champ qui apparaitra.
+                        Les observations et remarques doivent obligatoirement être renseigné si la question a été répondu non conforme mineure ou majeure. Et sont optionnelles en cas de conformité à la question.
                     </div>
                     <div class="helper-content">
                         Les réponses sont sauvegardées automatiquement lors de leurs ajouts et/ou modifications.
@@ -341,13 +341,13 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
                         </div>
                         <div class="preuves-container-qualiopi">
                            <div class="preuves-label-qualiopi">Preuve(s) attendue(s):</div>
-                           <div class="preuves-qualiopi"><?= nl2br($questions['Evidences']); ?></div>
+                           <div class="preuves-qualiopi"><?= str_replace(".", "<br>", $questions['Evidences']); ?></div>
                         </div>
                         <!-- Textarea for the observations -->
                         <div class="inputGroup">
                             <div id="radioDiv">
                                 <div class="radiobox">
-                                    <input type="radio" id="<?= $questions['ID']; ?>Conforme" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateReport(<?= $_POST['auditedUserID']; ?>, <?= $auditType; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Conforme" <?php if($questions['Report'] == "Conforme") { ?> checked <?php } ?>>
+                                    <input type="radio" id="<?= $questions['ID']; ?>Conforme" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, true); updateReport(<?= $_POST['auditedUserID']; ?>, <?= $auditType; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Conforme" <?php if($questions['Report'] == "Conforme") { ?> checked <?php } ?>>
                                     <label for="<?= $questions['ID']; ?>Conforme">Conforme</label>
                                 </div>
                                 <div class="radiobox">
@@ -359,7 +359,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
                                     <label for="<?= $questions['ID']; ?>NCM">NCM</label>
                                 </div>
                             </div>
-                            <textarea <?php if($questions['Report'] == "NCmineure" || $questions['Report'] == "NCMajeure") {?> class="visible" <?php } ?> name="textAreas" id="<?= $compteur; ?>" placeholder="Pourquoi avez vous répondu négativement ?" cols="60" rows="5" onchange="updateObservation(<?= $_POST['auditedUserID']; ?>, <?= $auditType; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>)"><?php if($questions['Observation'] !== null) { echo $questions['Observation']; } ?></textarea>
+                            <textarea class="visible" name="textAreas" id="<?= $compteur; ?>" placeholder="Insérer les remarques et observations ici." cols="60" rows="5" onchange="updateObservation(<?= $_POST['auditedUserID']; ?>, <?= $auditType; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>)"><?php if($questions['Observation'] !== null) { echo $questions['Observation']; } ?></textarea>
                             <?php if($compteur == $questionsNumber) { ?>
                                 <div id="message"></div>
                             <?php } ?>
@@ -601,7 +601,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
                         Toutes les questions doivent être répondues.
                     </div>
                     <div class="helper-content">
-                        Si vous répondez "non conforme" à une question, veuillez insérer la raison (observation) dans le champ qui apparaitra.
+                        Les observations et remarques doivent obligatoirement être renseigné si la question a été répondu non conforme mineure ou majeure. Et sont optionnelles en cas de conformité à la question.
                     </div>
                     <div class="helper-content">
                         Les réponses sont sauvegardées automatiquement lors de leurs ajouts et/ou modifications.
@@ -636,13 +636,13 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
                         </div>
                         <div class="preuves-container-qualiopi">
                            <div class="preuves-label-qualiopi">Preuve(s) attendue(s):</div>
-                           <div class="preuves-qualiopi"><?= nl2br($questions['Evidences']); ?></div>
+                           <div class="preuves-qualiopi"><?= str_replace(".", "<br>", $questions['Evidences']); ?></div>
                         </div>
                         <!-- Textarea for the observations -->
                         <div class="inputGroup">
                             <div id="radioDiv">
                                 <div class="radiobox">
-                                    <input type="radio" id="<?= $questions['ID']; ?>Conforme" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, false); updateReport(<?= $_POST['auditedUserID']; ?>, <?= $auditType; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Conforme">
+                                    <input type="radio" id="<?= $questions['ID']; ?>Conforme" name="<?= $compteur; ?>" onchange="showTextArea(<?= $compteur; ?>, true); updateReport(<?= $_POST['auditedUserID']; ?>, <?= $auditType; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>);" value="Conforme">
                                     <label for="<?= $questions['ID']; ?>Conforme">Conforme</label>
                                 </div>
                                 <div class="radiobox">
@@ -654,7 +654,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
                                     <label for="<?= $questions['ID']; ?>NCM">NCM</label>
                                 </div>
                             </div>
-                            <textarea name="textAreas" id="<?= $compteur; ?>" placeholder="Pourquoi avez vous répondu négativement ?" cols="60" rows="5" onchange="updateObservation(<?= $_POST['auditedUserID']; ?>, <?= $auditType; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>)"></textarea>
+                            <textarea class="visible" name="textAreas" id="<?= $compteur; ?>" placeholder="Insérer les remarques et observations ici." cols="60" rows="5" onchange="updateObservation(<?= $_POST['auditedUserID']; ?>, <?= $auditType; ?>, <?= $auditNumber; ?>, <?= $questions['ID']; ?>, this.value, <?= $compteur; ?>)"></textarea>
                             <?php if($compteur == $questionsNumber) { ?>
                                 <div id="message"></div>
                             <?php } ?>

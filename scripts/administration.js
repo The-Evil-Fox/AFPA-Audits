@@ -720,7 +720,8 @@ function updateQuestionQuestionnaire(questionnaire, questionID, auditType) {
 
     questionText = question.innerHTML;
 
-    question.innerHTML = "<input class='questionnaires-input-edit' type='text' id='input"+questionID+"' value='"+questionText+"'><span class='edit-notification'>Appuyez sur ECHAP ou cliquez en dehors du champ pour annuler.</span>";
+    question.innerHTML = `<input class="questionnaires-input-edit" type="text" id="input`+questionID+`" value="`+questionText+`">
+    <span class="edit-notification">Appuyez sur ECHAP ou cliquez en dehors du champ pour annuler.</span>`;
 
     questionInput = document.getElementById('input'+questionID);
 
@@ -760,6 +761,8 @@ function updateQuestionQuestionnaire(questionnaire, questionID, auditType) {
     question.addEventListener('keydown', enterDetect);
 
     function sendUpdatedQuestion(updatedQuestion) {
+
+        updatedQuestion = myFunctions.escapeHtml(updatedQuestion);
 
         operation = "editQuestion";
 
@@ -846,7 +849,17 @@ function updateEvidenceQuestionnaire(questionID, auditType) {
 
     evidenceText = evidence.innerHTML;
 
-    evidence.innerHTML = "<input class='questionnaires-input-edit' type='text' id='input"+questionID+"' value='"+evidenceText+"'><span class='edit-notification'>Appuyez sur ECHAP ou cliquez en dehors du champ pour annuler.</span>";
+    if(auditType == 2) {
+
+        evidence.innerHTML = `<input class="questionnaires-input-edit" spellcheck="false" type="text" id="input`+questionID+`" value="`+evidenceText+`">
+        <span class="edit-notification">Veuillez séparer chaque preuve par un point et ne pas utiliser de doubles quotes (").<br>Appuyez sur ECHAP ou cliquez en dehors du champ pour annuler.</span>`;
+
+    } else {
+
+        evidence.innerHTML = `<input class="questionnaires-input-edit" type="text" id="input`+questionID+`" value="`+evidenceText+`">
+        <span class="edit-notification">Appuyez sur ECHAP ou cliquez en dehors du champ pour annuler.</span>`;
+    
+    }
 
     evidenceInput = document.getElementById('input'+questionID);
 
@@ -886,6 +899,8 @@ function updateEvidenceQuestionnaire(questionID, auditType) {
     evidence.addEventListener('keydown', enterDetect);
 
     function sendUpdatedEvidence(updatedEvidence) {
+
+        updatedEvidence = myFunctions.escapeHtml(updatedEvidence);
 
         operation = "editEvidence";
 

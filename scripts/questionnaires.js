@@ -556,20 +556,46 @@ function sendAudit(auditType, auditNumber, userID, localisation, auditor, assist
         /* Checks if all the textarea (Observations) displayed are filled. 
            If not then a error message appears to the user. The function is also quitted
         */
+        
+        if(auditType == 2) {
 
-        if(allTextAreas[i].style.display == "block" && allTextAreas[i].value == "") {
+            if(!document.getElementById([number]+'Conforme').checked) {
 
-            messageWindow.innerHTML = "Veuillez insérer la raison de votre réponse négative à la question numéro " + number + " !";
-            messageWindow.style.display = "flex";
-            buttonSend.style.display = "none";
-            setTimeout(() => {
+                if(allTextAreas[i].style.display == "block" && allTextAreas[i].value == "") {
 
-                messageWindow.style.display = "none";
-                messageWindow.innerHTML = "";
-                buttonSend.style.display = "block";
+                    messageWindow.innerHTML = "Veuillez insérer la raison de votre réponse négative à la question numéro " + number + " !";
+                    messageWindow.style.display = "flex";
+                    buttonSend.style.display = "none";
+                    setTimeout(() => {
 
-            }, 2500);
-            return false;
+                        messageWindow.style.display = "none";
+                        messageWindow.innerHTML = "";
+                        buttonSend.style.display = "block";
+
+                    }, 2500);
+                    return false;
+
+                }
+
+            }
+
+        } else {
+
+            if(allTextAreas[i].style.display == "block" && allTextAreas[i].value == "") {
+
+                messageWindow.innerHTML = "Veuillez insérer la raison de votre réponse négative à la question numéro " + number + " !";
+                messageWindow.style.display = "flex";
+                buttonSend.style.display = "none";
+                setTimeout(() => {
+
+                    messageWindow.style.display = "none";
+                    messageWindow.innerHTML = "";
+                    buttonSend.style.display = "block";
+
+                }, 2500);
+                return false;
+
+            }
 
         }
 

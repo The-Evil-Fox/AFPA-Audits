@@ -170,7 +170,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
 
                     if($_POST['operation'] == "delete") {
 
-                        $deleteQuestion = $db->prepare('DELETE FROM QuestionsAuditQualiopi WHERE ID = :questionID');
+                        $deleteQuestion = $db->prepare('DELETE FROM IndicatorsQualiopi WHERE ID = :questionID');
                         $deleteQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
                         $deleteQuestion->execute();
 
@@ -187,7 +187,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
 
                         // Disable the question in the dabase
 
-                        $updateQuestion = $db->prepare('UPDATE QuestionsAuditQualiopi SET Active = :active WHERE ID = :questionID');
+                        $updateQuestion = $db->prepare('UPDATE IndicatorsQualiopi SET Active = :active WHERE ID = :questionID');
                         $updateQuestion->bindParam(':active', $active, PDO::PARAM_BOOL);
                         $updateQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
                         $updateQuestion->execute();
@@ -202,7 +202,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
 
                         // Activate the question in the database
                         
-                        $updateQuestion = $db->prepare('UPDATE QuestionsAuditQualiopi SET Active = :active WHERE ID = :questionID');
+                        $updateQuestion = $db->prepare('UPDATE IndicatorsQualiopi SET Active = :active WHERE ID = :questionID');
                         $updateQuestion->bindParam(':active', $active, PDO::PARAM_BOOL);
                         $updateQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
                         $updateQuestion->execute();
@@ -215,9 +215,9 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
 
                         // Update the question label in the database
 
-                        $editQuestion = $db->prepare('UPDATE QuestionsAuditQualiopi SET Question = :question WHERE ID = :questionID');
-                        $editQuestion->bindParam(':question', $_POST['updatedQuestion'], PDO::PARAM_STR);
-                        $editQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
+                        $editQuestion = $db->prepare('UPDATE IndicatorsQualiopi SET Indicator = :indicator WHERE ID = :indicatorID');
+                        $editQuestion->bindParam(':indicator', $_POST['updatedQuestion'], PDO::PARAM_STR);
+                        $editQuestion->bindParam(':indicatorID', $question, PDO::PARAM_INT);
                         $editQuestion->execute();
 
                         $message = "La question a bien été éditée !";
@@ -228,9 +228,9 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
 
                         // Update the evidence label in the database
 
-                        $editQuestion = $db->prepare('UPDATE QuestionsAuditQualiopi SET Question = :question WHERE ID = :questionID');
-                        $editQuestion->bindParam(':question', $_POST['updatedEvidence'], PDO::PARAM_STR);
-                        $editQuestion->bindParam(':questionID', $question, PDO::PARAM_INT);
+                        $editQuestion = $db->prepare('UPDATE IndicatorsQualiopi SET Evidences = :evidences WHERE ID = :indicatorID');
+                        $editQuestion->bindParam(':evidences', $_POST['updatedEvidence'], PDO::PARAM_STR);
+                        $editQuestion->bindParam(':indicatorID', $question, PDO::PARAM_INT);
                         $editQuestion->execute();
 
                         $message = "La preuve à fournir a bien été éditée !";

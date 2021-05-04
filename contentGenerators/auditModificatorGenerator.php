@@ -85,10 +85,10 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
 
         <?php } elseif($_POST['auditType'] == 2) {
 
-            $getQuestions = $db->query('SELECT qaq.ID, qaq.Question, qaq.Question, qaq.Active, cqaq.Name FROM QuestionsAuditQualiopi qaq LEFT JOIN 
-            CategoriesQuestionsAuditQualiopi cqaq ON qaq.Category = cqaq.ID ORDER BY cqaq.ID, qaq.ID ASC');
+            $getQuestions = $db->query('SELECT iq.ID, iq.Indicator, iq.Evidences, iq.Active, cq.Name FROM IndicatorsQualiopi iq LEFT JOIN 
+            CriteriaQualiopi cq ON iq.Criteria = cq.ID ORDER BY cq.ID, iq.ID ASC');
 
-            $getCategories = $db->query('SELECT * FROM CategoriesQuestionsAuditQualiopi ORDER BY ID ASC'); ?>
+            $getCategories = $db->query('SELECT * FROM CriteriaQualiopi ORDER BY ID ASC'); ?>
 
             <div class="userInputBar">
                 <button id="auditAddQuestionButton" onclick="showAdminForm('audit')"><i class="fas fa-plus"></i> Ajouter une question</button>
@@ -112,7 +112,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
                 <thead>
                     <tr>
                         <th>Statut</th>
-                        <th>Critere</th>
+                        <th>Indicateur</th>
                         <th>Preuves</th>
                         <th>Actions</th>
                     </tr>
@@ -121,8 +121,8 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
                     <?php while($question = $getQuestions->fetch()) { ?>
                         <tr>
                             <td data-label="Statut" id="questionStatus<?= $question['ID']; ?>"><?php if($question['Active'] == true) { ?>Active<?php } else { ?>Inactive<?php } ?></td>
-                            <td data-label="Critere" class="border-black" id="question-label-<?= $question['ID']; ?>"><?= $question['Name']; ?></td>
-                            <td data-label="Preuve" class="border-black" id="question-evidence-<?= $question['ID']; ?>"><?= $question['Question'];?></td>
+                            <td data-label="Critere" class="border-black" id="question-label-<?= $question['ID']; ?>"><?= $question['Indicator']; ?></td>
+                            <td data-label="Preuve" class="border-black" id="question-evidence-<?= $question['ID']; ?>"><?= $question['Evidences'];?></td>
                             <td data-label="Actions">
                                 <div class="buttonsModificationQuestionnaire">
                                     <button <?php if($question['Active'] == true) { ?> class="redButton"<?php } else { ?> class="greenButton"<?php } ?>
@@ -130,6 +130,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
                                     onclick="updateStatusRemoveQuestionQuestionnaire('audit', this, <?= $question['ID']; ?>, 2)"
                                     <?php if($question['Active'] == true) { ?> value="disable" <?php } else { ?> value="enable" <?php } ?>>
                                     <?php if($question['Active'] == true) { ?> <i class="fas fa-toggle-on"></i> Désactiver<?php } else { ?><i class="fas fa-toggle-off"></i> Activer<?php } ?>
+                                    <button onclick="updateQuestionQuestionnaire('audit', <?= $question['ID']; ?>, 2)" value="edit"><i class="far fa-edit"></i> Modifier indicateur</button>
                                     <button onclick="updateEvidenceQuestionnaire(<?= $question['ID']; ?>, 2)" value="edit"><i class="far fa-edit"></i> Modifier preuve</button>
                                     <button class="redButton" onclick="updateStatusRemoveQuestionQuestionnaire('audit', this, <?= $question['ID']; ?>, 2)" value="delete"><i class="fas fa-trash-alt"></i> Supprimer</button>
                                 </div>

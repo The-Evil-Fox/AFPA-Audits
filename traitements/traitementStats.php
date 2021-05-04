@@ -203,7 +203,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
                     <?php while($questionsAndCount = $getQuestionsAndCount->fetch()) { ?>
                         <tr>
                             <td data-label="Indicateur"><?= $questionsAndCount['Indicator']; ?></td>
-                            <td class="border-black" data-label="Preuves à fournir"><?= nl2br($questionsAndCount['Evidences']); ?></td>
+                            <td class="border-black" data-label="Preuves à fournir"><?= str_replace(".", "<br>", $questionsAndCount['Evidences']); ?></td>
                             <td class="number border-black" data-label="Non conformités majeures"><?= $questionsAndCount['RecurrenceNCmajeures']; ?></td>
                             <td class="number" data-label="Non conformités mineures"><?= $questionsAndCount['RecurrenceNCmineures']; ?></td>
                         </tr>

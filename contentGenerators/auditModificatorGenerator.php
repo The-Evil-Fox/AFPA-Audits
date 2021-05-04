@@ -33,8 +33,8 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
             <div class="userInputBar">
                 <button id="auditAddQuestionButton" onclick="showAdminForm('audit')"><i class="fas fa-plus"></i> Ajouter une question</button>
                 <div class="audit-param-ajoutquestion" id="auditFormContainer">
-                    <input type="text" id="newQuestion" placeholder="Ajouter une nouvelle question...">
-                    <input type="text" id="preuvesQuestion" placeholder="Insérer les preuves à fournir (optionnel)">
+                    <input type="text" id="newQuestion" placeholder="Insérez une nouvelle question">
+                    <input type="text" id="preuvesQuestion" placeholder="Insérez les preuves à fournir (optionnel)">
                     <select id="categorie">
                         <option value="">Veuillez selectionner une catégorie</option>
                         <?php while($categories = $getCategories->fetch()) { ?>
@@ -93,7 +93,12 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
             <div class="userInputBar">
                 <button id="auditAddQuestionButton" onclick="showAdminForm('audit')"><i class="fas fa-plus"></i> Ajouter une question</button>
                 <div class="audit-param-ajoutquestion" id="auditFormContainer">
-                    <input type="text" id="preuvesQuestion" placeholder="Insérer les preuves à fournir">
+                    <input type="text" id="newQuestion" placeholder="Insérez l'indicateur">
+                    <input type="text" id="preuvesQuestion" placeholder="Insérez la/les preuve(s) à fournir">
+                    <div class="label-container">
+                        <div class="add-label">Si vous insérez plusieurs preuves, merci de les séparés par un point.</div>
+                        <div class="add-label">Veuillez également ne pas utiliser de doubles quotes (").</div>
+                    </div>
                     <select id="categorie">
                         <option value="">Veuillez selectionner le critere associé à la question</option>
                         <?php while($categories = $getCategories->fetch()) { ?>

@@ -107,7 +107,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
         <div class="userInputBar">
             <button id="autoevalAddQuestionButton" onclick="showAdminForm('autoeval')"><i class="fas fa-plus"></i> Ajouter une question</button>
             <div class="autoeval-param-ajoutquestion" id="autoevalFormContainer">
-                <input type="text" id="newQuestion" placeholder="Ajouter une nouvelle question...">
+                <input type="text" id="newQuestion" placeholder="Ajoutez une nouvelle question">
                 <select id="categorie">
                     <option value="">Veuillez selectionner une catégorie</option>
                     <?php while($categories = $getCategories->fetch()) { ?>

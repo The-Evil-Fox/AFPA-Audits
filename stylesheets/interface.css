@@ -831,6 +831,16 @@ table .redButton {
     margin: 0 2vw;
 }
 
+.audit-param-ajoutquestion .label-container {
+    margin-top: 3vh;
+}
+
+.audit-param-ajoutquestion .add-label {
+    white-space: break-spaces;
+    margin-top: 1vh;
+    font-size: 2vh;
+}
+
 #modifyingToolContainer, #userInfosContainer {
     display: none;
 }
@@ -934,7 +944,6 @@ table#tableauResultatsAutoevalUtilisateur, table#tableauResultatsAuditsUtilisate
 table .edit-notification {
     font-weight: bolder;
     color: aqua;
-    top: 50px;
     white-space: break-spaces;
     text-align: center;
     display: block;

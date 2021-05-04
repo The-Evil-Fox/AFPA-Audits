@@ -330,12 +330,8 @@ function showAdminForm(questionnaire) {
 }
 
 function addQuestionQuestionnaire(questionnaire, auditType) {
-
-    if(auditType == 1) {
     
-        let newQuestion = document.getElementById('newQuestion').value;
-    
-    }
+    let newQuestion = document.getElementById('newQuestion').value;
 
     let categorieQuestion = document.getElementById('categorie').value;
     let messageWindow = document.getElementById('message');
@@ -407,30 +403,14 @@ function addQuestionQuestionnaire(questionnaire, auditType) {
 
     } else if(questionnaire == "audit") {
 
-        if(auditType == 1) {
+        dataSend = {
 
-            dataSend = {
+            newQuestion,
+            categorieQuestion,
+            evidenceQuestion,
+            auditType
 
-                newQuestion,
-                categorieQuestion,
-                evidenceQuestion,
-                auditType
-
-            };
-
-        }
-
-        if(auditType == 2) {
-
-            dataSend = {
-
-                categorieQuestion,
-                evidenceQuestion,
-                auditType
-
-            };
-
-        }
+        };
 
     }
 

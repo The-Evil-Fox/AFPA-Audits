@@ -241,18 +241,20 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
 
             }
 
-            if(isset($_POST['categorieQuestion']) && !empty($_POST['categorieQuestion']) && isset($_POST['evidenceQuestion']) && !empty($_POST['evidenceQuestion'])) {
+            if(isset($_POST['newQuestion']) && !empty($_POST['newQuestion']) && isset($_POST['categorieQuestion']) && !empty($_POST['categorieQuestion']) && isset($_POST['evidenceQuestion']) && !empty($_POST['evidenceQuestion'])) {
 
+                $newQuestion = htmlspecialchars($_POST['newQuestion']);
                 $evidenceQuestion = htmlspecialchars($_POST['evidenceQuestion']);
 
                 try {
 
                     // Inserts the new question in the database
 
-                    $addQuestion = $db->prepare('INSERT INTO QuestionsAuditQualiopi(CreatedBy, Question, Category) VALUES(:user, :question, :category)');
+                    $addQuestion = $db->prepare('INSERT INTO IndicatorsQualiopi(CreatedBy, Indicator, Criteria, Evidences) VALUES(:user, :indicator, :criteria, :evidences)');
                     $addQuestion->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
-                    $addQuestion->bindParam(':question', $evidenceQuestion, PDO::PARAM_STR);
-                    $addQuestion->bindParam(':category', $_POST['categorieQuestion'], PDO::PARAM_INT);
+                    $addQuestion->bindParam(':indicator', $newQuestion, PDO::PARAM_STR);
+                    $addQuestion->bindParam(':criteria', $_POST['categorieQuestion'], PDO::PARAM_INT);
+                    $addQuestion->bindParam(':evidences', $evidenceQuestion, PDO::PARAM_STR);
                     $addQuestion->execute();
 
                     $message = "La question a bien été ajoutée !";

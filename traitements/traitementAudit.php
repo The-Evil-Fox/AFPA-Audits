@@ -590,7 +590,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
                                     <?php while($minorNonCompliances = $getMinorNonCompliances->fetch()) { ?>
                                         <tr>
                                             <td data-label="Non conformitée mineure"><?= $minorNonCompliances['Indicator']; ?></td>
-                                            <td data-label="Preuves à fournir"><?= $minorNonCompliances['Evidences']; ?></td>
+                                            <td data-label="Preuves à fournir"><?= str_replace(".", "<br>", $minorNonCompliances['Evidences']); ?></td>
                                             <td data-label="Observation"><?= $minorNonCompliances['Observation']; ?></td>
                                         </tr>
                                     <?php } ?>

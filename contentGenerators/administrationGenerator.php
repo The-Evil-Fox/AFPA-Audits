@@ -168,18 +168,16 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
 
         // Count the number of results
 
-        $countDocuments = $getDocuments->rowCount();
-
-    ?>
+        $countDocuments = $getDocuments->rowCount(); ?>
 
         <div id="titleContainer">
             <h3>Documents</h3>
         </div>
         <div class="userInputBar">
-        <button onclick="addDocument()" id="addDocumentButton"><i class="fas fa-plus"></i> Ajouter un document</button>
-        <form id="formDocument" method="POST" enctype="multipart/form-data">
-            <input type="file" name="addDocument" id="addDocument">
-        </form>
+            <button onclick="addDocument()" id="addDocumentButton"><i class="fas fa-plus"></i> Ajouter un document</button>
+            <form id="formDocument" method="POST" enctype="multipart/form-data">
+                <input type="file" name="addDocument" id="addDocument">
+            </form>
         </div>
 
         <!-- If the number of results is different from 0 shows the document in a table -->
@@ -275,7 +273,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
 
     if(isset($_POST['globalStats'])) { 
         
-        $allAuditsTypes = $db->query('SELECT * FROM TypesAudits');?>
+        $allAuditsTypes = $db->query('SELECT * FROM TypesAudits'); ?>
 
         <div id="titleContainer">
             <h3>Statistiques globales</h3>
@@ -292,7 +290,9 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
 
     <?php }
 
-    if(isAdmin($userInfos['Role']) && isset($_POST['usersManagement'])) { 
+    if(isAdmin($userInfos['Role']) && isset($_POST['usersManagement'])) {
+
+        $getLocalisation = $db->query('SELECT * FROM Facilities ORDER BY Localisation asc');
         
         $getAllUsers = $db->prepare('SELECT ID, Name, FirstName FROM Users WHERE ID <> :user ORDER BY FirstName ASC');
         $getAllUsers->bindParam(':user', $_SESSION['ID'], PDO::PARAM_INT);
@@ -300,6 +300,34 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
 
         <div id="titleContainer">
             <h3>Gestion utilisateurs</h3>
+        </div>
+        <div class="userInputBar">
+            <button id="addUserButton" onclick="showAdminForm('adduser')"><i class="fas fa-plus"></i> Ajouter un utilisateur</button>
+            <div class="user-param-adduser" id="addUserFormContainer">
+                <form method="POST">
+                    <input type="text" placeholder="Insérer le prénom de l'utilisateur" id="username">
+                    <input type="text" placeholder="Insérer le nom de l'utilisateur" id="userfirstname">
+                    <input type="email" id="useremail" placeholder="Inserer l'email de l'utilisateur à ajouter">
+                    <select id="userlocalisation">
+                        <option value="">Veuillez selectionner la localisation de l'utilisateur à ajouter</option>
+                        <?php while($localisations = $getLocalisation->fetch()) { ?>
+                            <option value="<?= $localisations['ID']; ?>"><?= $localisations['Localisation']; ?></option>
+                        <?php } ?>
+                    </select>
+                    <select id="userrole">
+                        <option value="">Veuillez selectionner le role de l'utilisateur à ajouter</option>
+                        <option value="1">Utilisateur</option>
+                        <option value="2">Auditeur</option>
+                        <option value="4">Administrateur</option>
+                    </select>
+                    <input type="password" placeholder="Insérer le mot de passe de l'utilisateur" id="userpassword" autocomplete="false">
+                    <div id="message"></div>
+                    <div class="user-param-adduser-buttonsContainer">
+                        <button type="button" class="greenButton" onclick="addUser()"><i class="fas fa-check"></i></button>
+                        <button type="button" class="redButton" onclick="showAdminForm('adduser')"><i class="fas fa-times"></i></button>
+                    </div>
+                </form>
+            </div>
         </div>
         <select id="userSelect" onchange="editUser(this.value)">
             <option value="">Veuillez sélectionner un utilisateur</option>

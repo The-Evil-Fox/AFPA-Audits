@@ -27,9 +27,9 @@ require_once('config/roles.php');
   <?php require_once('config/sidebar.php'); ?>
   <!-- Content window ( with home background image ) -->
   <div class="content backgroundImage" id="content">
-  <div id="titleContainer">
-    <h3>Outil qualité digitalisé</h3>
-  </div>
+    <div id="titleContainer">
+      <h3>Outil qualité digitalisé</h3>
+    </div>
   </div>
   <div id="bugButtonContainer">
     <button id="bugButton" onclick="bugReportForm()"><i class='fas fa-bug'></i></button>

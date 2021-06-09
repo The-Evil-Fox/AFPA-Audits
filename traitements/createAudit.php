@@ -277,7 +277,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
             $result = $countQuestions->fetch();
             $questionsNumber = (int) $result['nb_questions'];
 
-            $selectQuestions = $db->prepare('SELECT a.Facility, a.Auditor, a.Assistant1, a.Assistant2, cq.Name, iq.ID, iq.Indicator, ar.Report, ar.Observation, iq.Evidences
+            $selectQuestions = $db->prepare('SELECT a.Facility, a.Auditor, a.Assistant1, a.Assistant2, cq.ID as criteriaID, cq.Name, iq.ID, iq.Indicator, ar.Report, ar.Observation, iq.Evidences
             FROM IndicatorsQualiopi iq
             LEFT JOIN CriteriaQualiopi cq ON iq.Criteria = cq.ID 
             LEFT JOIN AuditsReports ar ON ar.Question = iq.ID  
@@ -334,7 +334,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
                     <div class="form-part" id="question<?= $compteur; ?>">
                         <button class="buttonHelp" type="button" onclick="showTip()"><i class="fas fa-info-circle"></i> Afficher l'aide</button>
                         <div class="question-number">
-                            <h3>Critère: <?= $questions['Name']; ?></h3>
+                            <h3>Critère n°<?= $questions['criteriaID']; ?> : <?= $questions['Name']; ?></h3>
                         </div>
                         <div class="category-question">
                             <?= $questions['Indicator']; ?>
@@ -581,7 +581,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
             $result = $countQuestions->fetch();
             $questionsNumber = (int) $result['nb_questions'];
 
-            $selectQuestions = $db->query('SELECT cq.Name, iq.ID, iq.Indicator, iq.Evidences FROM IndicatorsQualiopi iq
+            $selectQuestions = $db->query('SELECT cq.ID as criteriaID, cq.Name, iq.ID, iq.Indicator, iq.Evidences FROM IndicatorsQualiopi iq
             LEFT JOIN CriteriaQualiopi cq ON iq.Criteria = cq.ID 
             WHERE iq.Active = true 
             ORDER BY iq.Criteria, iq.ID');
@@ -629,7 +629,7 @@ if(isAdmin($userInfos['Role']) || isAuditeur($userInfos['Role'])) {
                     <div class="form-part" id="question<?= $compteur; ?>">
                         <button class="buttonHelp" type="button" onclick="showTip()"><i class="fas fa-info-circle"></i> Afficher l'aide</button>
                         <div class="question-number">
-                            <h3>Critère: <?= $questions['Name']; ?></h3>
+                            <h3>Critère n°<?= $questions['criteriaID']; ?> : <?= $questions['Name']; ?></h3>
                         </div>
                         <div class="category-question">
                             <?= $questions['Indicator']; ?>

@@ -20,9 +20,36 @@ function showContent(category) {
         
             if(document.getElementById('questionsNumber') == null) {
 
-                return;
+                return false;
 
             }
+
+
+            // Removing the default arrow key shortcuts handlers on radio inputs
+
+            $('input[type=radio]').click(function(e) {
+
+                if(keyPressed && (keyPressed == 37 || keyPressed == 39)) {
+
+                    return false;
+
+                } else {
+                
+                }
+            
+            });
+
+            $(document).keydown(function(e) {
+
+                keyPressed = e.which;
+
+            });
+            
+            $(document).keyup(function(e) {
+
+                keyPressed = null;
+                
+            });
 
             questionsNbr = document.getElementById('questionsNumber').value;
         

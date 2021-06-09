@@ -792,7 +792,7 @@ table .redButton {
     color: green;
 }
 
-.userInputBar #listUsersSelect, .userInputBar #addDocumentButton, .userInputBar #showDocumentFormButton, .userInputBar #autoevalAddQuestionButton, .userInputBar #auditAddQuestionButton  {
+.userInputBar #listUsersSelect, .userInputBar #addDocumentButton, .userInputBar #showDocumentFormButton, .userInputBar #autoevalAddQuestionButton, .userInputBar #auditAddQuestionButton, .userInputBar #addUserButton {
     margin-left: 5vw;
 }
 
@@ -814,20 +814,25 @@ table .redButton {
     display: none;
 }
 
-.autoeval-param-ajoutquestion, .audit-param-ajoutquestion {
+.autoeval-param-ajoutquestion, .audit-param-ajoutquestion, .user-param-adduser {
     display: none;
     flex-direction: column;
     margin: 5vh auto;
     width: 60%;
 }
 
-.autoeval-param-ajoutquestion-buttonsContainer, .audit-param-ajoutquestion-buttonsContainer {
+.user-param-adduser form {
+    display: flex;
+    flex-direction: column;
+}
+
+.autoeval-param-ajoutquestion-buttonsContainer, .audit-param-ajoutquestion-buttonsContainer, .user-param-adduser-buttonsContainer {
     margin: 5vh auto;
     display: flex;
     flex-direction: row;
 }
 
-.autoeval-param-ajoutquestion-buttonsContainer button, .audit-param-ajoutquestion-buttonsContainer button {
+.autoeval-param-ajoutquestion-buttonsContainer button, .audit-param-ajoutquestion-buttonsContainer button, .user-param-adduser button {
     margin: 0 2vw;
 }
 
@@ -841,7 +846,11 @@ table .redButton {
     font-size: 2vh;
 }
 
-#modifyingToolContainer, #userInfosContainer {
+.user-param-adduser input, .user-param-adduser select {
+    margin: 2vh 0;
+}
+
+#modifyingToolContainer, #userInfosContainer{
     display: none;
 }
 

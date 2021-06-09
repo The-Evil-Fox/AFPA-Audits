@@ -18,6 +18,48 @@ if(!isset($_SESSION['ID'])) {
 
 if(isAdmin($userInfos['Role'])) {
 
+    if(isset($_POST['operation']) && !empty($_POST['operation']) && isset($_POST['username']) && !empty($_POST['username']) && isset($_POST['userfirstname']) && !empty($_POST['userfirstname']) && isset($_POST['useremail']) && !empty($_POST['useremail']) && isset($_POST['userlocalisation']) && !empty($_POST['userlocalisation']) && isset($_POST['userrole']) && !empty($_POST['userrole']) && isset($_POST['password']) && !empty($_POST['password'])) {
+
+        if($_POST['operation'] == "addUser") {
+
+            $username = htmlspecialchars($_POST['username']);
+            $userfirstname = htmlspecialchars($_POST['userfirstname']);
+            $useremail = htmlspecialchars($_POST['useremail']);
+            $userlocalisation = htmlspecialchars($_POST['userlocalisation']);
+            $userrole = htmlspecialchars($_POST['userrole']);
+            $userpassword = $_POST['password'];
+
+            $checkifuserexist = $db->prepare('SELECT ID FROM Users WHERE Email = :email');
+            $checkifuserexist->bindParam(':email', $useremail, PDO::PARAM_STR);
+            $checkifuserexist->execute();
+            $countResult = $checkifuserexist->rowCount();
+
+            if($countResult == 0) {
+
+                $insertUser = $db->prepare('INSERT INTO Users(Name, Firstname, Email, Localisation, Password, Role, InvitedBy) 
+                VALUES(:name, :firstname, :email, :localisation, :password, :role, :invitedBy)');
+
+                $insertUser->bindParam(':name', $username, PDO::PARAM_STR);
+                $insertUser->bindParam(':firstname', $userfirstname, PDO::PARAM_STR);
+                $insertUser->bindParam(':email', $useremail, PDO::PARAM_STR);
+                $insertUser->bindParam(':localisation', $userlocalisation, PDO::PARAM_INT);
+                $insertUser->bindParam(':password', $userpassword, PDO::PARAM_STR);
+                $insertUser->bindParam(':role', $userrole, PDO::PARAM_INT);
+                $insertUser->bindParam(':invitedBy', $_SESSION['ID'], PDO::PARAM_INT);
+                $insertUser->execute();
+
+                $message = "L'utilisateur a bien été ajouté !";
+
+            } else {
+
+                $message = "Cet utilisateur existe déjà !";
+
+            }
+
+        }
+
+    }
+
     function showTable($editedUserID) {
 
         global $db;
@@ -180,6 +222,12 @@ if(isAdmin($userInfos['Role'])) {
             }
 
         }
+
+    }
+
+    if(isset($message) && !empty($message)) {
+
+        echo $message;
 
     }
 
